@@ -76,13 +76,18 @@
     {% endblock %}
 
     <div id="about">
-        {% if include_pages['about'] is not none %}
-            {% include include_pages['about'] %}
-        {% else %}
-            <div class="alert alert-danger">
+        <div id="accordion">
+            <h2>What does this tool do?</h2>
+            <div>
+            {% if include_pages['about'] is not none %}
+                {% include include_pages['about'] %}
+            {% else %}
+                <div class="alert alert-danger">
                 <p>About section is a compulsory section and you can not set it to null in configuration file.</p>
             </div>
-        {% endif %}
+            {% endif %}
+            </div>
+        </div>
     </div>
 
     {% for page_name in include_pages %}

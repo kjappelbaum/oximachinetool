@@ -82,12 +82,11 @@ ADD ./.docker_files/create_secret_key.sh /etc/my_init.d/create_secret_key.sh
 # Download code
 RUN mkdir -p $HOME/code/
 WORKDIR $HOME/code/
-# Actually, don't download, but get the code directly from this repo
-COPY ./webservice/ webservice
 COPY ./requirements.txt requirements.txt
-
 RUN pip3 install -r $HOME/code/requirements.txt
 
+# Actually, don't download, but get the code directly from this repo
+COPY ./webservice/ webservice
 # Create a proper wsgi file file
 ENV SP_WSGI_FILE=webservice/app.wsgi
 RUN echo "import sys" > $SP_WSGI_FILE && \

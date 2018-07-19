@@ -90,13 +90,11 @@
         </div>
     </div>
 
-    {% for page_name in include_pages %}
-        {% if include_pages[page_name] is not none and page_name not in ["how_to_cite", 'about'] %}
-            {% include include_pages[page_name] %}
-        {% endif %}
-    {% endfor %}
+    {% if config.get("use_upload_structure_block", False) %} 
+      {% include "visualizer_select_structure.html" %}
+    {% endif %}
+    {% include include_pages['select_content'] %}
 
-    {% include "visualizer_select_content.html" %}
 
     {% if include_pages['how_to_cite'] is not none %}
         <div id='citations'>

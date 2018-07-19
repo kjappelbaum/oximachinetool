@@ -1,0 +1,34 @@
+
+<div class="alert alert-warning">
+    <p>About section is compulsory. To customize the text here, please
+    <ul>
+        <li>create a template file with below HTML content
+            <code>
+<pre>
+&lt;div id="accordion">
+    &lt;h2>What does this tool do?&lt;/h2>
+    &lt;div>
+        Add information about this tool here...
+    &lt;/div>
+&lt;/div>
+</pre>
+            </code>
+        </li>
+        <li>store it in the folder for custom templates in the path <code>templates/user_templates</code></li>
+        <li>in the config file, create a <code>templates</code> dictionary,
+            if not yet there, and set the variable <code>about</code> to point
+            to you custom template:
+            <code>
+<pre>
+templates:
+   - about: "custom_about.html"
+</pre>
+            </code>
+        </li>
+    </ul>
+    </p>
+
+    <p>If you want to add more section(s) after about, please follow the above steps again
+        for every new section.
+    </p>
+</div>

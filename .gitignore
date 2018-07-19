@@ -1,0 +1,8 @@
+build/
+dist/
+baseapp.egg-info/
+*~
+*.pyc
+.DS_Store
+.coverage
+.idea/

@@ -1,0 +1,4 @@
+# The following are needed for the web service
+Flask==0.12.2
+# command line, only for testing
+click>=6

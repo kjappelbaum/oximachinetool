@@ -1,0 +1,27 @@
+<div class="alert alert-warning">
+    <p>If you want to customize the text here, please
+    <ul>
+        <li>create a template file with the HTML content</li>
+        <li>store it in the folder for custom templates in the path <code>templates/user_templates</code></li>
+        <li>in the config file, create a <code>templates</code> dictionary,
+            if not yet there, and set the variable <code>how_to_cite</code>
+            to point to you custom template:
+            <code>
+<pre>
+templates:
+  - how_to_cite: "custom_how_to_cite.html"
+</pre>
+            </code>
+        </li>
+    </ul>
+    </p>
+    <p>If instead you want to remove this section altogether,
+        please set the <code>how_to_cite</code> variable as above to <code>null</code>:
+        <code>
+<pre>
+templates:
+  - how_to_cite: null
+</pre>
+        </code>
+    </p>
+</div>

@@ -1,0 +1,20 @@
+window_title: "Add window title here..."
+page_title: "Add page title here..."
+
+custom_css_files:
+  input_data:
+    - custom.css
+  process_data:
+    - custom.css
+
+custom_js_files:
+  input_data:
+    - custom.js
+  process_data:
+    - custom.js
+
+flashed_messages:
+  - "add warning message here..."
+
+templates:
+  ack: null

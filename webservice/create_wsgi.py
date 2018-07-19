@@ -7,8 +7,8 @@ import string
 
 import getpass, grp, pwd
 
-WSGI_FILENAME = 'base_app.wsgi'
-site_fname = "base-site.conf"
+WSGI_FILENAME = 'app.wsgi'
+site_fname = "site.conf"
 
 current_user = getpass.getuser()
 current_group = grp.getgrgid(pwd.getpwnam(current_user).pw_gid).gr_name

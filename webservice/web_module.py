@@ -9,17 +9,99 @@ from builtins import str
 
 import datetime
 import json
+import os
+from functools import wraps, update_wrapper
 
-class FlaskRedirectException(Exception):
-    """
-    Class used to return immediately with a flash message and a redirect.
-    """
-    pass
+import yaml
+import flask
+from flask import Blueprint
+
+from conf import directory, static_folder, config_file_path, ConfigurationError
+
+def get_secret_key():
+    try:
+        with open(os.path.join(directory, 'SECRET_KEY')) as f:
+            secret_key = f.readlines()[0].strip()
+            if len(secret_key) < 16:
+                raise ValueError
+            return secret_key
+    except Exception:
+        raise ConfigurationError(
+            "Please create a SECRET_KEY file in {} with a random string "
+            "of at least 16 characters".format(directory))
 
 
-MAX_NUMBER_OF_ATOMS = 1000
-time_reversal_note = ("The second half of the path is required only if "
-                      "the system does not have time-reversal symmetry")
+def parse_config(config):
+    default_templates_folder = 'default_templates'
+    user_templates_folder = 'user_templates'
+    retdict = {}
+
+    templates = config.get('templates', {})
+
+    known_templates = ['how_to_cite', 'about', 'select_content']
+
+    for template_name in known_templates:
+        # Note that this still allows to set it to None explicitly to skip this section
+        try:
+            retdict[template_name] = templates[template_name]
+            if retdict[template_name] is not None:
+                retdict[template_name] = os.path.join(user_templates_folder, retdict[template_name])
+        except KeyError:
+            retdict[template_name] = os.path.join(default_templates_folder, '{}.html'.format(template_name))
+
+    for template_name in templates:
+        if template_name not in known_templates and templates[template_name] is not None:
+            retdict[template_name] = os.path.join(user_templates_folder, templates[template_name])
+
+
+    return retdict
+
+def set_config_defaults(config):
+    """Add defaults so the site works"""
+    new_config = config.copy()
+
+    new_config.setdefault('window_title', "Materials Cloud Tool")
+    new_config.setdefault('page_title', "<PLEASE SPECIFY A PAGE_TITLE AND A WINDOW_TITLE IN THE CONFIG FILE>")
+
+    new_config.setdefault('custom_css_files', {})
+    new_config.setdefault('custom_js_files', {})
+    new_config.setdefault('templates', {})
+
+    return new_config
+
+
+def get_config():
+    try:
+        with open(config_file_path) as config_file:
+            config = yaml.load(config_file)
+    except IOError as exc:
+        if exc.errno == 2: # No such file or directory
+            config = {}
+        else:
+            raise
+
+    #set defaults
+    config = set_config_defaults(config)
+
+    return {
+        'config': config,
+        'include_pages': parse_config(config)
+    }
+
+def nocache(view):
+    """Add @nocache right between @app.route and the 'def' line.
+    From http://arusahni.net/blog/2014/03/flask-nocache.html"""
+    @wraps(view)
+    def no_cache(*args, **kwargs):
+        response = flask.make_response(view(*args, **kwargs))
+        response.headers['Last-Modified'] = datetime.datetime.now()
+        response.headers[
+            'Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '-1'
+        return response
+
+    return update_wrapper(no_cache, view)
 
 
 def logme(logger, *args, **kwargs):
@@ -68,31 +150,96 @@ def generate_log(filecontent,
     logdict.update(extra)
     return json.dumps(logdict)
 
+class ReverseProxied(object):
+    '''Wrap the application in this middleware and configure the 
+    front-end server to add these headers, to let you quietly bind 
+    this to a URL other than / and to an HTTP scheme that is 
+    different than what is used locally.
 
-def process_data_core(module_version="",
-                           call_source="",
-                           logger=None,
-                           flask_request=None):
+    Inspired by  http://flask.pocoo.org/snippets/35/
+
+    In apache: use the following reverse proxy (adapt where needed)
+    <Location /proxied>
+      ProxyPass http://localhost:4444/
+      ProxyPassReverse http://localhost:4444/
+      RequestHeader set X-Script-Name /proxied
+      RequestHeader set X-Scheme http
+    </Location>
+
+    :param app: the WSGI application
+    '''
+
+    def __init__(self, app):
+        self.app = app
+
+    def __call__(self, environ, start_response):
+        script_name = environ.get('HTTP_X_SCRIPT_NAME', '')
+        if script_name:
+            environ['SCRIPT_NAME'] = script_name
+            path_info = environ['PATH_INFO']
+            if path_info.startswith(script_name):
+                environ['PATH_INFO'] = path_info[len(script_name):]
+
+        scheme = environ.get('HTTP_X_SCHEME', '')
+        if scheme:
+            environ['wsgi.url_scheme'] = scheme
+        server = environ.get('HTTP_X_FORWARDED_HOST', '')
+        if server:
+            environ['HTTP_HOST'] = server
+        return self.app(environ, start_response)
+
+static_bp = Blueprint('static', __name__, url_prefix='/static')
+
+@static_bp.route('/js/<path:path>')
+def send_js(path):
     """
-    The main function that generates the data to be sent back to the view.
-
-    :param module_version: the module. The reason for passing it
-         is that, when running in debug mode, you want to get the local 
-         app rather than the installed one.
-    :param call_source: a string identifying the source (i.e., who called
-       this function). This is a string, mainly for logging reasons.
-    :param logger: if not None, should be a valid logger, that is used
-       to output useful log messages.
-    :param flask_request: if logger is not None, pass also the flask.request
-       object to help in logging.
-
-    :return: this function calls directly flask methods and returns flask 
-        objects
-
-    :raise: FlaskRedirectException if there is an error that requires
-        to redirect the the main selection page. The Exception message
-        is the message to be flashed via Flask (or in general shown to
-        the user).
+    Serve static JS files
     """
-    return {"data": "Processed data information..."}
+    return flask.send_from_directory(os.path.join(static_folder, 'js'), path)
 
+@static_bp.route('/js/custom/<path:path>')
+def send_custom_js(path):
+    """
+    Serve static JS files
+    """
+    return flask.send_from_directory(os.path.join(static_folder, 'js', 'custom'), path)
+
+@static_bp.route('/img/<path:path>')
+def send_img(path):
+    """
+    Serve static image files
+    """
+    return flask.send_from_directory(os.path.join(static_folder, 'img'), path)
+
+
+@static_bp.route('/css/<path:path>')
+def send_css(path):
+    """
+    Serve static CSS files
+    """
+    return flask.send_from_directory(os.path.join(static_folder, 'css'), path)
+
+
+@static_bp.route('/css/custom/<path:path>')
+def send_custom_css(path):
+    """
+    Serve static CSS files
+    """
+    return flask.send_from_directory(os.path.join(static_folder, 'css', 'custom'), path)
+
+
+@static_bp.route('/css/images/<path:path>')
+def send_cssimages(path):
+    """
+    Serve static CSS images files
+    """
+    return flask.send_from_directory(
+        os.path.join(static_folder, 'css', 'images'), path)
+
+
+@static_bp.route('/fonts/<path:path>')
+def send_fonts(path):
+    """
+    Serve static font files
+    """
+    return flask.send_from_directory(os.path.join(static_folder, 'fonts'), path)

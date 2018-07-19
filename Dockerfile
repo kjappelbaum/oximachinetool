@@ -49,31 +49,13 @@ RUN apt-get update \
 # set $HOME
 ENV HOME /home/app
 
-# Download code
-RUN mkdir -p $HOME/code/
-WORKDIR $HOME/code/
-
-# Actually, don't download, but get the code directly from this repo
-COPY ./webservice/ webservice
-COPY ./requirements.txt requirements.txt
-
-# Set proper permissions
-RUN chown -R app:app $HOME
-
 # Run this as sudo to replace the version of pip
 RUN pip3 install -U 'pip>=10' setuptools wheel
-RUN pip3 install -r $HOME/code/requirements.txt
 
 # install rest of the packages as normal user (app, provided by passenger)
 USER app
 
 WORKDIR /home/app/code
-
-# Create a proper wsgi file file
-ENV SP_WSGI_FILE=webservice/app.wsgi
-RUN echo "import sys" > $SP_WSGI_FILE && \
-    echo "sys.path.insert(0, '/home/app/code/webservice')" >> $SP_WSGI_FILE && \
-    echo "from run_app import app as application" >> $SP_WSGI_FILE 
 
 # Go back to root.
 # Also, it should remain as user root for startup
@@ -90,12 +72,30 @@ RUN a2enmod wsgi && a2enmod xsendfile && \
 RUN mkdir /etc/service/apache
 ADD ./.docker_files/apache_run.sh /etc/service/apache/run
 
+# Web
+EXPOSE 80
+
 # Set startup script to create the secret key
 RUN mkdir -p /etc/my_init.d
 ADD ./.docker_files/create_secret_key.sh /etc/my_init.d/create_secret_key.sh
 
-# Web
-EXPOSE 80
+# Download code
+RUN mkdir -p $HOME/code/
+WORKDIR $HOME/code/
+COPY ./requirements.txt requirements.txt
+RUN pip3 install -r $HOME/code/requirements.txt
+
+# Actually, don't download, but get the code directly from this repo
+COPY ./webservice/ webservice
+# Create a proper wsgi file file
+ENV SP_WSGI_FILE=webservice/app.wsgi
+RUN echo "import sys" > $SP_WSGI_FILE && \
+    echo "sys.path.insert(0, '/home/app/code/webservice')" >> $SP_WSGI_FILE && \
+    echo "from run_app import app as application" >> $SP_WSGI_FILE 
+
+# Set proper permissions
+RUN chown -R app:app $HOME
+
 
 # Final cleanup, in case it's needed
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

@@ -138,9 +138,33 @@ def parse_config(config):
 
     return retdict
 
+def set_config_defaults(config):
+    """Add defaults so the site works"""
+    new_config = config.copy()
+
+    new_config.setdefault('window_title', "Materials Cloud Tool")
+    new_config.setdefault('page_title', "<PLEASE SPECIFY A PAGE_TITLE AND A WINDOW_TITLE IN THE CONFIG FILE>")
+
+    new_config.setdefault('custom_css_files', {})
+    new_config.setdefault('custom_js_files', {})
+    new_config.setdefault('templates', {})
+
+    return new_config
+
+
 def get_config():
-    with open(config_file_path) as config_file:
-        config = yaml.load(config_file)
+    try:
+        with open(config_file_path) as config_file:
+            config = yaml.load(config_file)
+    except IOError as exc:
+        if exc.errno == 2: # No such file or directory
+            config = {}
+        else:
+            raise
+
+    #set defaults
+    config = set_config_defaults(config)
+
     return {
         'config': config,
         'include_pages': parse_config(config)

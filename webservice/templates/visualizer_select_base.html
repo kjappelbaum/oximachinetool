@@ -61,18 +61,18 @@
     </div>
 
     {% block flashedmessages %}
-        {% for message in flashed_messages %}
-            {% if message %}
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
                 <div class="alert alert-danger">
                     Warning:
-                    <ul class=flashes>
+                    <ul class="flashes">
                         {% for message in messages %}
                             <li>{{ message }}</li>
                         {% endfor %}
                     </ul>
                 </div>
             {% endif %}
-        {% endfor %}
+        {% endwith %}
     {% endblock %}
 
     <div id="about">

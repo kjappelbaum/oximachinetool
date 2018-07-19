@@ -13,8 +13,5 @@ custom_js_files:
   process_data:
     - custom.js
 
-flashed_messages:
-  - "add warning message here..."
-
 templates:
   ack: null

@@ -53,6 +53,13 @@ def parse_config(config):
         if template_name not in known_templates and templates[template_name] is not None:
             retdict[template_name] = os.path.join(user_templates_folder, templates[template_name])
 
+    additional_accordion_entries = config.get('additional_accordion_entries', [])
+    retdict['additional_accordion_entries'] = []
+    for accordian_entry in additional_accordion_entries:
+        retdict['additional_accordion_entries'].append({
+            "header": accordian_entry["header"],
+            "template_page": os.path.join(user_templates_folder, accordian_entry["template_page"])
+        })
 
     return retdict
 

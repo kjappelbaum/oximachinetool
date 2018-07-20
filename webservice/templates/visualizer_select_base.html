@@ -87,6 +87,12 @@
             </div>
             {% endif %}
             </div>
+            {% for additional_entry in include_pages["additional_accordion_entries"] %}
+            <h2>{{ additional_entry.header }}</h2>
+                <div>
+                {% include additional_entry.template_page %}
+                </div>
+            {% endfor %}
         </div>
     </div>
 

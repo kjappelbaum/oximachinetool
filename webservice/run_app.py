@@ -15,7 +15,7 @@ import flask
 import os
 import yaml
 
-from web_module import (ReverseProxied, static_bp, get_secret_key, get_config)
+from web_module import (ReverseProxied, static_bp, user_static_bp, get_secret_key, get_config)
 from conf import (FlaskRedirectException, ConfigurationError, static_folder)
 
 # This (undocumented) flag changes the style of the webpage (CSS, etc.)
@@ -65,6 +65,8 @@ def input_data():
 
 # Register blueprints
 app.register_blueprint(static_bp)
+app.register_blueprint(user_static_bp)
+
 try:
     from compute import blueprint
     app.register_blueprint(blueprint)

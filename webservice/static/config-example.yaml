@@ -1,6 +1,8 @@
 window_title: "Add window title here..."
 page_title: "Add page title here..."
 
+about_section_title: "What does this tool do?"
+
 custom_css_files:
   input_data:
     - custom.css

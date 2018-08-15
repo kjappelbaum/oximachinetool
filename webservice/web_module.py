@@ -220,7 +220,7 @@ def send_img(path):
     return flask.send_from_directory(os.path.join(static_folder, 'img'), path)
 
 @user_static_bp.route('/img/<path:path>')
-def send_img(path):
+def send_custom_img(path):
     """
     Serve static image files
     """
@@ -242,6 +242,13 @@ def send_custom_css(path):
     """
     return flask.send_from_directory(os.path.join(user_static_folder, 'css'), path)
 
+@user_static_bp.route('/data/<path:path>')
+def send_custom_data(path):
+    """
+    Serve static font files
+    """
+    return flask.send_from_directory(os.path.join(user_static_folder, 'data'), path)
+
 
 @static_bp.route('/css/images/<path:path>')
 def send_cssimages(path):
@@ -252,7 +259,7 @@ def send_cssimages(path):
         os.path.join(static_folder, 'css', 'images'), path)
 
 @user_static_bp.route('/css/images/<path:path>')
-def send_cssimages(path):
+def send_custom_cssimages(path):
     """
     Serve static CSS images files
     """
@@ -269,7 +276,7 @@ def send_fonts(path):
 
 
 @user_static_bp.route('/fonts/<path:path>')
-def send_fonts(path):
+def send_custom_fonts(path):
     """
     Serve static font files
     """

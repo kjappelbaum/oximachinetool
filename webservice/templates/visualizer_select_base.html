@@ -113,7 +113,7 @@
 
 
 {% for jsfile in config["custom_js_files"]["input_data"] %}
-    <script src="../static/js/custom/{{ jsfile }}"></script>
+    <script src="{{ jsfile }}"></script>
 {% endfor %}
 
 <div style ="position: relative" data-iframe-height></div>

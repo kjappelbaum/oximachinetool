@@ -11,25 +11,12 @@ of your tool for materialscloud.org/tools .
 
 ## Usage
 
- 1. Clone the tools-barebone repository and build the `tools-barebone` docker image:
-    ```
-    git clone https://github.com/materialscloud-org/tools-barebone
-    cd tools-barebone
-    ./build-docker.sh
-    ```
- 1. Fork the [tools-example](https://github.com/materialscloud-org/tools-example) repository and rename it
-    ```
-    git clone https://github.com/materialscloud-org/tools-example
-    mv tools-example my-tool  # also rename on github!
-    cd my-tool
-    ./build-docker.sh   # build the tools-example docker image
-    ```
- 1. Running the example app:
-    * `./run-docker.sh` and open open http://localhost:8091 to check the web interface
-    * `./enter-docker.sh` to get a shell on the container
-   
- 1. Start editing the example to fit your needs
+Clone the tools-barebone repository and build the `tools-barebone` docker image:
 
-   * `config.yml`
-   * `user_templates` folder
-   * ...
+```
+git clone https://github.com/materialscloud-org/tools-barebone
+cd tools-barebone
+./build-docker.sh
+```
+
+Continue by adapting the [tools-example](https://github.com/materialscloud-org/tools-example) to your needs (see instructions there).

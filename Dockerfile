@@ -12,7 +12,7 @@
 # https://github.com/phusion/passenger-docker#using
 FROM phusion/passenger-customizable:0.9.34
 
-MAINTAINER Giovanni Pizzi <giovanni.pizzi@epfl.ch>
+MAINTAINER Materials Cloud <developers@materialscloud.org>
 
 # Set correct environment variables.
 ENV HOME /root
@@ -62,7 +62,7 @@ WORKDIR /home/app/code
 USER root
 
 # Setup apache
-# Disable default apache site, enable seekpath site; also 
+# Disable default apache site, enable tools site; also
 # enable needed modules
 ADD ./.docker_files/apache-site.conf /etc/apache2/sites-available/app.conf
 RUN a2enmod wsgi && a2enmod xsendfile && \

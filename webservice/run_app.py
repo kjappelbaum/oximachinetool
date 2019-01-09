@@ -10,10 +10,8 @@ from __future__ import unicode_literals
 from future import standard_library
 standard_library.install_aliases()
 
-import datetime
 import flask
 import os
-import yaml
 
 from web_module import (ReverseProxied, static_bp, user_static_bp, get_secret_key, get_config)
 from conf import (FlaskRedirectException, ConfigurationError, static_folder)

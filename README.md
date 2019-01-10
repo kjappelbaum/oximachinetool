@@ -32,7 +32,9 @@ mkdir materialscloud-tools
 cd materialscloud-tools
 ```
 
-3. Inside _materialscloud-tools_ create the directory structure as shown below 
+### 3. _custom-tool_ app:
+
+3.1 Inside _materialscloud-tools_ create the directory structure as shown below 
 for the _custom-tool_.
 
 ```
@@ -51,7 +53,7 @@ select_content: "additional_content.html"   # additional functionality if any el
 
 ```
 
-4. In _config.yaml_ file, we can add values for the keys used in tools-barebone. One such 
+3.2 In _config.yaml_ file, we can add values for the keys used in tools-barebone. One such 
 example file is shown below. 
 
 ```
@@ -74,36 +76,42 @@ additional_accordion_entries:
 
 ```
 
-5. Next step is to clone the _tool-basebone_ repository in _materialscloud-tools_.
+
+### 4. _tools-barebone_ app:
+
+4.1 Next step is to clone the _tool-barebone_ repository in _materialscloud-tools_.
 
 ```
 cd materialscloud-tools
 git clone https://github.com/materialscloud-org/tools-barebone
 ```
 
-6. In _tools-barebone_ update the file _run-eample.sh_ to add the path for 
-the _custom-tool_ directory as shown below.
+4.2 Install the requirements in _tools-barebone_.
 
 ```
 cd tools-barebone
+pip install -e -r requirements.txt
+```
+
+4.3 Update the file _run-example.sh_ to add the path for the _custom-tool_ directory as shown below.
+
+```
 vim run-example.sh 
 
 # inside run-example.sh file update below line 
 TOOLS_EXAMPLE_DIR="../custom-tools"
 ```
 
-7. With above changes, basic layout for _custom-tool_ is ready and it can be run locally as:
+4.4 With above changes, basic layout for _custom-tool_ is ready and it can be run locally as:
 
 ```
-cd tools-barebone
 ./run-example.sh   # launch the server at http://127.0.0.1:5000
 ```
 
 
-8. To build and launch the docker container for custom tool:
+4.5 To build and launch the docker container for custom tool:
  
 ```
-cd tools-barebone
 ./build-docker.sh
 ./run-docker.sh     # launch the server at http://127.0.0.1:8090
  ```

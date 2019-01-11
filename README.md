@@ -46,10 +46,11 @@ touch config.yaml
 
 # create user templates folder
 mkdir user_templates
+cd user_templates
 touch ack.html                              # add acknowledgement text here
 touch about.html                            # add information about this tool here
-touch how_to_site.html                      # add tool citation here
-select_content: "additional_content.html"   # additional functionality if any else empty file
+touch how_to_cite.html                      # add tool citation here
+touch additional_content.html               # additional functionality if any otherwise empty file
 
 ```
 
@@ -79,7 +80,7 @@ additional_accordion_entries:
 
 ### 4. _tools-barebone_ app:
 
-4.1 Next step is to clone the _tool-barebone_ repository in _materialscloud-tools_.
+4.1 Next step is to clone the _tools-barebone_ repository in _materialscloud-tools_.
 
 ```
 cd materialscloud-tools
@@ -90,7 +91,7 @@ git clone https://github.com/materialscloud-org/tools-barebone
 
 ```
 cd tools-barebone
-pip install -e -r requirements.txt
+pip install -r requirements.txt
 ```
 
 4.3 Update the file _run-example.sh_ to add the path for the _custom-tool_ directory as shown below.
@@ -102,14 +103,16 @@ vim run-example.sh
 TOOLS_EXAMPLE_DIR="../custom-tools"
 ```
 
-4.4 With above changes, basic layout for _custom-tool_ is ready and it can be run locally as:
+4.4 Create the file _SECRET_KEY_ in the folder _tools-barebone/webservice_ containing a random string of at least 16 characters.
+
+4.5 With above changes, basic layout for _custom-tool_ is ready and it can be run locally as:
 
 ```
 ./run-example.sh   # launch the server at http://127.0.0.1:5000
 ```
 
 
-4.5 To build and launch the docker container for custom tool:
+4.6 To build and launch the docker container for custom tool:
  
 ```
 ./build-docker.sh

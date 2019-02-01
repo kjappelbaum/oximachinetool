@@ -32,9 +32,58 @@ mkdir materialscloud-tools
 cd materialscloud-tools
 ```
 
-### 3. _custom-tool_ app:
 
-3.1 Inside _materialscloud-tools_ create the directory structure as shown below 
+### 3. _tools-barebone_ app:
+
+3.1 Next step is to clone the _tools-barebone_ repository in _materialscloud-tools_.
+
+```
+cd materialscloud-tools
+git clone https://github.com/materialscloud-org/tools-barebone
+```
+
+3.2 Install the requirements in _tools-barebone_.
+
+```
+cd tools-barebone
+pip install -r requirements.txt
+```
+
+3.3 Create the file _SECRET_KEY_ in the folder _tools-barebone/webservice_ containing a random
+string of at least 16 characters. Also change the permissions of the _SECRET_KEY_ file to 600.
+For example:
+
+```
+echo "sakjfdjfjdfhsdbfsfbsbdlbfsd,lbgsfbgbskjgkjs" > webservice/SECRET_KEY
+chmod 600 webservice/SECRET_KEY
+```
+
+3.4 To build the docker container for custom tool:
+
+```
+./build-docker.sh
+```
+
+3.5 To run _tools-barebone_ locally, update the file _run-example.sh_ to add the path for 
+the _custom-tool_ directory as shown below.
+
+```
+vim run-example.sh
+
+# inside run-example.sh file update below line
+TOOLS_EXAMPLE_DIR="../custom-tools"
+```
+
+Start to server locally with:
+
+```
+./run-example.sh   # launch the server at http://127.0.0.1:5000
+```
+
+
+### 4. _custom-tool_ app:
+
+4.1 Inside _materialscloud-tools_ create the directory structure as shown below 
 for the _custom-tool_.
 
 ```
@@ -43,6 +92,9 @@ cd custom-tool
 
 # create configuration file
 touch config.yaml
+
+# create Dockerfile file
+touch Dockerfile
 
 # create user templates folder
 mkdir user_templates
@@ -54,7 +106,7 @@ touch additional_content.html               # additional functionality if any ot
 
 ```
 
-3.2 In _config.yaml_ file, we can add values for the keys used in tools-barebone. One such 
+4.2 In _config.yaml_ file, we can add values for the keys used in tools-barebone. One such 
 example file is shown below. 
 
 ```
@@ -77,48 +129,30 @@ additional_accordion_entries:
 
 ```
 
-
-### 4. _tools-barebone_ app:
-
-4.1 Next step is to clone the _tools-barebone_ repository in _materialscloud-tools_.
+4.3 Extend the Dockerfile from _tools-barebone_ as shown below and add the setup 
+required for _custom-tool_
 
 ```
-cd materialscloud-tools
-git clone https://github.com/materialscloud-org/tools-barebone
-```
+FROM tools-barebone
 
-4.2 Install the requirements in _tools-barebone_.
+MAINTAINER developers_name <developers_email>
 
-```
-cd tools-barebone
-pip install -r requirements.txt
-```
+COPY ./config.yaml /home/app/code/webservice/static/config.yaml
+COPY ./user_templates/* /home/app/code/webservice/templates/user_templates/
+COPY ./compute/ /home/app/code/webservice/compute/
 
-4.3 Update the file _run-example.sh_ to add the path for the _custom-tool_ directory as shown below.
+# Set proper permissions
+RUN chown -R app:app $HOME
 
 ```
-vim run-example.sh 
 
-# inside run-example.sh file update below line 
-TOOLS_EXAMPLE_DIR="../custom-tools"
-```
-
-4.4 Create the file _SECRET_KEY_ in the folder _tools-barebone/webservice_ containing a random string of at least 16 characters.
-
-4.5 With above changes, basic layout for _custom-tool_ is ready and it can be run locally as:
-
-```
-./run-example.sh   # launch the server at http://127.0.0.1:5000
-```
-
-
-4.6 To build and launch the docker container for custom tool:
+4.4 To build and launch the docker container for custom tool:
  
 ```
 ./build-docker.sh
-./run-docker.sh     # launch the server at http://127.0.0.1:8090
- ```
+./run-docker.sh     # launch the server at http://127.0.0.1:8091
 
+```
 
 ## tools-example
 

@@ -5,3 +5,4 @@ services:
     ports:
      - "8090:80"
     container_name: tools-barebone-instance
+    image: tools-barebone

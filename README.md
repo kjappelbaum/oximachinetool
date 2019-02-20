@@ -1,6 +1,6 @@
 # tools-barebone
 
-Tools-barebone is a framework implemented in Python using Flask framework. 
+Tools-barebone is a framework implemented in Python using Flask Jinja2 templates. 
 It can be used as an starting point to develop new tools for 
 [Materials Cloud Tools section](https://www.materialscloud.org/work/tools/options).
 
@@ -19,14 +19,14 @@ It provides:
 
 ## How to use a tools-barebone framework
 
-The _tools-barebone_ framework provides basic template to extend it further to develop 
+The _tools-barebone_ framework provides basic templates to extend it further to develop 
 a new tool for Materials Cloud. Here we will explain how the _tools-barebone_ template (shown
 at left side) can be extended to develop a new tool called _custom-tool_ (shown at
 right side).
 
 ![tools-barebone => custom-tool](https://github.com/materialscloud-org/tools-barebone/blob/master/webservice/static/img/tool_templates.png)
 
-#### 1. create a parent directory which will contain both _tools-barebone_ and _custom-tool_ directories. 
+#### 1. Create a parent directory which will contain both _tools-barebone_ and _custom-tool_ directories.
 
 For this example we will call it as _materialscloud-tools_. 
 
@@ -45,24 +45,25 @@ cd materialscloud-tools
 git clone https://github.com/materialscloud-org/tools-barebone
 ```
 
-In _tools-barebone_ _SECRET KEY_ is used to handle data in session. _SECTRE KEY_ is a 
+In _tools-barebone_ _SECRET KEY_ is used to handle the data in session. _SECTRE KEY_ is a 
 randomly generated string used as a key to encrypt cookies before sending them to browser. Create 
 the file called _SECRET_KEY_ in the folder _tools-barebone/webservice_ containing a random
-string of at least 16 characters. Also change the permissions of the _SECRET_KEY_ file to 600.
-For example:
+string of at least 16 characters. Also change the permissions of the _SECRET_KEY_ file to 600 as shown below:
 
 ```
 echo "sakjfdjfjdfhsdbfsfbsbdlbfsd,lbgsfbgbskjgkjs" > webservice/SECRET_KEY
 chmod 600 webservice/SECRET_KEY
 ```
 
-_tools-barebone_ can be used either locally or in docker. There are shell scripts provided 
-to build the docker, to run it, to get the apache log from running docker container, etc.
+The _tools-barebone_ can be used either locally or in docker. There are shell scripts provided 
+to build the docker, to launch the docker container, to get the apache log from running docker container, etc.
 
-For example to build the docker:
+For example:
 
 ```
 cd tools-barebone
+
+# to build docker
 ./build-docker.sh
 ```
 
@@ -84,7 +85,7 @@ vim run-example.sh
 TOOLS_EXAMPLE_DIR="../custom-tools"
 ```
 
-Now you can run your app locally by running the _run-example.sh_ script. The script copies the files from
+Now you can run your app locally by running the _run-example.sh_ script. This script copies the files from
 _custom-tool_ app to the _tools-barebone_ framework in predefined places and runs the app 
 at http://localhost:5000.
 

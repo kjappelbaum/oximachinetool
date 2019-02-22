@@ -24,7 +24,10 @@ a new tool for Materials Cloud. Here we will explain how the _tools-barebone_ te
 at left side) can be extended to develop a new tool called _custom-tool_ (shown at
 right side).
 
-![tools-barebone => custom-tool](https://github.com/materialscloud-org/tools-barebone/blob/master/webservice/static/img/tool_templates.png)
+Tools barebone template    |  New tool template
+:-------------------------:|:-------------------------:
+![](https://github.com/materialscloud-org/tools-barebone/blob/master/webservice/static/img/tools-barebone.png)  |  ![](https://github.com/materialscloud-org/tools-barebone/blob/master/webservice/static/img/tools-example.png)
+
 
 #### 1. Create a parent directory which will contain both _tools-barebone_ and _custom-tool_ directories.
 

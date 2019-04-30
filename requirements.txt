@@ -1,5 +1,5 @@
 Flask==1.0.2
 numpy==1.14.5
 future==0.16.0
-pyyaml==3.13
-Jinja2==2.10
+pyyaml==5.1
+Jinja2==2.10.1

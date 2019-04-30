@@ -38,7 +38,7 @@ def parse_config(config):
 
     templates = config.get('templates', {})
 
-    known_templates = ['how_to_cite', 'about', 'select_content']
+    known_templates = ['how_to_cite', 'about', 'select_content', 'upload_structure_additional_content']
 
     for template_name in known_templates:
         # Note that this still allows to set it to None explicitly to skip this section

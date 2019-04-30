@@ -80,7 +80,7 @@ def set_config_defaults(config):
 def get_config():
     try:
         with open(config_file_path) as config_file:
-            config = yaml.load(config_file)
+            config = yaml.safe_load(config_file)
     except IOError as exc:
         if exc.errno == 2: # No such file or directory
             config = {}

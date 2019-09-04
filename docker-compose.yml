@@ -1,8 +1,8 @@
 version: '3'
 services:
-  tools-barebone:
+  tools-barebone-shiftml:
     build: .
     ports:
      - "8090:80"
-    container_name: tools-barebone-instance
-    image: tools-barebone
+    container_name: tools-barebone-shiftml-instance
+    image: tools-barebone-shiftml

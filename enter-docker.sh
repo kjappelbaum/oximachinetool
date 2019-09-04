@@ -1,2 +1,2 @@
 #!/bin/bash
-docker exec -it tools-barebone-instance bash
+docker exec -it tools-barebone-shiftml-instance bash

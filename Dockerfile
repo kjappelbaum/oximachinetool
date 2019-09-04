@@ -39,10 +39,10 @@ RUN /pd_build/utilities.sh && \
 ## NOTE: Here and below we install everything with python3
 RUN apt-get update \
     && apt-get -y install \
-    python3-pip \
+    python-pip \
     apache2 \
     libapache2-mod-xsendfile \
-    libapache2-mod-wsgi-py3 \
+    libapache2-mod-wsgi \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean all
 
@@ -50,7 +50,7 @@ RUN apt-get update \
 ENV HOME /home/app
 
 # Run this as sudo to replace the version of pip
-RUN pip3 install -U 'pip>=10' setuptools wheel
+RUN pip2 install -U 'pip>=10' setuptools wheel
 
 # install rest of the packages as normal user (app, provided by passenger)
 USER app
@@ -83,7 +83,7 @@ ADD ./.docker_files/create_secret_key.sh /etc/my_init.d/create_secret_key.sh
 RUN mkdir -p $HOME/code/
 WORKDIR $HOME/code/
 COPY ./requirements.txt requirements.txt
-RUN pip3 install -r $HOME/code/requirements.txt
+RUN pip2 install -r $HOME/code/requirements.txt
 
 # Actually, don't download, but get the code directly from this repo
 COPY ./webservice/ webservice

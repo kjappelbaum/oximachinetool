@@ -38,7 +38,7 @@ def parse_config(config):
 
     templates = config.get('templates', {})
 
-    known_templates = ['how_to_cite', 'about', 'select_content']
+    known_templates = ['how_to_cite', 'about', 'select_content', 'upload_structure_additional_content']
 
     for template_name in known_templates:
         # Note that this still allows to set it to None explicitly to skip this section
@@ -80,7 +80,7 @@ def set_config_defaults(config):
 def get_config():
     try:
         with open(config_file_path) as config_file:
-            config = yaml.load(config_file)
+            config = yaml.safe_load(config_file)
     except IOError as exc:
         if exc.errno == 2: # No such file or directory
             config = {}

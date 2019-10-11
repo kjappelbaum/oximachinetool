@@ -65,11 +65,9 @@ def input_data():
 app.register_blueprint(static_bp)
 app.register_blueprint(user_static_bp)
 
-try:
-    from compute import blueprint
-    app.register_blueprint(blueprint)
-except ImportError:
-    logger.warning("NOTE: could not import the 'compute' module with custom functions")
+
+from compute import blueprint
+app.register_blueprint(blueprint)
 
 if __name__ == "__main__":
     # Don't use x-sendfile when testing it, because this is only good

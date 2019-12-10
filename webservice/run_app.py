@@ -210,7 +210,7 @@ def process_structure_core(
 
     # Now, featurize
     try:
-        feature_array, feature_value_dict = _featurize_single(s)
+        feature_array, feature_value_dict, metal_indices = _featurize_single(s)
 
     except Exception as e:
         logme(
@@ -230,14 +230,17 @@ def process_structure_core(
             flask_request,
             call_source,
             reason="Featurize-OK",
-            extra={"feature_val_dict": feature_value_dict, 'feature_array_shape': feature_array.shape},
+            extra={
+                "feature_val_dict": feature_value_dict,
+                "feature_array_shape": feature_array.shape,
+            },
         )
 
     # Now, predict
 
     try:
         metal_sites = list(feature_value_dict.keys())
-        predictions_output = predictions(feature_array, metal_sites)
+        predictions_output, prediction_labels = predictions(feature_array, metal_sites)
     except Exception as e:
         logme(
             logger,
@@ -246,7 +249,7 @@ def process_structure_core(
             flask_request,
             call_source,
             reason="predictionexception",
-            extra={"exception": str(e), 'shape_array': feature_array.shape},
+            extra={"exception": str(e), "shape_array": feature_array.shape},
         )
 
     try:
@@ -358,7 +361,9 @@ def process_structure_core(
     return dict(
         # jsondata=json.dumps(out_json_data),
         raw_code=raw_code,
-        predictions_output=predictions_output, 
+        prediction_labels=prediction_labels,
+        metal_indices=metal_indices,
+        predictions_output=predictions_output,
         inputstructure_cell_vectors=inputstructure_cell_vectors,
         inputstructure_atoms_scaled=inputstructure_atoms_scaled,
         inputstructure_atoms_cartesian=inputstructure_atoms_cartesian,

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MOFOxPred</title>
+    <title>oxiMACHINE</title>
     <link rel="stylesheet" type="text/css" href="../static/css/jquery-ui.1.12.1.min.css" />
 
     <link rel="stylesheet" type="text/css" href="../static/css/visualizer.min.css" />
@@ -89,7 +89,7 @@
 
         <div id="maintitle">
             {% block seekpathtitle %}
-            <h1><span style="font-weight: bold;">MOFOxPred: Predicting oxidation states for MOFs</h1>
+            <h1><span style="font-weight: bold;">oxiMACHINE: Predicting oxidation states for MOFs</h1>
             {% endblock seekpathtitle %}
         </div>
 
@@ -245,7 +245,7 @@
             </div>
 
             <div class="jsmol-options", style="margin-top: 20px">
-
+        
                 <div class="option-section">
                     <h4 class="inline-header">Camera:</h4>
                     <button id="centerX" onclick="centerXaxis(jmolApplet)">x</button>
@@ -270,19 +270,11 @@
                                 <a href="#" data-toggle="tooltip" title="Show bonds"><sup>[?]</sup></a>
                             </label>
                         </div>
-                        <div class="checkbox-option" id="labels">
+                        <div class="checkbox-option" id="oxlabels">
                             <label>
                                 <input id="labels-input" style='margin-right:4px' type="checkbox"
-                                    onchange="showLabels(jmolApplet)">atom labels
-                                <a href="#" data-toggle="tooltip" title="Display element symbols"><sup>[?]</sup></a>
-                            </label>
-                        </div>
-                        <div class="checkbox-option" id="packed">
-                            <label>
-                                <input id="packed-input" style='margin-right:4px' type="checkbox"
-                                    onchange="showPacked(jmolApplet)">packed cell
-                                <a href="#" data-toggle="tooltip"
-                                    title="Show atoms on the edge of the cell or supercell"><sup>[?]</sup></a>
+                                    onchange="labelOxStates(jmolApplet, metal_indices, prediction_labels)">oxidation state labels
+                                <a href="#" data-toggle="tooltip" title="Display oxidation state assignments"><sup>[?]</sup></a>
                             </label>
                         </div>
                     </div>
@@ -364,6 +356,8 @@
         // Activate clipboard buttons
         var clipboard = new Clipboard('.clipboardbtn');
         structureviewer= jsmolCrystal({{ xsfstructure|tojson|safe }}, "structure-content","jmolApplet", [1,1,1]);
+        var metal_indices = {{ metal_indices|tojson|safe }};
+        var prediction_labels = {{ prediction_labels|tojson|safe }};
 
         $(document).ready(function () {
             var divjsmol = document.getElementById('crystal');

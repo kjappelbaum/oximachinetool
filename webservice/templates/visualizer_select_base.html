@@ -22,7 +22,7 @@
     <script src="../static/js/jquery-ui.1.12.1.min.js"></script>
     <link rel="stylesheet" type="text/css" href="../static/css/jquery-ui.1.12.1.min.css" />
 
-    <title>MOFOxPred</title>
+    <title>oxiMACHINE</title>
     <script>
         $(function () {
             $("#accordion").accordion({
@@ -52,7 +52,7 @@
     <div id='container'>
         <div id='maintitle'>
             {% block mofoxpredtitle %}
-            <h1 style="text-align: center;"><span style="font-weight: bold;">MOFOxPred</span>: A tool to predict
+            <h1 style="text-align: center;"><span style="font-weight: bold;">oxiMACHINE</span>: A tool to predict
                 oxidation states of MOFs</h1>
             {% endblock %}
         </div>
@@ -74,21 +74,20 @@
 
         {% block aboutblock %}
         <div id="accordion">
-            <h2>What MOFOxPred does</h2>
+            <h2>What oxiMACHINE does</h2>
             <div>
                 <p>This tool takes  <strong>a crystal structure</strong> and predicts the oxidation state for each metal site. Note that 
                     <ul>
-                        <li>We automatically attempt to calculate the primitive structure</li>
+                        <li>We automatically attempt to calculate the primitive structure and will show the primitive structure in the visualizer</li>
                         <li>Limit calculations in this web app to structures with less than 500 atoms</li>
-                        <li>We attempt to detect atomic overlaps</li>
+                        <li>We attempt to detect atomic overlaps and will return an error if we find overlaps</li>
                         <li>We trained the model on oxidation states of MOFs deposited in the MOF subset of the Cambridge Structure Database</li>
                     </ul>
                 </p>
                 <p>
                 In addition to the oxidation state predictions, we also output
                 <ul>
-                    <li>The probability of the assignment</li>
-                    <li>The predictions made by the base estimators</li>
+                    <li>The confidence in the assignment </li>
                     <li>The feature values for each metal site</li>
                 </ul>
                 </p>

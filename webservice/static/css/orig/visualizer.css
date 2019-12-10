@@ -157,14 +157,13 @@ canvas {
 
 #structure {
   background-color: #fff;
-  width: 100%;
+  width: 92%;
   height: 500px;
   border: 1px solid #bbb;
   margin: 20px;
   padding: 20px;
   position: relative;
   top: 0px;
-  left: 0%;
   overflow: hidden;
 }
 
@@ -469,7 +468,7 @@ canvas {
 .jsmol-options {
   top: 20;
   text-align: left;
-  line-height: 2.5em; 
+  line-height: 2.5em;
 }
 
 .jsmol-options .option-section {

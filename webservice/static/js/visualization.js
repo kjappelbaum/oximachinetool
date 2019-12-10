@@ -63,6 +63,10 @@ function jsmolCrystal(data, parentHtmlId, appletName, supercellOptions) {
     //remove JSmol logo
     loadingScript+= '; set frank off';
 
+    //setup labels
+    //loadingScript+= '; set labeloffset 2 2';
+    loadingScript+= '; set fontSize 16';
+
     Jmol.script(jsmolStructureviewer, loadingScript);
 
     //parentDiv.innerHTML = Jmol.getAppletHtml(jsmolStructureviewer);
@@ -114,6 +118,26 @@ function showLabels(viewer) {
         var jmolscript = "label %a";
     } else {
         var jmolscript = "label off";
+    }
+    Jmol.script(eval(viewer), jmolscript);
+    return jmolscript;
+};
+
+function labelOxStates(viewer, atom_indices, labeltext) { 
+    var jmolscript = "";
+    if ($("#labels-input").is(":checked")){
+        for (const [index, label] of labeltext.entries()) {
+            var num = atom_indices[index] + 1;
+            jmolscript+= 'select atomno=' + num + '; ';
+            jmolscript+= 'label ' + '"' + label + '"' + '; ';
+        }
+    } else {
+        for (const [index, label] of labeltext.entries()) {
+            var num = atom_indices[index] + 1;
+            jmolscript+= 'select atomno=' + num + '; ';
+            jmolscript+= 'label off; ';
+            // jmolscript+= 'color label black';
+        }
     }
     Jmol.script(eval(viewer), jmolscript);
     return jmolscript;

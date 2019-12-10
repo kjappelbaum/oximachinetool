@@ -24,6 +24,7 @@ def _featurize_single(structure, feature_dir: str = ""):
     """
     gf = GetFeatures(structure, feature_dir)
     features = gf.return_features()
+    metal_indices = gf.metal_indices
     X = []
     rl = FeatureCollector.create_dict_for_feature_table_from_dict(features)
     for f in rl:
@@ -34,7 +35,7 @@ def _featurize_single(structure, feature_dir: str = ""):
     feature_value_dict = {}
     for i, site in enumerate(X):
         feature_value_dict[metals[i] + "_" + str(i)] = dict(zip(names, site))
-    return X, feature_value_dict
+    return X, feature_value_dict, metal_indices
 
 
 class OverlapError(Exception):

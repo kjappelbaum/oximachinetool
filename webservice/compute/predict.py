@@ -57,7 +57,11 @@ def predictions(X, site_names):
                 site_names[i],
                 int2roman(pred),
                 max_probas[i],
-                [int2roman(MODEL.classes[i]) for i in base_predictions[i]],
+                ", ".join([int2roman(MODEL.classes[i]) for i in base_predictions[i]]),
             ],
         )
-    return prediction_output
+
+    prediction_labels = []
+    for i, pred in enumerate(prediction):
+        prediction_labels.append("{} ({})".format(site_names[i], int2roman(pred)))
+    return prediction_output, prediction_labels

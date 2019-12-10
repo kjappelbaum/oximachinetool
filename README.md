@@ -66,7 +66,7 @@ function gen_pwd_char() {
 THE_SECRET_KEY=`gen_pwd_char; gen_pwd_char; gen_pwd_char; gen_pwd_char; gen_pwd_char; gen_pwd_char; gen_pwd_char; gen_pwd_char; gen_pwd_char; gen_pwd_char; gen_pwd_char; gen_pwd_char; gen_pwd_char; gen_pwd_char; gen_pwd_char; gen_pwd_char;`
 
 echo "$THE_SECRET_KEY" > webservice/SECRET_KEY
-chmod 600 webservice/SECRET_KEY
+chmo  
 ```
 
 The `tools-barebone` can be used either locally or in docker. We provide shell scripts 

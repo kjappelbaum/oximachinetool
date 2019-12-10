@@ -1,2 +1,2 @@
 #!/bin/bash
-docker exec -it tools-barebone-instance cat /var/log/apache2/error.log
+docker exec -it custom-tools-instance cat /var/log/apache2/error.log

@@ -1,0 +1,6 @@
+git+https://github.com/kjappelbaum/cif_check.git
+git+https://github.com/kjappelbaum/mof_oxidation_states.git
+git+https://github.com/kjappelbaum/learn_mof_ox_state.git
+pymatgen
+ase
+future

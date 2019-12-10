@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,7 +8,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
     <!-- Bootstrap -->
-    <link href="static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -15,107 +16,155 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <link rel="stylesheet" type="text/css" href="static/css/visualizer_base.min.css"/>
-    <link rel="stylesheet" type="text/css" href="static/css/visualizer_input.min.css"/>
-    <script src="static/js/jquery-3.1.0.min.js"></script>
-    <script src="static/js/jquery-ui.1.12.1.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="static/css/jquery-ui.1.12.1.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../static/css/visualizer_base.min.css" />
+    <link rel="stylesheet" type="text/css" href="../static/css/visualizer_input.min.css" />
+    <script src="../static/js/jquery-3.1.0.min.js"></script>
+    <script src="../static/js/jquery-ui.1.12.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../static/css/jquery-ui.1.12.1.min.css" />
 
-    <title>{{ config["window_title"] }}</title>
-
+    <title>MOFOxPred</title>
     <script>
-        $( function() {
-            $( "#accordion" ).accordion({
+        $(function () {
+            $("#accordion").accordion({
                 collapsible: true,
                 heightStyle: "content", // Avoid that all have the same height
-                active: false  // Start all closed
+                active: false // Start all closed
             });
 
-            $( "#fileformatSelect" ).change(function() {
-                if ( $(this).val() == "xyz-ase" )
-                    $( "#xyzFormatFields" ).show();
+            $("#fileformatSelect").change(function () {
+                if ($(this).val() == "xyz-ase")
+                    $("#xyzFormatFields").show();
                 else
-                    $( "#xyzFormatFields" ).hide();
+                    $("#xyzFormatFields").hide();
             });
         });
     </script>
 
-    {% for cfile in config["custom_css_files"]["input_data"] %}
-        <link rel="stylesheet" type="text/css" href="static/css/custom/{{ cfile }}"/>
-    {% endfor %}
-
     {% block customheads %}
     {% endblock %}
 
-    <script src="static/js/iframeResizer.contentWindow.min.js"></script>
+    <script src="../static/js/iframeResizer.contentWindow.min.js"></script>
 </head>
 
 </head>
 
 <body>
-<div id='container'>
-    <div id='maintitle'>
-        {% block pagetitle %}
-            <h1 style="text-align: center;">{{ config["page_title"] }}</h1>
-        {% endblock %}
-    </div>
-
-    {% block flashedmessages %}
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div class="alert alert-danger">
-                    Warning:
-                    <ul class="flashes">
-                        {% for message in messages %}
-                            <li>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            {% endif %}
-        {% endwith %}
-    {% endblock %}
-
-    <div id="about">
-        <div id="accordion">
-            <h2>{{ config["about_section_title"] }}</h2>
-            <div>
-            {% if include_pages['about'] is not none %}
-                {% include include_pages['about'] %}
-            {% else %}
-                <div class="alert alert-danger">
-                <p>About section is a compulsory section and you can not set it to null in configuration file.</p>
-            </div>
-            {% endif %}
-            </div>
-            {% for additional_entry in include_pages["additional_accordion_entries"] %}
-            <h2>{{ additional_entry.header }}</h2>
-                <div>
-                {% include additional_entry.template_page %}
-                </div>
-            {% endfor %}
+    <div id='container'>
+        <div id='maintitle'>
+            {% block mofoxpredtitle %}
+            <h1 style="text-align: center;"><span style="font-weight: bold;">MOFOxPred</span>: A tool to predict
+                oxidation states of MOFs</h1>
+            {% endblock %}
         </div>
-    </div>
 
-    {% if config.get("use_upload_structure_block", False) %} 
-      {% include "visualizer_select_structure.html" %}
-    {% endif %}
-    {% include include_pages['select_content'] %}
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-danger">
+            Warning:
+            <ul class=flashes>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <!--<h2><a href="#tool">Skip the introduction and jump directly to the tool</a></h2>-->
+
+        {% block aboutblock %}
+        <div id="accordion">
+            <h2>What MOFOxPred does</h2>
+            <div>
+                <p>This tool takes  <strong>a crystal structure</strong> and predicts the oxidation state for each metal site. Note that 
+                    <ul>
+                        <li>We automatically attempt to calculate the primitive structure</li>
+                        <li>Limit calculations in this web app to structures with less than 500 atoms</li>
+                        <li>We attempt to detect atomic overlaps</li>
+                        <li>We trained the model on oxidation states of MOFs deposited in the MOF subset of the Cambridge Structure Database</li>
+                    </ul>
+                </p>
+                <p>
+                In addition to the oxidation state predictions, we also output
+                <ul>
+                    <li>The probability of the assignment</li>
+                    <li>The predictions made by the base estimators</li>
+                    <li>The feature values for each metal site</li>
+                </ul>
+                </p>
+            </div>
 
 
-    {% if include_pages['how_to_cite'] is not none %}
+        </div>
+
+        {% endblock %}
+
+        <h2><a name="tool"></a>Upload your structure</h2>
+        <div style="margin-left: 20px; margin-right: 20px">
+            <form action="../process_structure/" enctype="multipart/form-data" method="post">
+                <div class='alert alert-info'>
+                    <div class='row'>
+                        <div class='col-xs-12 col-sm-6'>
+                            <label for="file">Upload a crystal structure:</label>
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                            <input type="file" name="structurefile" size="100">
+                        </div>
+                    </div>
+                    <div class='row'>
+                        <div class='col-sm-6'>
+                            <label for="fileformat">Select here the file format:</label>
+                        </div>
+                        <div class='col-sm-6'>
+                            <select name="fileformat" id="fileformatSelect">
+                                <option value="cif">CIF</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='row' style="text-align:center">
+                        <p class='small'> <br>By continuing, you agree with the <a href="../termsofuse/"
+                                target="_blank">terms of use</a> of this service.</p>
+                        <input type="submit" value="Calculate my structure" class="btn btn-default">
+                    </div>
+
+            </form>
+        </div>
+
+        <h2>Otherwise, pick an example</h2>
+        <form action="../process_example_structure/" method="post">
+            <div style="margin-left: 20px; margin-right: 20px;">
+                <div class='alert alert-info'>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6">
+                            <label for="examplestructure">Select here an example structure:</label>
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                            <select name="examplestructure">
+                                <option value='aP2_inv'>aP2 [with inversion]</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class='row' style="text-align: center">
+                        <input type="submit" value="Calculate this example" class="btn btn-default">
+                    </div>
+                </div>
+            </div>
+        </form>
+
         <div id='citations'>
             <h2>How to cite</h2>
-            {% include include_pages['how_to_cite'] %}
+            <p>If you use this tool, please cite the following work:
+                <ul>
+                    <li>Citation</li>
+                </ul>
+            </p>
+            <p>Note: if you want to use the code on your computer, you can download the
+                python library from <a href="http://github.com/" target="_blank">ghithub tepo</a>.
         </div>
-    {% endif %}
 
-</div>
+    </div>
 
-
-{% for jsfile in config["custom_js_files"]["input_data"] %}
-    <script src="{{ jsfile }}"></script>
-{% endfor %}
-
-<div style ="position: relative" data-iframe-height></div>
+    <div style="position: relative" data-iframe-height></div>
 </body>
+
 </html>

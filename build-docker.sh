@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build -t tools-barebone .
+docker build --no-cache -t tools-barebone .

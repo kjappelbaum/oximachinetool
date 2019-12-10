@@ -24,6 +24,10 @@ Flask app that uses `jsmol` to visualize the structure (and predictions).
 
 ## ToDo
 
+- [ ] Add more examples
+
+- [ ] Add the colorcoding for the uncertainty
+
 - [ ] Precompute feature vectors for example
 
 - [ ] Add some explainability plots

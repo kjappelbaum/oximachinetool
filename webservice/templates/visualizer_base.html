@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>oxiMACHINE</title>
     <link rel="stylesheet" type="text/css" href="../static/css/jquery-ui.1.12.1.min.css" />
+    <link rel="stylesheet" href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'>
+    <script src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js'></script>
 
     <link rel="stylesheet" type="text/css" href="../static/css/visualizer.min.css" />
     <link rel="stylesheet" type="text/css" href="../static/css/visualizer_base.min.css" />
@@ -310,11 +312,12 @@
         <div id="accordion">
                 <h3>Predictions</h3>
                     <div style="overflow-x:auto;">
-                        <table cellspacing="10" align='left'>
+                        <table class="table table-striped">
                             <thead>
                                 <tr>
                                 <th>Metal Site</th>
                                 <th>Prediction</th>
+                                <th>Confidence Rating</th>
                                 <th>Predicted Probability</th>
                                 <th>Predictions of Base Estimators</th>
                                 </tr>
@@ -324,6 +327,12 @@
                                 <tr>
                                     <td> {{ prediction[0] }} </td>
                                     <td> {{ prediction[1] }} </td>
+                                    <td>   
+                                            <div class="progress">
+                                                <div class="{{ prediction[5] }}" role="progressbar" style="width: {{ prediction[4] }}%" aria-valuenow={{ prediction[4] }} aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                    
+                                    </td>
                                     <td style="text-align: left"><code>{{ "%.3f" % prediction[2]|float }}</code></td>
                                     <td> {{ prediction[3] }} </td>
                                 </tr>
@@ -336,7 +345,7 @@
             <div>
                 {% for k, v in feature_values.items() %}
                 <div id="tablekpoints">
-                    <h4> {{ k }}</h4>
+                    <h2> {{ k }}</h2>
                     <table>
                     {% for name, value in v.items() %}
                     <tr>

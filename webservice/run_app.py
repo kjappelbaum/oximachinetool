@@ -469,8 +469,6 @@ def process_example_structure():
     """
     if flask.request.method == "POST":
         examplestructure = flask.request.form.get("examplestructure", "<none>")
-        flask.flash("Example {}".format(examplestructure))
-
         structurefilepath = os.path.join(
             THIS_DIR, "compute", "examples", examplemapping[examplestructure]
         )

@@ -13,6 +13,8 @@ standard_library.install_aliases()
 
 import flask
 import os
+
+THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 import copy
 import io
 
@@ -43,6 +45,12 @@ from conf import (
     static_folder,
     view_folder,
 )
+
+examplemapping = {
+    "cui_ii_btc": "KAJZIH_freeONLY.cif",
+    "sno": "SnO_mp-2097_computed.cif",
+    "sno2": "SnO2_mp-856_computed.cif",
+}
 
 # This (undocumented) flag changes the style of the webpage (CSS, etc.)
 # and decides whether some of the headers (e.g. the App title) and the
@@ -461,9 +469,43 @@ def process_example_structure():
     """
     if flask.request.method == "POST":
         examplestructure = flask.request.form.get("examplestructure", "<none>")
-        fileformat = "vasp-ase"
+        flask.flash("Example {}".format(examplestructure))
 
-        flask.flash("Example")
+        structurefilepath = os.path.join(
+            THIS_DIR, "compute", "examples", examplemapping[examplestructure]
+        )
+        fileformat = 'cif'
+        with open(structurefilepath, "r") as structurefile:
+            filecontent = structurefile.read()
+        
+        try:
+            data_for_template = process_structure_core(
+                filecontent=filecontent,
+                fileformat=fileformat,
+                call_source="process_structure",
+                logger=logger,
+                flask_request=flask.request,
+            )
+            return flask.render_template(
+                get_visualizer_template(flask.request), **data_for_template
+            )
+        except FlaskRedirectException as e:
+            flask.flash(str(e))
+            return flask.redirect(flask.url_for("input_structure"))
+        except OverlapError:
+            flask.flash("Maybe you have overlapping atoms?")
+            return flask.redirect(flask.url_for("input_structure"))
+        except LargeStructureError:
+            flask.flash(
+                "You seem to have too many atoms in your structure to run on the web"
+            )
+            return flask.redirect(flask.url_for("input_structure"))
+        except Exception as e:
+            flask.flash("Unable to process the structure, sorry... {}".format(e))
+            return flask.redirect(flask.url_for("input_structure"))
+
+    else:  # GET Request
+        return flask.redirect(flask.url_for("input_structure"))
 
 
 @app.route("/static/js/<path:path>")

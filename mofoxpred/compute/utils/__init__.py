@@ -15,8 +15,7 @@ def string_to_pymatgen(s):
         if len(s) > MAX_NUMBER_OF_ATOMS:
             raise LargeStructureError("Structure too large")
     except Exception as e:
-        raise ValueError(
-            "Pymatgen could not parse ciffile because of {}".format(e))
+        raise ValueError("Pymatgen could not parse ciffile because of {}".format(e))
     return s
 
 
@@ -41,7 +40,7 @@ def tuple_from_pymatgen(pmgstructure):
     """
     Given a pymatgen structure, return a structure tuple as expected from seekpath
     :param pmgstructure: a pymatgen Structure object
-
+    
     :return: a structure tuple (cell, positions, numbers) as accepted
         by seekpath.
     """
@@ -72,3 +71,4 @@ class LargeStructureError(Exception):
     """
 
     pass
+

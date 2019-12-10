@@ -1,3 +1,8 @@
+from joblib import load
+from mine_mof_oxstate.featurize import GetFeatures, FeatureCollector
+from pymatgen import Structure
+from numeral import int2roman
+import numpy as np
 import os
 from glob import glob
 from pathlib import Path
@@ -5,28 +10,32 @@ from collections import defaultdict
 from functools import partial
 import concurrent.futures
 import warnings
+from .predict import FEATURES
 
 warnings.simplefilter("ignore")
-import numpy as np
-from numeral import int2roman
+alph = 'abcdefghijlmnopqrstuvwxyz'
 
-from pymatgen import Structure
-from mine_mof_oxstate.featurize import GetFeatures, FeatureCollector
-from joblib import load
-
-
-def _featurize_single(structure: tuple, feature_dir: str):
+def _featurize_single(structure, feature_dir: str = ""):
     """[summary]
-    
+
     Arguments:
-        structure {tuple} -- (name of structure, string with structure)
+        structure {pymatgen Structe} -- (name of structure, string with structure)
         feature_dir {str} -- output directory for features
     """
-    name = structure[0]
-    gf = GetFeatures.from_string(structure[1], feature_dir)
-    gf.path = name
-    gf.outname = os.path.join(gf.outpath, "".join([name, ".pkl"]))
-    gf.run_featurization()
+    gf = GetFeatures(structure, feature_dir)
+    features = gf.return_features()
+    metal_indices = gf.metal_indices
+    X = []
+    rl = FeatureCollector.create_dict_for_feature_table_from_dict(features)
+    for f in rl:
+        X.append(f["feature"])
+    X = np.vstack(X)
+    X, names = FeatureCollector._select_features_return_names(FEATURES, X)
+    metals = [site.species_string for site in gf.metal_sites]
+    feature_value_dict = {}
+    for i, site in enumerate(X):
+        feature_value_dict[metals[i] + ' ' + alph[i]] = dict(zip(names, site))
+    return X, feature_value_dict, metal_indices
 
 
 class OverlapError(Exception):

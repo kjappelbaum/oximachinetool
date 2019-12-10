@@ -13,7 +13,7 @@ import warnings
 from .predict import FEATURES
 
 warnings.simplefilter("ignore")
-
+alph = 'abcdefghijlmnopqrstuvwxyzABZDEFGHIJKLMNOPQRSTUVQXYZ0123456789'
 
 def _featurize_single(structure, feature_dir: str = ""):
     """[summary]
@@ -34,7 +34,7 @@ def _featurize_single(structure, feature_dir: str = ""):
     metals = [site.species_string for site in gf.metal_sites]
     feature_value_dict = {}
     for i, site in enumerate(X):
-        feature_value_dict[metals[i] + "_" + str(i)] = dict(zip(names, site))
+        feature_value_dict[metals[i] + ' ' + alph[i]] = dict(zip(names, site))
     return X, feature_value_dict, metal_indices
 
 

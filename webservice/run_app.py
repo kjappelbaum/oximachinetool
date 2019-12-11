@@ -253,6 +253,7 @@ def process_structure_core(
         metal_sites = list(feature_value_dict.keys())
         predictions_output, prediction_labels = predictions(feature_array, metal_sites)
     except Exception as e:
+        print(e)
         logme(
             logger,
             filecontent,

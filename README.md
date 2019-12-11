@@ -1,6 +1,6 @@
 # oxiMACHINE tools entry
 
-<img src='oximachine_logo.png' style='width:200px' text-align=center> </img>
+<img src='oximachine_logo.png' width=200px, text-align=center> </img>
 
 
 > ⚠️ **Warning**: Alpha version

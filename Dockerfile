@@ -32,7 +32,7 @@ RUN /pd_build/utilities.sh
 # Install Apache 
 # (nginx doesn't have the X-Sendfile support that we want to use)
 ## NOTE: Here and below we install everything with python3
-RUN add-apt-repository ppa:jonathonf/python-3.6 \
+RUN add-apt-repository ppa:deadsnakes/ppa \
     && apt-get update \
     && apt-get -y install \
     python3.6 \

@@ -2,7 +2,6 @@ FROM tools-barebone
 
 MAINTAINER Kevin Maik Jablonka <kevin.jablonka@epfl.ch>
 
-# Set proper permissions
 RUN python3.6 -m pip install --upgrade numpy
 COPY ./compute/requirements.txt /home/app/code/webservice
 RUN python3.6 -m pip  install -r /home/app/code/webservice/requirements.txt

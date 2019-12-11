@@ -1,5 +1,8 @@
 # oxiMACHINE tools entry
 
+![oxiMACHINE](oximachine_logo.png)
+
+
 > ⚠️ **Warning**: Alpha version
 
 Flask app that uses `jsmol` to visualize the structure (and predictions).

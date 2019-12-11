@@ -5,7 +5,7 @@
 
 > ⚠️ **Warning**: Alpha version
 
-Flask app that uses `jsmol` to visualize the structure (and predictions).
+Flask app that uses `jsmol` to visualize the structure (and predictions). The code builts heavily ontop of the implementation of the [seekpath web app](https://github.com/giovannipizzi/seekpath).
 
 ## Directly run flask app
 

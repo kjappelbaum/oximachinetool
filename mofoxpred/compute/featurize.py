@@ -13,7 +13,7 @@ import warnings
 from .predict import FEATURES
 
 warnings.simplefilter("ignore")
-alph = 'abcdefghijlmnopqrstuvwxyz'
+alph = 'abcdefghijlmnopqrstuvwxyzABZDEFGHIJKLMNOPQRSTUVQXYZ0123456789'
 
 def _featurize_single(structure, feature_dir: str = ""):
     """[summary]

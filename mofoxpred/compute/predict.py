@@ -52,12 +52,21 @@ def predictions(X, site_names):
     print(prediction, site_names, max_probas, base_predictions)
     prediction_output = []
     for i, pred in enumerate(prediction):
+        agreement = [MODEL.classes[j] for j in base_predictions[i]].count(pred) / len(base_predictions[i]) * 100
+        if agreement > 80: 
+            bartype = 'progress-bar bg-success'
+        elif agreement < 60:
+             bartype = 'progress-bar bg-danger'
+        else:
+            bartype = 'progress-bar bg-warning'
         prediction_output.append(
             [
                 site_names[i],
                 int2roman(pred),
                 max_probas[i],
-                ", ".join([int2roman(MODEL.classes[i]) for i in base_predictions[i]]),
+                ", ".join([int2roman(MODEL.classes[j]) for j in base_predictions[i]]),
+                agreement, 
+                bartype
             ],
         )
 

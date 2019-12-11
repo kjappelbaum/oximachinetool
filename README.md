@@ -29,7 +29,7 @@ Flask app that uses `jsmol` to visualize the structure (and predictions). The co
 
 - [ ] Add more examples
 
-- [ ] Add the colorcoding for the uncertainty
+- [X] Add the colorcoding for the uncertainty
 
 - [ ] Precompute feature vectors for example
 
@@ -38,3 +38,5 @@ Flask app that uses `jsmol` to visualize the structure (and predictions). The co
 - [ ] Couple details with structure
 
 - [ ] Add plot of feature distribution in trainin set (e.g. violin plot) and the metal site as dots
+
+- [ ] Potentially add a Explore section for the EDA

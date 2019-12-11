@@ -32,11 +32,8 @@ RUN /pd_build/utilities.sh
 # Install Apache 
 # (nginx doesn't have the X-Sendfile support that we want to use)
 ## NOTE: Here and below we install everything with python3
-RUN add-apt-repository ppa:deadsnakes/ppa \
-    && apt-get update \
+RUN apt-get update \
     && apt-get -y install \
-    python3.6 \
-    python3.6-dev \
     python3-pip \
     apache2 \
     libapache2-mod-xsendfile \
@@ -48,7 +45,7 @@ RUN add-apt-repository ppa:deadsnakes/ppa \
 ENV HOME /home/app
 
 # Run this as sudo to replace the version of pip
-RUN python3.6 -m pip install -U 'pip>=10' setuptools wheel
+RUN pip3 install -U 'pip>=10' setuptools wheel
 
 # install rest of the packages as normal user (app, provided by passenger)
 USER app
@@ -81,7 +78,7 @@ ADD ./.docker_files/create_secret_key.sh /etc/my_init.d/create_secret_key.sh
 RUN mkdir -p $HOME/code/
 WORKDIR $HOME/code/
 COPY ./requirements.txt requirements.txt
-RUN python3.6 -m pip install -r $HOME/code/requirements.txt
+RUN pip3 install -r $HOME/code/requirements.txt
 
 # Actually, don't download, but get the code directly from this repo
 COPY ./webservice/ webservice

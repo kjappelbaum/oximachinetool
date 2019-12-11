@@ -50,6 +50,8 @@ examplemapping = {
     "cui_ii_btc": "KAJZIH_freeONLY.cif",
     "sno": "SnO_mp-2097_computed.cif",
     "sno2": "SnO2_mp-856_computed.cif",
+    "bao": 'BaO_mp-1342_computed.cif',
+    'bao2': 'BaO2_mp-1105_computed.cif',
 }
 
 # This (undocumented) flag changes the style of the webpage (CSS, etc.)

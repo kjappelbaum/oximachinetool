@@ -4,4 +4,4 @@ git+https://github.com/kjappelbaum/mof_oxidation_states.git
 git+https://github.com/kjappelbaum/learn_mof_ox_state.git
 pymatgen
 ase
-future==0.16.0
+future

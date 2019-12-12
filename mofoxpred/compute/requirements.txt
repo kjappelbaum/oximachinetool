@@ -1,8 +1,8 @@
 numpy==1.17.2
-git+https://github.com/kjappelbaum/cif_check.git
-git+https://github.com/kjappelbaum/mof_oxidation_states.git
-git+https://github.com/kjappelbaum/learn_mof_ox_state.git
-git+https://github.com/kjappelbaum/matminer.git@localpropertystats
+git+git://github.com/kjappelbaum/cif_check.git@b56c11d#egg=cifcheck
+git+git://github.com/kjappelbaum/mof_oxidation_states.git@73af2657ca7468121eb999e600aa011e49f7631c#egg=mine_mof_oxstate
+git+git://github.com/kjappelbaum/learn_mof_ox_state.git@52b783e2417b6635e2540affa56ff1a5165364ea#egg=learnmofox
+git+git://github.com/kjappelbaum/matminer.git@9d7cd6bc0ad26eaf2246e7e96d40069c550b53a5#egg=matminer
 pymatgen
 ase
 future

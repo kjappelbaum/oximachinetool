@@ -7,7 +7,10 @@
 # http://phusion.github.io/baseimage-docker/ page, it automatically
 # contains and starts all needed services (like logging), it
 # takes care of sending around signals when stopped, etc.
-FROM phusion/passenger-customizable:0.9.34 
+##
+# Actually, I use passenger-full that already has python
+# https://github.com/phusion/passenger-docker#using
+FROM phusion/passenger-customizable:0.9.34
 
 MAINTAINER Materials Cloud <developers@materialscloud.org>
 
@@ -20,8 +23,10 @@ CMD ["/sbin/my_init"]
 # If you're using the 'customizable' variant, you need to explicitly opt-in
 # for features. Uncomment the features you want:
 #
-#   Build system and git.
-RUN /pd_build/utilities.sh
+    #   Build system and git.
+    #   Python support (2.7 and 3.x - it is 3.5.x in this ubuntu 16.04)
+RUN /pd_build/utilities.sh && \
+    /pd_build/python.sh 
 
 ##########################################
 ############ Installation Setup ##########
@@ -64,7 +69,7 @@ RUN a2enmod wsgi && a2enmod xsendfile && \
     a2dissite 000-default && a2ensite app 
 
 # Activate apache at startup
-RUN mkdir -p /etc/service/apache
+RUN mkdir /etc/service/apache
 ADD ./.docker_files/apache_run.sh /etc/service/apache/run
 
 # Web

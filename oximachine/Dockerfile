@@ -2,7 +2,6 @@ FROM tools-barebone
 
 MAINTAINER Kevin Maik Jablonka <kevin.jablonka@epfl.ch>
 
-RUN pip3 install --upgrade numpy
 COPY ./compute/requirements.txt /home/app/code/webservice
 RUN pip3  install -r /home/app/code/webservice/requirements.txt
 

@@ -52,4 +52,4 @@ cd oximachine
 
 - [ ] Potentially add a Explore section for the EDA
 
-- [ ] add a test for the container build
+- [x] add a test for the container build

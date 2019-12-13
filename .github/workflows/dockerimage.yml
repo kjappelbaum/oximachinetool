@@ -11,5 +11,5 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Build the Docker image
-      run: ./build-docker.sh && cd oximachine && ./build_docker.sh && ./run_docker.sh &&  curl -X POST --data "examplestructure=sno" http://localhost:8091/process_example_structure/ > example.html && grep -F "Sn" example.html || ( cat example.html ; exit 1 ) 
+      run: ./build-docker.sh && cd oximachine && ./build_docker.sh && ./run_docker.sh &&  ../test/wait-for-it.sh localhost:8091 -t 120 && sleep 15 && curl -X POST --data "examplestructure=sno" http://localhost:8091/process_example_structure > example.html || ( cat example.html ; exit 1 ) 
       

@@ -25,7 +25,8 @@ Flask app that uses `jsmol` to visualize the structure (and predictions). The co
 
   - and run everything python related with `python3.6` (or higher) as the ML tools do not work with older python versions.
 
-- Run the image `docker run -p 8091:80 -it oximachine`
+- Run the image `docker run -p 8091:80 -it oximachine` (and go to
+        `localhost:8091`)
 
 ```
 ./build-docker.sh # to build the tools-barbone

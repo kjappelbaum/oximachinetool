@@ -1,5 +1,7 @@
 # oxiMACHINE tools entry
 
+[![Actions Status](https://github.com/kjappelbaum/oximachinetool/workflows/Docker%20Image%20Build%20CI/badge.svg)](https://github.com/kjappelbaum/oximachinetool/actions)
+
 <img src='oximachine_logo.png' width=200px, text-align=center> </img>
 
 > ⚠️ **Warning**: Alpha version

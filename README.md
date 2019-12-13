@@ -28,6 +28,13 @@ Flask app that uses `jsmol` to visualize the structure (and predictions). The co
 
 - Run the image `docker run -p 8091:80 -it oximachine`
 
+
+```
+./build-docker.sh # to build the tools-barbone
+cd oximachine
+./build-docker.sh # to build the oximachine 
+```
+
 ## ToDo
 
 - [ ] Add more examples

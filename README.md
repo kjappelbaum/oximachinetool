@@ -49,3 +49,5 @@ cd oximachine
 - [ ] Add plot of feature distribution in trainin set (e.g. violin plot) and the metal site as dots
 
 - [ ] Potentially add a Explore section for the EDA
+
+- [ ] add a test for the container build

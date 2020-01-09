@@ -2,7 +2,7 @@
 
 [![Actions Status](https://github.com/kjappelbaum/oximachinetool/workflows/Docker%20Image%20Build%20CI/badge.svg)](https://github.com/kjappelbaum/oximachinetool/actions)
 [![](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/download/releases/3.6.0/)
-[![Maintainability](https://api.codeclimate.com/v1/badges/c7f5bd59c0a1ac26c0cc/maintainability)](https://codeclimate.com/github/kjappelbaum/oximachinetool/maintainability)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 <img src='oximachine_logo.png' width=200px, text-align=center> </img>
 
@@ -10,33 +10,34 @@
 
 Flask app that uses `jsmol` to visualize the structure (and predictions). The code builds heavily ontop of the implementation of the [seekpath web app](https://github.com/giovannipizzi/seekpath).
 
-## Directly run flask app
+## How to run the code
+
+You have to options to run the code: You can either clone the repository and directly run the flask app. 
+
+### Directly run flask app
+- clone the repository 
 
 - copy `compute` and `user_templates` to `webservice`
 
-- install both `requirements.txt`
+- install the requirements listed in both `requirements.txt` files 
 
 - python `run_app.py`
 
-## Run docker image
+### Run docker image
 
-- Build the docker image for the app based on the modified `tools-barebone` image (`docker build -t oximachine .`). Note that
-
-  - Note that the ML packages are actually built for `python>=3.6`. In this flask app, we use `python==3.5` wherefore you might run into some issues (e.g., due to f strings)
-
-    <!-- - you need to use ubuntu 16.04 version in the `tools-barebone`, otherwise there are some issues with Apache
-    - note that `libapache2-mod-wsgi-py3` is compiled with the wrong python version (3.5), we install it with pip for this reason -->
-
-  - and run everything python related with `python3.6` (or higher) as the ML tools do not work with older python versions.
-
-- Run the image `docker run -p 8091:80 -it oximachine` (and go to
-        `localhost:8091`)
-
+- Build the docker image for the app based on the modified `tools-barebone` image (`docker build -t oximachine .`). You can use the `/build-docker.sh` scripts to do this. 
 ```
 ./build-docker.sh # to build the tools-barbone
 cd oximachine
 ./build-docker.sh # to build the oximachine
 ```
+
+- Run the image `docker run -p 8091:80 -it oximachine` (and go to
+        `localhost:8091`)
+- Then you can use it as shown in the screencast. 
+
+![oximachine screencast]('_static/oximachine.gif)
+
 
 ## ToDo
 
@@ -59,4 +60,4 @@ cd oximachine
 
 # Acknowledgment
 
-- Materials Cloud team, especially Leopold Talirz for help with deployment and giving valuable feedback and providing a good template. 
+- Materials Cloud team, especially [Leopold Talirz](https://github.com/ltalirz) for help with deployment and giving valuable feedback and providing a good template. 

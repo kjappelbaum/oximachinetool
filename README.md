@@ -53,3 +53,8 @@ cd oximachine
 - [ ] Potentially add a Explore section for the EDA
 
 - [x] add a test for the container build
+
+
+# Acknowledgment
+
+- Materials Cloud team, especially Leopold Talirz for help with deployment and giving valuable feedback and providing a good template. 

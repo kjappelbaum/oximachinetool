@@ -1,12 +1,14 @@
 # oxiMACHINE tools entry
 
 [![Actions Status](https://github.com/kjappelbaum/oximachinetool/workflows/Docker%20Image%20Build%20CI/badge.svg)](https://github.com/kjappelbaum/oximachinetool/actions)
+[![](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/download/releases/3.6.0/)
+[![Maintainability](https://api.codeclimate.com/v1/badges/c7f5bd59c0a1ac26c0cc/maintainability)](https://codeclimate.com/github/kjappelbaum/oximachinetool/maintainability)
 
 <img src='oximachine_logo.png' width=200px, text-align=center> </img>
 
 > ⚠️ **Warning**: Alpha version
 
-Flask app that uses `jsmol` to visualize the structure (and predictions). The code builts heavily ontop of the implementation of the [seekpath web app](https://github.com/giovannipizzi/seekpath).
+Flask app that uses `jsmol` to visualize the structure (and predictions). The code builds heavily ontop of the implementation of the [seekpath web app](https://github.com/giovannipizzi/seekpath).
 
 ## Directly run flask app
 

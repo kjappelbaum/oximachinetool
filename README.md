@@ -36,7 +36,7 @@ cd oximachine
         `localhost:8091`)
 - Then you can use it as shown in the screencast. 
 
-![oximachine screencast]('_static/oximachine.gif)
+![oximachine screencast]('_static/oximachine.gif')
 
 
 ## ToDo

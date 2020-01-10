@@ -1,4 +1,4 @@
-# oxiMACHINE tools entry
+# oxiMACHINE app
 
 [![Actions Status](https://github.com/kjappelbaum/oximachinetool/workflows/Docker%20Image%20Build%20CI/badge.svg)](https://github.com/kjappelbaum/oximachinetool/actions)
 [![](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/download/releases/3.6.0/)
@@ -13,7 +13,7 @@ Flask app that uses `jsmol` to visualize the structure (and predictions). The co
 
 ## How to run the code
 
-You have to options to run the code: You can either clone the repository and directly run the flask app.
+You have to options to run the code: You can either clone the repository and directly run the flask app. Alternatively, can can directly [use it on MaterialsCloud](https://dev-tools.materialscloud.org/oximachine/input_structure/).
 
 ### Directly run flask app
 

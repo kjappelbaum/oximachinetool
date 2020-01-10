@@ -44,7 +44,7 @@ The use of the web app is shown in the screencast.
 
 ![oximachine screencast](_static/oximachine.gif)
 
-The app provides the option to upload a `cif` or to also choose from some examples. 
+The app provides the option to upload a `cif` or to also choose from some examples.
 
 ## ToDo
 

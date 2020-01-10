@@ -12,20 +12,22 @@ Flask app that uses `jsmol` to visualize the structure (and predictions). The co
 
 ## How to run the code
 
-You have to options to run the code: You can either clone the repository and directly run the flask app. 
+You have to options to run the code: You can either clone the repository and directly run the flask app.
 
 ### Directly run flask app
-- clone the repository 
+
+- clone the repository
 
 - copy `compute` and `user_templates` to `webservice`
 
-- install the requirements listed in both `requirements.txt` files 
+- install the requirements listed in both `requirements.txt` files
 
 - python `run_app.py`
 
 ### Run docker image
 
-- Build the docker image for the app based on the modified `tools-barebone` image (`docker build -t oximachine .`). You can use the `/build-docker.sh` scripts to do this. 
+- Build the docker image for the app based on the modified `tools-barebone` image (`docker build -t oximachine .`). You can use the `/build-docker.sh` scripts to do this.
+
 ```
 ./build-docker.sh # to build the tools-barbone
 cd oximachine
@@ -33,11 +35,15 @@ cd oximachine
 ```
 
 - Run the image `docker run -p 8091:80 -it oximachine` (and go to
-        `localhost:8091`)
-- Then you can use it as shown in the screencast. 
+  `localhost:8091`)
+
+### How to use the app
+
+The use of the web app is shown in the screencast.
 
 ![oximachine screencast](_static/oximachine.gif)
 
+The app provides the option to upload a `cif` or to also choose from some examples. 
 
 ## ToDo
 
@@ -57,7 +63,6 @@ cd oximachine
 
 - [x] add a test for the container build
 
-
 # Acknowledgment
 
-- Materials Cloud team, especially [Leopold Talirz](https://github.com/ltalirz) for help with deployment and giving valuable feedback and providing a good template. 
+- Materials Cloud team, especially [Leopold Talirz](https://github.com/ltalirz) for help with deployment and giving valuable feedback and providing a good template.

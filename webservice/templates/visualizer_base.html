@@ -342,6 +342,7 @@
                     </div>
         
             <h3>Feature values</h3>
+            More information about the features can be found in the <a href='https://chemrxiv.org/articles/Using_Collective_Knowledge_to_Assign_Oxidation_States/11604129/1'>preprint on Chemrxiv (DOI: 10.26434/chemrxiv.11604129.v1)</a>.
             <div>
                 {% for k, v in feature_values.items() %}
                 <div id="tablekpoints">
@@ -350,7 +351,7 @@
                     {% for name, value in v.items() %}
                     <tr>
                             <th> {{ name }} </th>
-                            <td style="text-align: right"><code>{{ "%.3f" % value|float }}</code></td>
+                            <td style="text-align: right"><code>{{ "%.3f" % value[0]|float  }} ({{  "%d" value[1]|int  }}. percentile)</code></td>
                     </tr>
                     {% endfor %}
                     </table>

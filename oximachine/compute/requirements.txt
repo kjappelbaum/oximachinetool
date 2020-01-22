@@ -5,3 +5,4 @@ git+git://github.com/kjappelbaum/learn_mof_ox_state.git@52b783e2417b6635e2540aff
 git+git://github.com/kjappelbaum/matminer.git@9d7cd6bc0ad26eaf2246e7e96d40069c550b53a5#egg=matminer
 pymatgen==2019.7.2
 future==0.16.0
+shap==0.32.1

@@ -65,6 +65,12 @@ def _featurize_single(structure, feature_dir: str = ""):
     Arguments:
         structure {pymatgen Structe} -- (name of structure, string with structure)
         feature_dir {str} -- output directory for features
+        
+    Returns: 
+        X {np.array} -- feature matrix
+        feature_value_dict {dict}  --
+        metal_indices {list}
+        names {list} -- list of feature names
     """
     gf = GetFeatures(structure, feature_dir)
     features = gf.return_features()
@@ -80,7 +86,7 @@ def _featurize_single(structure, feature_dir: str = ""):
     for i, site in enumerate(X):
         feature_stats = _return_feature_statistics_array(site)
         feature_value_dict[metals[i] + " " + alph[i]] = dict(zip(names, feature_stats))
-    return X, feature_value_dict, metal_indices
+    return X, feature_value_dict, metal_indices, names
 
 
 class OverlapError(Exception):

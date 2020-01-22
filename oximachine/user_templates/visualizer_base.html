@@ -10,6 +10,7 @@
     <script src="../static/js/jquery-ui.1.12.1.min.js"></script>
     <link rel="stylesheet" href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'>
     <script src='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js'></script>
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 
     <link rel="stylesheet" type="text/css" href="../static/css/visualizer.min.css" />
     <link rel="stylesheet" type="text/css" href="../static/css/visualizer_base.min.css" />
@@ -24,6 +25,10 @@
     <script src="../static/js/webglcheck.min.js"></script>
     <script src="../static/js/clipboard.min.js"></script>
     <script src="../static/js/download.min.js"></script>
+
+    <!-- To visalize the feature importance plots -->
+    <script type="text/javascript" src="../static/js/shap.min.js"></script>
+
     <script>
         $(function () {
             $("#accordion").accordion({
@@ -340,7 +345,20 @@
                             </tbody>
                         </table> 
                     </div>
-        
+            
+            <h3>Feature importance </h3>
+            <div>
+                <p>
+                    Note that the feature importance scores in this app are calculated with a crude estimate. The base value is the average prediction of our model. The plot then shows the most important features that shift the prediction for a particular metal site away from the base value. 
+                </p>
+            {% for k, v in featurization_output.items() %}
+            
+                <div id="tablekpoints">
+                    <h2>{{ k }}</h2>
+                    {{ v|safe }}
+                </div>
+            {% endfor %}
+            </div>
             <h3>Feature values</h3>
             <div>
                 {% for k, v in feature_values.items() %}
@@ -411,7 +429,7 @@
     </script>
 
     <div id='finalinfo'>
-        <p><span style="font-weight: bold;">Technical info</span>: Time spent to compute quantities (featurization and prediction):
+        <p><span style="font-weight: bold;">Technical info</span>: Time spent to compute quantities (featurization, prediction and interpretation):
             {{ '%.3f' % compute_time }} s. Model version: {{ model_version }}.
         </p>
         <p> 

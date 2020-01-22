@@ -1,0 +1,65 @@
+<h2><a name="tool"></a>Upload your structure</h2>
+<div style="margin-left: 20px; margin-right: 20px">
+    <form action="compute/process_structure/" enctype="multipart/form-data" method="post">
+        <div class='alert alert-info'>
+            <div class='row'>
+                <div class='col-xs-12 col-sm-6'>
+                    <label for="file">Upload a crystal structure:</label>
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                    <input type="file" name="structurefile" size="100">
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-sm-6'>
+                    <label for="fileformat">Select here the file format:</label>
+                </div>
+                <div class='col-sm-6'>
+                    <select name="fileformat" id="fileformatSelect">
+                        <option value="cif">CIF</option>
+                    </select>
+                </div>
+            </div>
+            {% if include_pages['upload_structure_additional_content'] is not none %}
+            {% include include_pages['upload_structure_additional_content'] %}
+            {% endif %}
+            {% block structure_additional_content %}{% endblock %}
+            <div class='row' style="text-align:center">
+                <p class='small'>By continuing, you agree with the <a href="termsofuse.html" target="_blank">terms of
+                        use</a> of this service.</p>
+                <input type="submit" value="Calculate my structure" class="btn btn-default">
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<h2>Otherwise, pick an example</h2>
+<form action="../process_example_structure/" method="post">
+    <div style="margin-left: 20px; margin-right: 20px;">
+        <div class='alert alert-info'>
+            <div class="row">
+                <div class="col-xs-12 col-sm-6">
+                    <label for="examplestructure">Select here an example structure:</label>
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                    <select name="examplestructure">
+                        <option value='IDIWOH'>MIL-47 (as)</option>
+                        <option value='IDIWIB'>MIL-47 (activated)</option>
+                        <option value='CuI_II_BTC'>Cu(I/II)-BTC</option>
+                        <option value='AgO'>AgO</option>
+                        <option value='Ag2O'>Ag2O</option>
+                        <option value='CuO'>CuO</option>
+                        <option value='Cu2O'>Cu2O</option>
+                        <option value='TiO2a'>TiO2 (anatase)</option>
+                        <option value='TiO2b'>TiO2 (rutile)</option>
+                        <option value='ZnO'>ZnO</option>
+                    </select>
+                </div>
+            </div>
+            <div class='row' style="text-align: center">
+                <input type="submit" value="Calculate this example" class="btn btn-default">
+            </div>
+        </div>
+    </div>
+</form>

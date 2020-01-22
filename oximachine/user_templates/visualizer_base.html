@@ -347,10 +347,19 @@
                 <div id="tablekpoints">
                     <h2> {{ k }}</h2>
                     <table>
+                    <tr>
+                        <th>
+                            feature
+                        </th>
+                        <th>
+                            value (percentile position)<a href="#" data-toggle="tooltip" title="A percentile position of, for example, 80% means that 80% of the scores for this feature in the training set are below the given score."><sup>[?]</sup>
+                            </a>
+                        </th>
+                    </tr>
                     {% for name, value in v.items() %}
                     <tr>
                             <th> {{ name }} </th>
-                            <td style="text-align: right"><code>{{ "%.3f" % value[0]|float  }} ({{  "%d" value[1]|int  }}. percentile)</code></td>
+                            <td style="text-align: right">{{ "%.3f" % value[0]|float  }} <span style="color:{{ value[2] }}">({{  value[1] }})</span></td>
                     </tr>
                     {% endfor %}
                     </table>

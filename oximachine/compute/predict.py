@@ -18,8 +18,10 @@ from mine_mof_oxstate.featurize import GetFeatures, FeatureCollector
 from joblib import load
 from .utils import string_to_pymatgen
 import shap
+import logging
 
-shap.initjs()
+log = logging.getLogger("shap")
+log.setLevel(logging.ERROR)
 
 from learnmofox import utils
 import sys

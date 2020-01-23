@@ -7,6 +7,7 @@ from collections import defaultdict
 from functools import partial
 import concurrent.futures
 import warnings
+import logging
 
 warnings.simplefilter("ignore")
 import numpy as np
@@ -20,6 +21,10 @@ from .utils import string_to_pymatgen
 import shap
 
 shap.initjs()
+
+import logging
+log = logging.getLogger('shap')
+log.setLevel(logging.ERROR)
 
 from learnmofox import utils
 import sys

@@ -46,6 +46,15 @@ from conf import (
     view_folder,
 )
 
+sampling_mapping = {
+    "very_low": 3,
+    "low": 50,
+    "medium": 160,
+    "high": 250,
+}
+
+DEFAULT_SAMPLES = sampling_mapping["low"]
+
 examplemapping = {
     "cui_ii_btc": "KAJZIH_freeONLY.cif",
     "sno": "SnO_mp-2097_computed.cif",
@@ -257,7 +266,7 @@ def process_structure_core(
         predictions_output, prediction_labels = predictions(feature_array, metal_sites)
 
         featurization_output = get_explanations(
-            feature_array, prediction_labels, feature_names
+            feature_array, prediction_labels, feature_names, DEFAULT_SAMPLES
         )
 
     except Exception as e:
@@ -430,6 +439,31 @@ def input_structure():
     Input structure selection
     """
     return flask.render_template(get_visualizer_select_template(flask.request))
+
+
+@app.route("/set_feature_importance_level/", methods=["GET", "POST"])
+def feature_importance_val():
+    """
+    Set fidelity level for feature importance 
+    """
+    if flask.request.method == "POST":
+        samples = flask.request.form.get("samples", "<none>")
+        global DEFAULT_SAMPLES
+        try:
+            DEFAULT_SAMPLES = sampling_mapping[samples]
+            logger.debug(
+                "Changed sampling level for feature importance to {}".format(
+                    DEFAULT_SAMPLES
+                )
+            )
+            return ("", 204)
+        except Exception as e:
+            logger.error(
+                "Could not change sampling level due to exeception {}".format(e)
+            )
+            return flask.redirect(flask.url_for("input_structure"))
+    else:  # GET Request
+        return flask.redirect(flask.url_for("input_structure"))
 
 
 @app.route("/process_structure/", methods=["GET", "POST"])

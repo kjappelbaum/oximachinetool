@@ -6,3 +6,4 @@ git+git://github.com/kjappelbaum/matminer.git@9d7cd6bc0ad26eaf2246e7e96d40069c55
 pymatgen==2019.7.2
 future==0.16.0
 shap==0.32.1
+ipython==7.8.0

@@ -9,11 +9,11 @@
 
 > ⚠️ **Warning**: Alpha version
 
-Flask app that uses `jsmol` to visualize the structure (and predictions). The code builds heavily ontop of the implementation of the [seekpath web app](https://github.com/giovannipizzi/seekpath).
+Flask app that uses `jsmol` to visualize the structure (and predictions). The code builds heavily on top of the implementation of the [seekpath web app](https://github.com/giovannipizzi/seekpath).
 
 ## How to run the code
 
-You have to options to run the code: You can either clone the repository and directly run the flask app. Alternatively, can can directly [use it on MaterialsCloud](https://dev-tools.materialscloud.org/oximachine/input_structure/).
+You have to options to run the code: You can either clone the repository and directly run the flask app. Alternatively, can directly [use it on MaterialsCloud](https://dev-tools.materialscloud.org/oximachine/input_structure/).
 
 ### Directly run flask app
 
@@ -50,17 +50,17 @@ The app provides the option to upload a `cif` or to also choose from some exampl
 
 - [ ] Add more examples
 
-- [x] Add the colorcoding for the uncertainty
+- [x] Add the color coding for the uncertainty
 
 - [ ] Precompute feature vectors for example
 
-- [ ] Add some explainability plots
+- [x] Add some explainability plots
 
 - [ ] Couple details with structure
 
-- [ ] Add plot of feature distribution in trainin set (e.g. violin plot) and the metal site as dots
+- [ ] Add plot of feature distribution in training set (e.g. violin plot) and the metal site as dots
 
-- [ ] Potentially add a Explore section for the EDA
+- [ ] Potentially add an explore section for the EDA
 
 - [x] add a test for the container build
 

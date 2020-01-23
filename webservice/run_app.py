@@ -46,14 +46,14 @@ from conf import (
     view_folder,
 )
 
-sampling_mapping={
-    'very_low': 5, 
-    'low': 30, 
-    'medium': 100,
-    'high': 200,
+sampling_mapping = {
+    "very_low": 3,
+    "low": 50,
+    "medium": 160,
+    "high": 250,
 }
 
-DEFAULT_SAMPLES = sampling_mapping['low']
+DEFAULT_SAMPLES = sampling_mapping["low"]
 
 examplemapping = {
     "cui_ii_btc": "KAJZIH_freeONLY.cif",
@@ -440,6 +440,7 @@ def input_structure():
     """
     return flask.render_template(get_visualizer_select_template(flask.request))
 
+
 @app.route("/set_feature_importance_level/", methods=["GET", "POST"])
 def feature_importance_val():
     """
@@ -451,11 +452,15 @@ def feature_importance_val():
         try:
             DEFAULT_SAMPLES = sampling_mapping[samples]
             logger.debug(
-                'Changed sampling level for feature importance to {}'.format(DEFAULT_SAMPLES)
+                "Changed sampling level for feature importance to {}".format(
+                    DEFAULT_SAMPLES
+                )
             )
-            return ('', 204)
+            return ("", 204)
         except Exception as e:
-            logger.error('Could not change sampling level due to exeception {}'.format(e))
+            logger.error(
+                "Could not change sampling level due to exeception {}".format(e)
+            )
             return flask.redirect(flask.url_for("input_structure"))
     else:  # GET Request
         return flask.redirect(flask.url_for("input_structure"))

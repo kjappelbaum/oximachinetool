@@ -117,15 +117,17 @@ table.center {
 .submit-progress-bg {
     background-color: lightgray;
     opacity: .6;
-    width:100%;
-    height:100%; 
+    width: 100%;
+    height: 100%;
     position: absolute;
-    left:0; top:0;
-    z-index:10
+    left: 0;
+    top: 0;
+    z-index: 10
 }
 
 .submit-progress i {
-    margin-right: 0em;
+    margin-left: 98px;
+    margin-bottom: 8px;
 }
 
 .spinner {
@@ -134,9 +136,9 @@ table.center {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-  }
+}
 
-.submit-progress > div {
-    vertical-align:top;
-    display:inline-block;   
+#HASH {
+    display: flex;
+    justify-content: space-between;
 }

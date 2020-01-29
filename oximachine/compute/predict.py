@@ -42,6 +42,7 @@ GEOMETRY_FEATURES = ["crystal_nn_fingerprint", "behler_parinello"]
 CHEMISTRY_FEATURES = ["local_property_stats"]
 FEATURES = CHEMISTRY_FEATURES + METAL_CENTER_FEATURES + ["crystal_nn_no_steinhardt"]
 
+
 MODEL = joblib.load(os.path.join(THIS_DIR, "votingclassifier.joblib"))
 SCALER = joblib.load(os.path.join(THIS_DIR, "scaler_0.joblib"))
 EXPLAINER = joblib.load(os.path.join(THIS_DIR, "explainer.joblib"))

@@ -30,8 +30,11 @@ from compute.utils import (
     UnknownFormatError,
     OverlapError,
     LargeStructureError,
+    load_pickle,
     MAX_NUMBER_OF_ATOMS,
 )
+from pymatgen.io.cif import CifParser
+
 
 from compute.featurize import _featurize_single
 from compute.predict import predictions, get_explanations
@@ -128,6 +131,194 @@ def get_json_for_visualizer(s):
     return res
 
 
+def process_precomputed_core(
+    name, call_source="", logger=None, flask_request=None,
+):
+    """
+    The main function that generates the data to be sent back to the view.
+    
+    :param name: The structure name (CSD reference code) (string)
+    :param call_source: a string identifying the source (i.e., who called
+       this function). This is a string, mainly for logging reasons.
+    :param logger: if not None, should be a valid logger, that is used
+       to output useful log messages.
+    :param flask_request: if logger is not None, pass also the flask.request
+       object to help in logging.
+    :return: this function calls directly flask methods and returns flask 
+        objects
+    :raise: FlaskRedirectException if there is an error that requires
+        to redirect the the main selection page. The Exception message
+        is the message to be flashed via Flask (or in general shown to
+        the user).
+    """
+    logger.debug("dealing with {}".format(name))
+    start_time = time.time()
+    try:
+        logger.debug('building path')
+        structurefilepath = os.path.join(THIS_DIR, "compute", "precomputed", "structures", name + ".cif")
+        logger.debug('structurefilepath is {}'.format(structurefilepath))
+        fileformat = "cif"
+
+        s = CifParser(structurefilepath, occupancy_tolerance=100).get_structures()[0]
+
+        logger.debug('read pymatgen structure')
+        structure_tuple = tuple_from_pymatgen(s)
+        logger.debug('generated structure tuple')
+        
+    except Exception as e:
+        # There was an exception...
+        logger.debug("Exception {} when parsing the input".format(e))
+        raise FlaskRedirectException(
+            "I tried my best, but I wasn't able to load your "
+            "file in format '{}'... because of {}".format(fileformat, e)
+        )
+
+    logger.debug("Successfully read structure")
+
+    # Now, read the precomputed results
+    try:
+        logger.debug('reading pickle')
+        
+        precomputed_dict = load_pickle(
+            os.path.join(
+                THIS_DIR, "compute", "precomputed", "precomputed", name + ".pkl"
+            )
+        )
+
+        feature_array = precomputed_dict["feature_array"]
+        feature_value_dict = precomputed_dict["feature_value_dict"]
+        metal_indices = precomputed_dict["metal_indices"]
+        feature_names = precomputed_dict["feature_names"]
+        metal_sites = precomputed_dict["metal_sites"]
+        predictions_output = precomputed_dict["predictions_output"]
+        prediction_labels = precomputed_dict["prediction_labels"]
+        featurization_output = precomputed_dict["featurization_output"]
+
+    except Exception as e:
+        logger.debug("Exception {} when parsing the input".format(e))
+        raise FlaskRedirectException(
+            "I tried my best, but I wasn't able to load your "
+            "result for '{}'... because of {}".format(name, e)
+        )
+
+    logger.debug("Successfully read pickle with precomputed results")
+
+    try:
+        in_json_data = {
+            "cell": structure_tuple[0],
+            "scaled_coords": structure_tuple[1],
+            "atomic_numbers": structure_tuple[2],
+        }
+
+        path_results = get_json_for_visualizer(s)
+
+        raw_code_dict = copy.copy(path_results)
+
+        raw_code_dict["primitive_lattice"] = path_results["primitive_lattice"].tolist()
+        raw_code_dict["primitive_positions"] = path_results[
+            "primitive_positions"
+        ].tolist()
+        inputstructure_positions_cartesian = np.dot(
+            np.array(in_json_data["scaled_coords"]), np.array(in_json_data["cell"])
+        ).tolist()
+        primitive_positions_cartesian = np.dot(
+            np.array(path_results["primitive_positions"]),
+            np.array(path_results["primitive_lattice"]),
+        ).tolist()
+        primitive_positions_cartesian_refolded = np.dot(
+            np.array(path_results["primitive_positions"]) % 1.0,
+            np.array(path_results["primitive_lattice"]),
+        ).tolist()
+        raw_code_dict["primitive_positions_cartesian"] = primitive_positions_cartesian
+
+        raw_code_dict["primitive_types"] = path_results["primitive_types"].tolist()
+        primitive_symbols = [
+            chemical_symbols[num] for num in path_results["primitive_types"]
+        ]
+        raw_code_dict["primitive_symbols"] = primitive_symbols
+        # raw_code_dict["primitive_symbols"] = path_results["primitive_types"]
+
+        raw_code = json.dumps(raw_code_dict, indent=2)
+
+        raw_code = (
+            str(jinja2.escape(raw_code)).replace("\n", "<br>").replace(" ", "&nbsp;")
+        )
+        inputstructure_cell_vectors = [
+            [idx, coords[0], coords[1], coords[2]]
+            for idx, coords in enumerate(in_json_data["cell"], start=1)
+        ]
+        inputstructure_symbols = [
+            chemical_symbols[num] for num in in_json_data["atomic_numbers"]
+        ]
+        inputstructure_atoms_scaled = [
+            [label, coords[0], coords[1], coords[2]]
+            for label, coords in zip(
+                inputstructure_symbols, in_json_data["scaled_coords"]
+            )
+        ]
+        inputstructure_atoms_cartesian = [
+            [label, coords[0], coords[1], coords[2]]
+            for label, coords in zip(
+                inputstructure_symbols, inputstructure_positions_cartesian
+            )
+        ]
+
+        atoms_scaled = [
+            [label, coords[0], coords[1], coords[2]]
+            for label, coords in zip(
+                primitive_symbols, path_results["primitive_positions"]
+            )
+        ]
+
+        atoms_cartesian = [
+            [label, coords[0], coords[1], coords[2]]
+            for label, coords in zip(primitive_symbols, primitive_positions_cartesian)
+        ]
+
+        direct_vectors = [
+            [idx, coords[0], coords[1], coords[2]]
+            for idx, coords in enumerate(path_results["primitive_lattice"], start=1)
+        ]
+
+        primitive_lattice = path_results["primitive_lattice"]
+        xsfstructure = []
+        xsfstructure.append("CRYSTAL")
+        xsfstructure.append("PRIMVEC")
+        for vector in primitive_lattice:
+            xsfstructure.append("{} {} {}".format(vector[0], vector[1], vector[2]))
+        xsfstructure.append("PRIMCOORD")
+        xsfstructure.append("{} 1".format(len(primitive_positions_cartesian_refolded)))
+        for atom_num, pos in zip(
+            path_results["primitive_types"], primitive_positions_cartesian_refolded
+        ):
+            xsfstructure.append("{} {} {} {}".format(atom_num, pos[0], pos[1], pos[2]))
+        xsfstructure = "\n".join(xsfstructure)
+
+        compute_time = time.time() - start_time
+
+    except Exception as e:
+        logger.debug("Exception {} when parsing the input".format(e))
+
+    return dict(
+        # jsondata=json.dumps(out_json_data),
+        raw_code=raw_code,
+        prediction_labels=prediction_labels,
+        metal_indices=metal_indices,
+        predictions_output=predictions_output,
+        featurization_output=featurization_output,
+        inputstructure_cell_vectors=inputstructure_cell_vectors,
+        inputstructure_atoms_scaled=inputstructure_atoms_scaled,
+        inputstructure_atoms_cartesian=inputstructure_atoms_cartesian,
+        atoms_scaled=atoms_scaled,
+        direct_vectors=direct_vectors,
+        atoms_cartesian=atoms_cartesian,
+        compute_time=compute_time,
+        model_version=MODEL_VERSION,
+        xsfstructure=xsfstructure,
+        feature_values=feature_value_dict,
+    )
+
+
 def process_structure_core(
     filecontent, fileformat, call_source="", logger=None, flask_request=None,
 ):
@@ -136,9 +327,6 @@ def process_structure_core(
     
     :param filecontent: The file content (string)
     :param fileformat: The file format (string), among the accepted formats
-    :param seekpath_module: the seekpath module. The reason for passing it
-         is that, when running in debug mode, you want to get the local 
-         seekpath rather than the installed one.
     :param call_source: a string identifying the source (i.e., who called
        this function). This is a string, mainly for logging reasons.
     :param logger: if not None, should be a valid logger, that is used
@@ -549,6 +737,32 @@ def process_example_structure():
             flask.flash("Unable to process the structure, sorry... {}".format(e))
             return flask.redirect(flask.url_for("input_structure"))
 
+    else:  # GET Request
+        return flask.redirect(flask.url_for("input_structure"))
+
+
+@app.route("/process_precomputed/<name>", methods=["GET"])
+def process_precomputed(name):
+    """
+    Process an precomputed example structure (example name from POST request)
+    """
+    if flask.request.method == "GET":
+        try:
+            data_for_template = process_precomputed_core(
+                name=name,
+                call_source="process_precomputed",
+                logger=logger,
+                flask_request=flask.request,
+            )
+            return flask.render_template(
+                get_visualizer_template(flask.request), **data_for_template
+            )
+        except FlaskRedirectException as e:
+            flask.flash(str(e))
+            return flask.redirect(flask.url_for("input_structure"))
+        except Exception as e:
+            flask.flash("Unable to process the structure, sorry... {}".format(e))
+            return flask.redirect(flask.url_for("input_structure"))
     else:  # GET Request
         return flask.redirect(flask.url_for("input_structure"))
 

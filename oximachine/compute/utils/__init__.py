@@ -15,7 +15,7 @@ def string_to_pymatgen(s):
         if len(s) > MAX_NUMBER_OF_ATOMS:
             raise LargeStructureError("Structure too large")
     except Exception as e:
-        raise ValueError("Pymatgen could not parse ciffile because of {}".format(e))
+        raise ValueError("Pymatgen could not parse CIF, you might try rewriting the CIF in P1 symmetry.")
     return s
 
 

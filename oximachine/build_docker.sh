@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build --no-cache -t oximachine .
+docker build -t oximachine .

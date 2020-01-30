@@ -225,10 +225,10 @@ table td {
 
 #structure {
   background-color: #fff;
-  width: 92%;
   height: 500px;
   border: 1px solid #bbb;
-  margin: 20px;
+  margin-left: 2%;
+  margin-right: 2%;
   padding: 20px;
   position: relative;
   top: 0px;
@@ -575,4 +575,12 @@ table td {
 .jsmol-options label {
   font-weight: normal;
   font-family: 'Assistant', sans-serif;
+}
+
+.table td {
+  font-size: 1em;
+}
+
+.table thead th {
+  font-size: 1em;
 }

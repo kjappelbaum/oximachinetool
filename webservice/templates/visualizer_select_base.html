@@ -7,10 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
+    <!-- Bootstrap -->
     <script src="../static/js/jquery-3.1.0.min.js"></script>
     <script src="../static/js/jquery-ui.1.12.1.min.js"></script>
-    
-    <!-- Bootstrap -->
+    <script src="../static/js/popperjs.min.js"></script>
     <link href="../static/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -23,6 +23,7 @@
     <link rel="stylesheet" type="text/css" href="../static/css/visualizer_input.min.css" />
 
     <link rel="stylesheet" type="text/css" href="../static/css/jquery-ui.1.12.1.min.css" />
+    <link rel="stylesheet" href="../static/css/font-awesome.min.css">
 
     <title>oxiMACHINE</title>
     <script>
@@ -113,6 +114,7 @@
                         <li> <a href='https://pymatgen.org/'> pymatgen </a></li>
                         <li> <a href='https://hackingmaterials.lbl.gov/matminer/'>matminer</a></li>
                         <li> <a href='https://scikit-learn.org/stable/index.html'> sklearn</a></li>
+                        <li> <a href='https://shap.readthedocs.io/en/latest/'> shap</a></li>
                         <li> <a href='https://flask.palletsprojects.com/en/1.1.x/'>flask</a></li>
                     </ul>
                 </p>
@@ -146,7 +148,7 @@
                     <div class='row' style="text-align:center">
                         <p class='small'> <br>By continuing, you agree with the <a href="../termsofuse/"
                                 target="_blank">terms of use</a> of this service.</p>
-                        <input type="submit" value="Calculate my structure" class="btn btn-default">
+                        <input type="submit" value="Calculate my structure" class="btn btn-default" onclick="DisplayProgressMessage()">
                     </div>
 
             </form>
@@ -172,11 +174,36 @@
                         </div>
                     </div>
                     <div class='row' style="text-align: center">
-                        <input type="submit" value="Calculate this example" class="btn btn-default">
+                        <input type="submit" value="Calculate this example" class="btn btn-default" onclick="DisplayProgressMessage()">
                     </div>
                 </div>
             </div>
         </form>
+        <h2>Modify the settings for the feature importance </h2>
+        <div style="margin-left: 20px; margin-right: 20px" >
+            <p>
+                By default we use a crude approximation of the feature importance to give you fast results. 
+                If you care more about feature importance, you can choose here a higher level of fidelity.<a href="#" data-toggle="tooltip" title="Note though that even at the highest fidelity level the results are still biased due to the background data which we use for feature importance calculation, which is a weighted k-mean summarized subset of our training set. "><sup>[?]</sup>
+                </a>
+            </p>
+            <form action="../set_feature_importance_level/" method="post">
+                <div class='alert alert-info'>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6">
+                            <label for="samples">Select here a fidelity level for the feature importance:</label>
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                            <select name="samples"  onchange="this.form.submit()" default='low'>
+                                <option value='very_low'>very low</option>
+                                <option value='low'>low</option>
+                                <option value="medium">medium</option>
+                                <option value='high'>high</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        </form >
     </div>
 
     <div id='citation'>
@@ -185,6 +212,27 @@
     </div>
     
     <div style="position: relative" data-iframe-height></div>
+
+
+    <div class="submit-progress hidden">
+        <div>
+        <i class="fa fa-spinner fa-spin" style="font-size: 32px"></i>
+         <label>Please wait while we calculate features, predictions and interpretations ...</label>
+        </div>
+    </div>
+
 </body>
+
+    <script>
+        function DisplayProgressMessage() {
+        $("html").addClass("submit-progress-bg");
+        // Wrap in setTimeout so the UI
+        // can update the spinners
+        setTimeout(function () {
+            $(".submit-progress").removeClass("hidden");
+        }, 1);
+        return true;
+        }
+    </script>
 
 </html>

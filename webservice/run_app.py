@@ -34,7 +34,7 @@ from compute.utils import (
 )
 
 from compute.featurize import _featurize_single
-from compute.predict import predictions
+from compute.predict import predictions, get_explanations
 from ase.data import chemical_symbols
 
 from web_module import get_secret_key, get_config, logme, ReverseProxied
@@ -45,6 +45,15 @@ from conf import (
     static_folder,
     view_folder,
 )
+
+sampling_mapping = {
+    "very_low": 3,
+    "low": 50,
+    "medium": 160,
+    "high": 250,
+}
+
+DEFAULT_SAMPLES = sampling_mapping["low"]
 
 examplemapping = {
     "cui_ii_btc": "KAJZIH_freeONLY.cif",
@@ -151,6 +160,7 @@ def process_structure_core(
             filecontent, fileformat, extra_data=form_data
         )
     except UnknownFormatError:
+        ## Can only read cif at the moment
         logme(
             logger,
             filecontent,
@@ -161,8 +171,9 @@ def process_structure_core(
             extra={"form_data": form_data},
         )
         raise FlaskRedirectException("Unknown format '{}'".format(fileformat))
+
     except OverlapError:
-        ## Structure too big
+        ## Structure contains overlaps
         logme(
             logger,
             filecontent,
@@ -193,8 +204,6 @@ def process_structure_core(
         )
     except Exception as e:
         # There was an exception...
-
-        print(e)
         logme(
             logger,
             filecontent,
@@ -221,8 +230,12 @@ def process_structure_core(
 
     # Now, featurize
     try:
-        feature_array, feature_value_dict, metal_indices = _featurize_single(s)
-
+        (
+            feature_array,
+            feature_value_dict,
+            metal_indices,
+            feature_names,
+        ) = _featurize_single(s)
     except Exception as e:
         logme(
             logger,
@@ -248,10 +261,14 @@ def process_structure_core(
         )
 
     # Now, predict
-
     try:
         metal_sites = list(feature_value_dict.keys())
         predictions_output, prediction_labels = predictions(feature_array, metal_sites)
+
+        featurization_output = get_explanations(
+            feature_array, prediction_labels, feature_names, DEFAULT_SAMPLES
+        )
+
     except Exception as e:
         print(e)
         logme(
@@ -376,6 +393,7 @@ def process_structure_core(
         prediction_labels=prediction_labels,
         metal_indices=metal_indices,
         predictions_output=predictions_output,
+        featurization_output=featurization_output,
         inputstructure_cell_vectors=inputstructure_cell_vectors,
         inputstructure_atoms_scaled=inputstructure_atoms_scaled,
         inputstructure_atoms_cartesian=inputstructure_atoms_cartesian,
@@ -421,6 +439,31 @@ def input_structure():
     Input structure selection
     """
     return flask.render_template(get_visualizer_select_template(flask.request))
+
+
+@app.route("/set_feature_importance_level/", methods=["GET", "POST"])
+def feature_importance_val():
+    """
+    Set fidelity level for feature importance 
+    """
+    if flask.request.method == "POST":
+        samples = flask.request.form.get("samples", "<none>")
+        global DEFAULT_SAMPLES
+        try:
+            DEFAULT_SAMPLES = sampling_mapping[samples]
+            logger.debug(
+                "Changed sampling level for feature importance to {}".format(
+                    DEFAULT_SAMPLES
+                )
+            )
+            return ("", 204)
+        except Exception as e:
+            logger.error(
+                "Could not change sampling level due to exeception {}".format(e)
+            )
+            return flask.redirect(flask.url_for("input_structure"))
+    else:  # GET Request
+        return flask.redirect(flask.url_for("input_structure"))
 
 
 @app.route("/process_structure/", methods=["GET", "POST"])

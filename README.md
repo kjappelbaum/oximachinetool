@@ -30,8 +30,6 @@ You have to options to run the code: You can either clone the repository and dir
 - Build the docker image for the app based on the modified `tools-barebone` image (`docker build -t oximachine .`). You can use the `/build-docker.sh` scripts to do this.
 
 ```
-./build-docker.sh # to build the tools-barbone
-cd oximachine
 ./build-docker.sh # to build the oximachine
 ```
 

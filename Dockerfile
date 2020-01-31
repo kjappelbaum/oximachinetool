@@ -1,6 +1,6 @@
 FROM materialscloud/tools-barebone:20200124152746970e15
 
-MAINTAINER Kevin Maik Jablonka <kevin.jablonka@epfl.ch>
+LABEL maintainer="Kevin Maik Jablonka <kevin.jablonka@epfl.ch>"
 
 RUN pip3 install --upgrade numpy==1.17.2
 COPY ./webservice/ webservice

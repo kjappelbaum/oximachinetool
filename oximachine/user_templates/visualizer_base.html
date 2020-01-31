@@ -419,6 +419,7 @@
         structureviewer= jsmolCrystal({{ xsfstructure|tojson|safe }}, "structure-content","jmolApplet", [1,1,1]);
         var metal_indices = {{ metal_indices|tojson|safe }};
         var prediction_labels = {{ prediction_labels|tojson|safe }};
+        labelOxStates(jmolApplet, metal_indices, prediction_labels); 
 
         $(document).ready(function () {
             var divjsmol = document.getElementById('crystal');

@@ -56,7 +56,7 @@ sampling_mapping = {
     "high": 250,
 }
 
-DEFAULT_SAMPLES = sampling_mapping["low"]
+DEFAULT_SAMPLES = sampling_mapping["very_low"]
 
 examplemapping = {
     "cui_ii_btc": "KAJZIH_freeONLY.cif",
@@ -154,17 +154,19 @@ def process_precomputed_core(
     logger.debug("dealing with {}".format(name))
     start_time = time.time()
     try:
-        logger.debug('building path')
-        structurefilepath = os.path.join(THIS_DIR, "compute", "precomputed", "structures", name + ".cif")
-        logger.debug('structurefilepath is {}'.format(structurefilepath))
+        logger.debug("building path")
+        structurefilepath = os.path.join(
+            THIS_DIR, "compute", "precomputed", "structures", name + ".cif"
+        )
+        logger.debug("structurefilepath is {}".format(structurefilepath))
         fileformat = "cif"
 
         s = CifParser(structurefilepath, occupancy_tolerance=100).get_structures()[0]
 
-        logger.debug('read pymatgen structure')
+        logger.debug("read pymatgen structure")
         structure_tuple = tuple_from_pymatgen(s)
-        logger.debug('generated structure tuple')
-        
+        logger.debug("generated structure tuple")
+
     except Exception as e:
         # There was an exception...
         logger.debug("Exception {} when parsing the input".format(e))
@@ -177,8 +179,8 @@ def process_precomputed_core(
 
     # Now, read the precomputed results
     try:
-        logger.debug('reading pickle')
-        
+        logger.debug("reading pickle")
+
         precomputed_dict = load_pickle(
             os.path.join(
                 THIS_DIR, "compute", "precomputed", "precomputed", name + ".pkl"

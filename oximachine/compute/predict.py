@@ -79,8 +79,6 @@ def get_explanations(
 
         result_dict[prediction_labels[i]] = html_data
 
-    print(result_dict)
-
     return result_dict
 
 

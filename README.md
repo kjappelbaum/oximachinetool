@@ -15,7 +15,7 @@ Flask app that uses `jsmol` to visualize the structure (and predictions). The co
 
 ## How to run the code
 
-You have to options to run the code: You can either clone the repository and directly run the flask app. Alternatively, can directly [use it on MaterialsCloud](https://dev-tools.materialscloud.org/oximachine/input_structure/).
+You have to options to run the code: You can either clone the repository and directly run the flask app. Alternatively, can directly [use it on Dokku/Materials Cloud](https://go.epfl.ch/oximachine).
 
 ### Directly run flask app
 

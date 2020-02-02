@@ -64,6 +64,8 @@ The app provides the option to upload a `cif` or to also choose from some exampl
 
 - [x] add a test for the container build
 
+- [X] Figure our css issue on MaterialsCloud (prefixed with dash)
+
 # Acknowledgment
 
 - Materials Cloud team, especially [Leopold Talirz](https://github.com/ltalirz) for help with deployment and giving valuable feedback and providing a good template.

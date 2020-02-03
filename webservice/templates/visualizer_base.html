@@ -101,7 +101,7 @@
     <div id="above">
 
         <div id="maintitle">
-            <h1><span style="font-weight: bold;">oxiMACHINE: Predicting oxidation states for MOFs</h1>
+            <h1><span style="font-weight: bold;">oxiMACHINE: Predicting oxidation states for MOFs.</h1>
         </div>
 
         <div id="topinfo">
@@ -275,7 +275,7 @@
                         <div class="checkbox-option" id="oxlabels">
                             <label>
                                 <input id="labels-input" style='margin-right:4px' type="checkbox"
-                                    onchange="labelOxStates(jmolApplet, metal_indices, prediction_labels);">oxidation state labels
+                                    onchange="labelOxStates(jmolApplet, metal_indices, prediction_labels);" checked>oxidation state labels
                                 <a href="#" data-toggle="tooltip" title="Display oxidation state assignments"><sup>[?]</sup></a>
                             </label>
                         </div>
@@ -409,6 +409,8 @@
             $('[data-toggle="tooltip"]').tooltip({
                 placement: "top"
             });
+
+            labelOxStates(jmolApplet, metal_indices, prediction_labels);
 
             enableDoubleTap(structureviewer['_mouseInterface'], function () {
                 toggleStrVisInteraction(false);

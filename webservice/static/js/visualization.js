@@ -125,17 +125,36 @@ function showLabels(viewer) {
 
 function labelOxStates(viewer, atom_indices, labeltext) { 
     var jmolscript = "";
+    const counter = 0; 
+    const elements = labeltext.length;
+
     if ($("#labels-input").is(":checked")){
         for (const [index, label] of labeltext.entries()) {
-            var num = atom_indices[index] + 1;
-            jmolscript+= '; select atomno=' + num + '; ';
-            jmolscript+= 'label ' + '"' + label + '"' + '; ';
+            if (counter < elements) {
+                var num = atom_indices[index] + 1;
+                jmolscript+= '; select atomno=' + num + '; ';
+                jmolscript+= 'label ' + '"' + label + '"' + '; ';
+                counter += 1;
+            }
+            else {
+                var num = atom_indices[index] + 1;
+                jmolscript+= '; select atomno=' + num + '; ';
+                jmolscript+= 'label ' + '"' + label + '"';
+            }
         }
     } else {
         for (const [index, label] of labeltext.entries()) {
-            var num = atom_indices[index] + 1;
-            jmolscript+= 'select atomno=' + num + '; ';
-            jmolscript+= 'label off; ';
+            if (counter < elements){
+                var num = atom_indices[index] + 1;
+                jmolscript+= 'select atomno=' + num + '; ';
+                jmolscript+= 'label off; ';
+                counter +=1; 
+            }
+            else {
+                var num = atom_indices[index] + 1;
+                jmolscript+= 'select atomno=' + num + '; ';
+                jmolscript+= 'label off';
+            }
         }
     }
     Jmol.script(eval(viewer), jmolscript);

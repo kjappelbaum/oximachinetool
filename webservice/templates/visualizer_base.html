@@ -84,9 +84,6 @@
         startWebGLCheck();
     </script>
 
-    {% block customheads %}
-    {% endblock %}
-
     <script src="../static/js/iframeResizer.contentWindow.min.js"></script>
 
 </head>
@@ -104,9 +101,7 @@
     <div id="above">
 
         <div id="maintitle">
-            {% block seekpathtitle %}
             <h1><span style="font-weight: bold;">oxiMACHINE: Predicting oxidation states for MOFs</h1>
-            {% endblock seekpathtitle %}
         </div>
 
         <div id="topinfo">
@@ -186,7 +181,7 @@
                             <div class="alert alert-warning">
                                 Your browser support for WebGL is marked as
                                 experimental. This means
-                                3D content (Brillouin zone and crystal structure) may not be shown as expected.
+                                3D content (crystal structure) may not be shown as expected.
                                 <br />
                                 You may want to consider an <a href="http://get.webgl.org" target="_blank">upgrade of
                                     your browser</a>.
@@ -213,8 +208,7 @@
                     <div class="webgl-hidden webgl-div" id="webgl-no">
                         <div class="alert alert-danger">
                             <p>We are sorry, but your browser does not seem to support WebGL, so we cannot show 3D
-                                objects like the
-                                Brillouin zone or the crystal structure.</p>
+                                objects like the crystal structure.</p>
                             <p>You may want to visit <a href="http://get.webgl.org" target="_blank">this page</a> to get
                                 a list of
                                 recent browsers that support WebGL.</p>
@@ -303,10 +297,6 @@
             </div>
         </div>
     </div>
-
-
-
-
 
 
     <div id="rawcode">

@@ -41,6 +41,12 @@
                     $("#xyzFormatFields").hide();
             });
         });
+
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip({
+                placement: "top"
+            });
+        });
     </script>
 
     {% block customheads %}
@@ -55,8 +61,7 @@
     <div id='container'>
         <div id='maintitle'>
             {% block mofoxpredtitle %}
-            <h1 style="text-align: center;"><span style="font-weight: bold;">oxiMACHINE</span>: A tool to predict
-                oxidation states of MOFs</h1>
+            <h1 style="text-align: center;"><span style="font-weight: bold;">oxiMACHINE</span>: Predicting oxidation states for MOFs</h1>
             {% endblock %}
         </div>
 
@@ -116,10 +121,20 @@
                         <li> <a href='https://scikit-learn.org/stable/index.html'> sklearn</a></li>
                         <li> <a href='https://shap.readthedocs.io/en/latest/'> shap</a></li>
                         <li> <a href='https://flask.palletsprojects.com/en/1.1.x/'>flask</a></li>
+                        <li>
+                            The <a href='https://github.com/materialscloud-org/tools-barebone'>tools-barbone</a> template. 
+                        </li>
                     </ul>
                 </p>
                 <p>
                     For training of the models, we used the data deposited in the Cambridge Structural Database (CSD). 
+
+                    <ol>
+                        <li>Moghadam, P. Z.; Li, A.; Wiggin, S. B.; Tao, A.; Maloney, A. G. P.; Wood, P. A.; Ward, S. C.; Fairen-Jimenez, D.  
+                            <i> Chem. Mater. </i> <b>2017</b>, 29 (7), 2618–2625. </li>
+                            <li> Groom, C. R.; Bruno, I. J.; Lightfoot, M. P.; Ward, S. C.  
+                                <i> Crystallogr B Struct Sci Cryst Eng Mater</i> <b>2016</b>, 72 (2), 171–179.</li>
+                    </ol>
                 </p>
             </div>
         </div>
@@ -211,7 +226,7 @@
 
     <div id='citation'>
         <p> Note: if you want to use the code on your computer, you can download the
-                python code from <a href="https://github.com/kjappelbaum/oximachinetool/settings" target="_blank">our Github repo</a>. Also note that this tool is in development. Latest release: v0.3.0.</p>
+                Python code from <a href="https://github.com/kjappelbaum/oximachinetool" target="_blank">our Github repo</a>. Also note that this tool is in development. Latest release: v0.3.0.</p>
     </div>
     
     <div style="position: relative" data-iframe-height></div>

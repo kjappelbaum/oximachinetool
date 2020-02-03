@@ -89,9 +89,9 @@ function toggleRotation(viewer) {
 
 function showBonds(viewer) {
     if ($("#bonds-input").is(":checked")){
-        var jmolscript = "wireframe 0.15";
+        var jmolscript = "select; wireframe 0.15";
     } else {
-        var jmolscript = "wireframe off";
+        var jmolscript = "select; wireframe off";
     }
     Jmol.script(eval(viewer), jmolscript);
     return jmolscript;
@@ -132,13 +132,13 @@ function labelOxStates(viewer, atom_indices, labeltext) {
         for (const [index, label] of labeltext.entries()) {
             if (counter < elements) {
                 var num = atom_indices[index] + 1;
-                jmolscript+= '; select atomno=' + num + '; ';
+                jmolscript+= 'select atomno=' + num + '; ';
                 jmolscript+= 'label ' + '"' + label + '"' + '; ';
                 counter += 1;
             }
             else {
                 var num = atom_indices[index] + 1;
-                jmolscript+= '; select atomno=' + num + '; ';
+                jmolscript+= 'select atomno=' + num + '; ';
                 jmolscript+= 'label ' + '"' + label + '"';
             }
         }
@@ -163,9 +163,9 @@ function labelOxStates(viewer, atom_indices, labeltext) {
 
 function showSpheres(viewer) {
     if ($("#spheres-input").is(":checked")){
-        var jmolscript = "spacefill on";
+        var jmolscript = "select; spacefill on";
     } else {
-        var jmolscript = "spacefill 23%";
+        var jmolscript = "select; spacefill 23%";
     }
     Jmol.script(eval(viewer), jmolscript);
     return jmolscript;

@@ -1,18 +1,18 @@
-Clazz.declarePackage ("JS");
-Clazz.load (["JS.AbstractButton"], "JS.JMenuItem", null, function () {
+Clazz.declarePackage ("J.awtjs.swing");
+Clazz.load (["J.awtjs.swing.AbstractButton"], "J.awtjs.swing.JMenuItem", null, function () {
 c$ = Clazz.decorateAsClass (function () {
 this.btnType = 0;
 Clazz.instantialize (this, arguments);
-}, JS, "JMenuItem", JS.AbstractButton);
+}, J.awtjs.swing, "JMenuItem", J.awtjs.swing.AbstractButton);
 Clazz.makeConstructor (c$, 
 function (text) {
-Clazz.superConstructor (this, JS.JMenuItem, ["btn"]);
+Clazz.superConstructor (this, J.awtjs.swing.JMenuItem, ["btn"]);
 this.setText (text);
 this.btnType = (text == null ? 0 : 1);
 }, "~S");
 Clazz.makeConstructor (c$, 
 function (type, i) {
-Clazz.superConstructor (this, JS.JMenuItem, [type]);
+Clazz.superConstructor (this, J.awtjs.swing.JMenuItem, [type]);
 this.btnType = i;
 }, "~S,~N");
 Clazz.overrideMethod (c$, "toHTML", 

@@ -1,2 +1,2 @@
-Clazz.declarePackage ("JS");
-Clazz.declareInterface (JS, "Document");
+Clazz.declarePackage ("J.awtjs.swing");
+Clazz.declareInterface (J.awtjs.swing, "Document");

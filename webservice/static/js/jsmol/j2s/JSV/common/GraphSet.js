@@ -1,5 +1,5 @@
 Clazz.declarePackage ("JSV.common");
-Clazz.load (["JSV.common.XYScaleConverter", "java.util.Hashtable", "JU.BS", "$.Lst", "JSV.common.Coordinate"], "JSV.common.GraphSet", ["java.lang.Boolean", "$.Double", "$.Float", "JU.DF", "$.PT", "JSV.common.Annotation", "$.ColorParameters", "$.ColoredAnnotation", "$.ImageView", "$.Integral", "$.IntegralData", "$.Measurement", "$.MeasurementData", "$.PanelData", "$.Parameters", "$.PeakData", "$.PeakPickEvent", "$.PlotWidget", "$.ScaleData", "$.ScriptToken", "$.Spectrum", "$.ViewData", "JU.Logger"], function () {
+Clazz.load (["JSV.common.XYScaleConverter", "java.util.Hashtable", "JU.BS", "$.Lst", "JSV.common.Coordinate", "JSV.dialog.JSVDialog"], "JSV.common.GraphSet", ["java.lang.Boolean", "$.Double", "$.Float", "JU.DF", "$.PT", "JSV.common.Annotation", "$.ColorParameters", "$.ColoredAnnotation", "$.ImageView", "$.Integral", "$.IntegralData", "$.Measurement", "$.MeasurementData", "$.PanelData", "$.Parameters", "$.PeakData", "$.PeakPickEvent", "$.PlotWidget", "$.ScaleData", "$.ScriptToken", "$.Spectrum", "$.ViewData", "JU.Logger"], function () {
 c$ = Clazz.decorateAsClass (function () {
 this.gs2dLinkedX = null;
 this.gs2dLinkedY = null;
@@ -116,7 +116,7 @@ this.mapX = null;
 if (!Clazz.isClassDefined ("JSV.common.GraphSet.Highlight")) {
 JSV.common.GraphSet.$GraphSet$Highlight$ ();
 }
-this.widgetsAreSet = true;
+this.triggered = true;
 this.lastIntDragX = 0;
 this.nextClickMode = 0;
 this.dialogs = null;
@@ -169,7 +169,7 @@ Clazz.defineMethod (c$, "closeDialogsExcept",
 function (type) {
 if (this.dialogs != null) for (var e, $e = this.dialogs.entrySet ().iterator (); $e.hasNext () && ((e = $e.next ()) || true);) {
 var ad = e.getValue ();
-if (ad.isDialog () && (type === JSV.common.Annotation.AType.NONE || ad.getAType () !== type)) (ad).setVisible (false);
+if (Clazz.instanceOf (ad, JSV.dialog.JSVDialog) && (type === JSV.common.Annotation.AType.NONE || ad.getAType () !== type)) (ad).setVisible (false);
 }
 }, "JSV.common.Annotation.AType");
 Clazz.defineMethod (c$, "dispose", 
@@ -186,7 +186,7 @@ this.widgets = null;
 this.disposeImage ();
 if (this.dialogs != null) for (var e, $e = this.dialogs.entrySet ().iterator (); $e.hasNext () && ((e = $e.next ()) || true);) {
 var ad = e.getValue ();
-if (ad.isDialog ()) (ad).dispose ();
+if (Clazz.instanceOf (ad, JSV.dialog.JSVDialog)) (ad).dispose ();
 }
 this.dialogs = null;
 });
@@ -645,9 +645,7 @@ Clazz.defineMethod (c$, "checkArrowLeftRightClick",
 if (this.haveLeftRightArrows) {
 var dx = (this.isArrowClick (xPixel, yPixel, 1) ? -1 : this.isArrowClick (xPixel, yPixel, 2) ? 1 : 0);
 if (dx != 0) {
-var i = this.iSpectrumSelected + dx;
-if (i < 0) i = this.nSpectra - 1;
-this.setSpectrumClicked (i % this.nSpectra);
+this.setSpectrumClicked ((this.iSpectrumSelected + dx) % this.nSpectra);
 return true;
 }if (this.isArrowClick (xPixel, yPixel, 0)) {
 if (this.showAllStacked) {
@@ -844,7 +842,7 @@ this.cur2Dy.xPixel1 = this.imageView.xPixel1 + 5;
 }}, "~B");
 Clazz.defineMethod (c$, "setDerivedPins", 
  function (subIndex) {
-this.widgetsAreSet = true;
+this.triggered = true;
 if (this.gs2dLinkedX != null) this.cur1D2x1.setX (this.cur1D2x1.getXVal (), this.toPixelX (this.cur1D2x1.getXVal ()));
 if (this.gs2dLinkedY != null) this.cur1D2x2.setX (this.cur1D2x2.getXVal (), this.toPixelX (this.cur1D2x2.getXVal ()));
 this.pin1Dx01.setX (0, Clazz.doubleToInt ((this.pin1Dx0.xPixel0 + this.pin1Dx1.xPixel0) / 2));
@@ -967,7 +965,7 @@ for (var i = this.viewList.size (); --i >= 1; ) this.viewList.removeItemAt (i);
 
 });
 Clazz.defineMethod (c$, "drawAll", 
- function (gMain, gFront, gBack, iSplit, needNewPins, doAll, pointsOnly) {
+ function (gMain, gFront, gBack, iSplit, needNewPins, doAll) {
 this.g2d = this.pd.g2d;
 this.gMain = gMain;
 var spec0 = this.getSpectrumAt (0);
@@ -1029,10 +1027,10 @@ this.pd.titleDrawn = true;
 if (this.pd.getBoolean (JSV.common.ScriptToken.YSCALEON)) this.drawYScale (gMain, this);
 if (this.pd.getBoolean (JSV.common.ScriptToken.YUNITSON)) this.drawYUnits (gMain);
 }}var isContinuous = spec.isContinuous ();
-var onSpectrum = ((this.nSplit > 1 ? i == this.iSpectrumMovedTo : this.isLinked || i == iSpectrumForScale) && !this.pd.isPrinting && isContinuous);
+var onSpectrum = ((this.nSplit > 1 ? i == this.iSpectrumMovedTo : this.isLinked || i == iSpectrumForScale) && !this.pd.isPrinting && spec.isContinuous ());
 var hasPendingIntegral = (!isGrey && this.pendingIntegral != null && spec === this.pendingIntegral.spec);
 if (doAll || hasPendingIntegral) {
-this.drawPlot (hasPendingIntegral && !doAll ? gFront : gMain, i, spec, isContinuous, offset, isGrey, null, onSpectrum, hasPendingIntegral, pointsOnly);
+this.drawPlot (hasPendingIntegral && !doAll ? gFront : gMain, i, spec, isContinuous, offset, isGrey, null, onSpectrum, hasPendingIntegral);
 }this.drawIntegration (gFront, i, offset, isGrey, ig, isContinuous, onSpectrum);
 this.drawMeasurements (gFront, i);
 if (this.pendingMeasurement != null && this.pendingMeasurement.spec === spec) this.drawMeasurement (gFront, this.pendingMeasurement);
@@ -1070,7 +1068,7 @@ if (subIndex >= 0) this.draw2DUnits (gMain);
 }this.drawWidgets (gFront, g2, subIndex, needNewPins, doDraw1DObjects, true, false);
 this.drawWidgets (gFront, g2, subIndex, needNewPins, doDraw1DObjects, true, true);
 }if (this.annotations != null) this.drawAnnotations (gFront, this.annotations, null);
-}, "~O,~O,~O,~N,~B,~B,~B");
+}, "~O,~O,~O,~N,~B,~B");
 Clazz.defineMethod (c$, "drawSpectrumSource", 
  function (g, i) {
 this.pd.printFilePath (g, this.pd.thisWidth - this.pd.right, this.yPixel0, this.spectra.get (i).getFilePath ());
@@ -1188,10 +1186,10 @@ Clazz.defineMethod (c$, "drawBar",
 var r = xMax + xMin;
 var d = Math.abs (xMax - xMin);
 var range = Math.abs (this.toX (this.xPixel1) - this.toX (this.xPixel0));
-if (false && tickSize > 0 && d > range / 20) {
+if (tickSize > 0 && d > range / 20) {
 d = range / 20;
-xMin = r / 2 - d / 2;
-xMax = r / 2 + d / 2;
+xMin = r / 2 - d;
+xMax = r / 2 + d;
 }var x1 = this.toPixelX (xMin);
 var x2 = this.toPixelX (xMax);
 if (x1 > x2) {
@@ -1215,7 +1213,7 @@ this.fillBox (g, x1 - 1, this.yPixel0 + 2, x1 + 1, this.yPixel0 + 2 + tickSize, 
 Clazz.defineMethod (c$, "drawIntegration", 
  function (gFront, index, yOffset, isGrey, iData, isContinuous, isSelected) {
 if (iData != null) {
-if (this.haveIntegralDisplayed (index)) this.drawPlot (gFront, index, this.spectra.get (index), true, yOffset, false, iData, true, false, false);
+if (this.haveIntegralDisplayed (index)) this.drawPlot (gFront, index, this.spectra.get (index), true, yOffset, false, iData, true, false);
 this.drawIntegralValues (gFront, index, yOffset);
 }var ratios = this.getIntegrationRatios (index);
 if (ratios != null) this.drawAnnotations (gFront, ratios, JSV.common.ScriptToken.INTEGRALPLOTCOLOR);
@@ -1226,7 +1224,7 @@ var ad = this.getDialog (type, iSpec);
 return (ad == null || ad.getData ().size () == 0 || !ad.getState () ? null : ad.getData ());
 }, "JSV.common.Annotation.AType,~N");
 Clazz.defineMethod (c$, "drawPlot", 
- function (g, index, spec, isContinuous, yOffset, isGrey, ig, isSelected, hasPendingIntegral, pointsOnly) {
+ function (g, index, spec, isContinuous, yOffset, isGrey, ig, isSelected, hasPendingIntegral) {
 var xyCoords = (ig == null ? spec.getXYCoords () : this.getIntegrationGraph (index).getXYCoords ());
 var isIntegral = (ig != null);
 var bsDraw = (isIntegral ? ig.getBitSet () : null);
@@ -1241,7 +1239,7 @@ var cInt = (isIntegral || fillPeaks ? this.pd.getColor (JSV.common.ScriptToken.I
 var cFill = (cInt == null || spec.fillColor == null ? cInt : spec.fillColor);
 var iFirst = this.viewData.getStartingPointIndex (index);
 var iLast = this.viewData.getEndingPointIndex (index);
-if (isContinuous && !pointsOnly) {
+if (isContinuous) {
 iLast--;
 var doLineTo = (isIntegral || this.pendingIntegral != null) && this.g2d.canDoLineTo ();
 if (doLineTo) this.g2d.doStroke (g, true);
@@ -1306,13 +1304,12 @@ var y1 = this.toPixelY (Math.max (this.getScale ().minYOnScale, 0));
 y1 = this.fixY (yOffset + y1);
 y2 = this.fixY (yOffset + y2);
 if (y1 == y2 && (y1 == this.yPixel0 || y1 == this.yPixel1)) continue;
-if (pointsOnly) this.g2d.fillRect (g, x1 - 1, y2 - 1, 3, 3);
- else this.g2d.drawLine (g, x1, y1, x1, y2);
+this.g2d.drawLine (g, x1, y1, x1, y2);
 }
-if (!pointsOnly && this.getScale ().isYZeroOnScale ()) {
+if (this.getScale ().isYZeroOnScale ()) {
 var y = yOffset + this.toPixelY (this.getScale ().spectrumYRef);
 if (y == this.fixY (y)) this.g2d.drawLine (g, this.xPixel1, y, this.xPixel0, y);
-}}}, "~O,~N,JSV.common.Spectrum,~B,~N,~B,JSV.common.IntegralData,~B,~B,~B");
+}}}, "~O,~N,JSV.common.Spectrum,~B,~N,~B,JSV.common.IntegralData,~B,~B");
 Clazz.defineMethod (c$, "drawFrame", 
  function (g, iSpec, addCurrentBox, addSplitBox, drawUpDownArrows) {
 if (!this.pd.gridOn || this.pd.isPrinting) {
@@ -1661,7 +1658,7 @@ Clazz.defineMethod (c$, "checkIntegral",
 var ad = this.getDialog (JSV.common.Annotation.AType.Integration, -1);
 if (ad == null) return false;
 var integral = (ad.getData ()).addIntegralRegion (x1, x2);
-if (isFinal && ad.isDialog ()) (ad).update (null, 0, 0);
+if (isFinal && Clazz.instanceOf (ad, JSV.dialog.JSVDialog)) (ad).update (null, 0, 0);
 if (Double.isNaN (x2)) return false;
 this.pendingIntegral = (isFinal ? null : integral);
 this.pd.isIntegralDrag = !isFinal;
@@ -1965,8 +1962,8 @@ return (isEnd ? this.xPixelPlot1 - xPixel < 20 : xPixel - this.xPixelPlot0 < 20)
 }, "~N,~B");
 Clazz.defineMethod (c$, "checkWidgetEvent", 
 function (xPixel, yPixel, isPress) {
-if (!this.widgetsAreSet) return false;
-this.widgetsAreSet = false;
+if (!this.triggered) return false;
+this.triggered = false;
 var widget;
 if (isPress) {
 if (this.pd.clickCount == 2 && this.lastIntDragX != xPixel && !this.is2dClick (xPixel, yPixel)) {
@@ -2110,7 +2107,7 @@ JU.Logger.info ("JSVGraphSet " + (i + 1) + " nSpectra = " + graphSets.get (i).nS
 return graphSets;
 }, "JSV.common.PanelData,JSV.api.JSVPanel,JU.Lst,~N,~N,JSV.common.PanelData.LinkMode");
 Clazz.defineMethod (c$, "drawGraphSet", 
-function (gMain, gFront, gBack, width, height, left, right, top, bottom, isResized, taintedAll, pointsOnly) {
+function (gMain, gFront, gBack, width, height, left, right, top, bottom, isResized, taintedAll) {
 this.zoomEnabled = this.pd.getBoolean (JSV.common.ScriptToken.ENABLEZOOM);
 this.height = height * this.pd.scalingFactor;
 this.width = width * this.pd.scalingFactor;
@@ -2125,11 +2122,11 @@ if (!this.pd.isPrinting && this.widgets != null) for (var j = 0; j < this.widget
 
 for (var iSplit = 0; iSplit < this.nSplit; iSplit++) {
 this.setPositionForFrame (iSplit);
-this.drawAll (gMain, gFront, gBack, iSplit, isResized || this.nSplit > 1, taintedAll, pointsOnly);
+this.drawAll (gMain, gFront, gBack, iSplit, isResized || this.nSplit > 1, taintedAll);
 }
 this.setPositionForFrame (this.nSplit > 1 ? this.pd.currentSplitPoint : 0);
 if (this.pd.isPrinting) return;
-}, "~O,~O,~O,~N,~N,~N,~N,~N,~N,~B,~B,~B");
+}, "~O,~O,~O,~N,~N,~N,~N,~N,~N,~B,~B");
 Clazz.defineMethod (c$, "escapeKeyPressed", 
 function (isDEL) {
 if (this.zoomBox1D != null) this.zoomBox1D.xPixel0 = this.zoomBox1D.xPixel1 = 0;
@@ -2276,7 +2273,7 @@ var yOffset = (this.getSpectrum ().isInverted () ? this.yPixel1 - this.pd.mouseY
 }, "JSV.common.Annotation.AType,~N");
 Clazz.defineMethod (c$, "isVisible", 
  function (ad) {
-return ad != null && (ad.isDialog () && ad.isVisible ());
+return (Clazz.instanceOf (ad, JSV.dialog.JSVDialog) && ad.isVisible ());
 }, "JSV.api.AnnotationData");
 Clazz.defineMethod (c$, "mousePressedEvent", 
 function (xPixel, yPixel, clickCount) {
@@ -2433,13 +2430,13 @@ if (tfToggle != null && tfToggle !== Boolean.TRUE) return;
 if (type === JSV.common.Annotation.AType.PeakList || type === JSV.common.Annotation.AType.Integration || type === JSV.common.Annotation.AType.Measurements) this.pd.showDialog (type);
 return;
 }if (tfToggle == null) {
-if (id.isDialog ()) (id).setVisible (!(id).isVisible ());
+if (Clazz.instanceOf (id, JSV.dialog.JSVDialog)) (id).setVisible (!(id).isVisible ());
  else this.pd.showDialog (type);
 return;
 }var isON = tfToggle.booleanValue ();
 if (isON) id.setState (isON);
-if (isON || id.isDialog ()) this.pd.showDialog (type);
-if (!isON && id.isDialog ()) (id).setVisible (false);
+if (isON || Clazz.instanceOf (id, JSV.dialog.JSVDialog)) this.pd.showDialog (type);
+if (!isON && Clazz.instanceOf (id, JSV.dialog.JSVDialog)) (id).setVisible (false);
 }, "JSV.common.Annotation.AType,Boolean");
 Clazz.defineMethod (c$, "checkIntegralParams", 
 function (parameters, value) {
@@ -2656,18 +2653,18 @@ if (dialog == null) {
 if (!forceNew) return null;
 this.addDialog (iSpec, JSV.common.Annotation.AType.PeakList, dialog =  new JSV.common.PeakData (JSV.common.Annotation.AType.PeakList, this.getSpectrum ()));
 }(dialog.getData ()).setPeakList (p, -2147483648, this.viewData.getScale ());
-if (dialog.isDialog ()) (dialog).setFields ();
+if (Clazz.instanceOf (dialog, JSV.dialog.JSVDialog)) (dialog).setFields ();
 return dialog.getData ();
 }, "~N,JSV.common.Parameters,~B");
 Clazz.defineMethod (c$, "setPeakListing", 
 function (tfToggle) {
 var dialog = this.getDialog (JSV.common.Annotation.AType.PeakList, -1);
-var ad = (dialog != null && dialog.isDialog () ? dialog : null);
+var ad = (Clazz.instanceOf (dialog, JSV.dialog.JSVDialog) ? dialog : null);
 var isON = (tfToggle == null ? ad == null || !ad.isVisible () : tfToggle.booleanValue ());
 if (isON) {
 this.pd.showDialog (JSV.common.Annotation.AType.PeakList);
 } else {
-if (dialog.isDialog ()) (dialog).setVisible (false);
+if (Clazz.instanceOf (dialog, JSV.dialog.JSVDialog)) (dialog).setVisible (false);
 }}, "Boolean");
 Clazz.defineMethod (c$, "haveIntegralDisplayed", 
 function (i) {

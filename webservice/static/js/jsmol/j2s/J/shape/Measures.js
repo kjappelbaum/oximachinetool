@@ -1,5 +1,5 @@
 Clazz.declarePackage ("J.shape");
-Clazz.load (["J.api.JmolMeasurementClient", "J.shape.AtomShape", "JU.Lst"], "J.shape.Measures", ["java.lang.Boolean", "$.Float", "java.util.Hashtable", "JU.AU", "$.BS", "$.PT", "$.SB", "JM.Measurement", "$.MeasurementData", "JU.BSUtil", "$.C", "$.Escape"], function () {
+Clazz.load (["J.api.JmolMeasurementClient", "J.shape.AtomShape", "JU.Lst"], "J.shape.Measures", ["java.lang.Float", "java.util.Hashtable", "JU.AU", "$.BS", "$.PT", "$.SB", "JM.Measurement", "$.MeasurementData", "JU.BSUtil", "$.C", "$.Escape"], function () {
 c$ = Clazz.decorateAsClass (function () {
 this.bsSelected = null;
 this.strFormat = null;
@@ -14,6 +14,7 @@ this.mPending = null;
 this.colix = 0;
 this.tickInfo = null;
 this.defaultTickInfo = null;
+this.font3d = null;
 this.htMin = null;
 this.tokAction = 0;
 Clazz.instantialize (this, arguments);
@@ -31,7 +32,7 @@ this.atoms = this.ms.at;
 });
 Clazz.overrideMethod (c$, "initShape", 
 function () {
-if (J.shape.Measures.font3d == null) J.shape.Measures.font3d = this.vwr.gdata.getFont3D (18);
+this.font3d = this.vwr.gdata.getFont3D (15);
 });
 Clazz.overrideMethod (c$, "setSize", 
 function (size, bsSelected) {
@@ -48,7 +49,7 @@ return;
 this.setColor (JU.C.getColixO (value));
 return;
 }if ("font" === propertyName) {
-J.shape.Measures.font3d = value;
+this.font3d = value;
 return;
 }if ("hideAll" === propertyName) {
 this.showHide ((value).booleanValue ());
@@ -74,7 +75,7 @@ this.bsSelected.or (bs);
 }if ("setFormats" === propertyName) {
 this.setFormats (value);
 return;
-}this.measureAllModels = this.vwr.getBoolean (603979877);
+}this.measureAllModels = this.vwr.getBoolean (603979878);
 if ("delete" === propertyName) {
 this.deleteO (value);
 this.setIndices ();
@@ -114,39 +115,36 @@ if (this.tickInfo != null) this.define (md, 12291);
 this.define (md, md.tokAction);
 this.setIndices ();
 return;
-}var m = this.setSingleItem (md.points);
+}var pt = this.setSingleItem (md.points);
 if (md.thisID != null) {
-m.thisID = md.thisID;
-m.mad = md.mad;
-if (md.colix != 0) m.colix = md.colix;
-m.strFormat = md.strFormat;
-m.text = md.text;
+pt.thisID = md.thisID;
+pt.mad = md.mad;
+if (md.colix != 0) pt.colix = md.colix;
+pt.strFormat = md.strFormat;
+pt.text = md.text;
 }switch (md.tokAction) {
-case 266284:
-this.doAction (md, md.thisID, 266284);
-break;
 case 12291:
-this.defineAll (-2147483648, m, true, false, false);
+this.defineAll (-2147483648, pt, true, false, false);
 this.setIndices ();
 break;
 case 1073742335:
-this.showHideM (m, false);
+this.showHideM (pt, false);
 break;
 case 1073742334:
-this.showHideM (m, true);
+this.showHideM (pt, true);
 break;
 case 1665140738:
 if (md.thisID != null) this.doAction (md, md.thisID, 1665140738);
 break;
 case 12290:
 if (md.thisID == null) {
-this.deleteM (m);
+this.deleteM (pt);
 } else {
 this.deleteO (md.thisID);
-}this.toggle (m);
+}this.toggle (pt);
 break;
 case 268435538:
-this.toggle (m);
+this.toggle (pt);
 }
 return;
 }if ("clear" === propertyName) {
@@ -187,9 +185,6 @@ this.doAction (null, value, 12294);
 } else {
 this.showHideM ( new JM.Measurement ().setPoints (this.ms, value, null, null), true);
 }return;
-}if ("refresh" === propertyName) {
-this.doAction (value, null, 266284);
-return;
 }if ("show" === propertyName) {
 if (Clazz.instanceOf (value, String)) {
 this.doAction (null, value, 134222350);
@@ -392,27 +387,12 @@ this.measurementCount--;
 this.vwr.setStatusMeasuring ("measureDeleted", i, msg, 0);
 }, "~N");
 Clazz.defineMethod (c$, "doAction", 
- function (md, id, tok) {
-id = id.toUpperCase ().$replace ('?', '*');
-var isWild = JU.PT.isWild (id);
+ function (md, s, tok) {
+s = s.toUpperCase ().$replace ('?', '*');
+var isWild = JU.PT.isWild (s);
 for (var i = this.measurements.size (); --i >= 0; ) {
 var m = this.measurements.get (i);
-if (m.thisID != null && (m.thisID.equalsIgnoreCase (id) || isWild && JU.PT.isMatch (m.thisID.toUpperCase (), id, true, true))) switch (tok) {
-case 266284:
-if (md.colix != 0) m.colix = md.colix;
-if (md.mad != 0) m.mad = md.mad;
-if (md.strFormat != null) {
-m.strFormat = m.strFormat.substring (0, 2) + md.strFormat.substring (2);
-}if (md.text != null) {
-if (m.text == null) {
-m.text = md.text;
-} else {
-if (md.text.font != null) m.text.font = md.text.font;
-m.text.text = null;
-if (md.text.align != 0) m.text.align = md.text.align;
-if (md.colix != 0) m.labelColix = m.text.colix = md.text.colix;
-}}m.formatMeasurement (null);
-break;
+if (m.thisID != null && (m.thisID.equalsIgnoreCase (s) || isWild && JU.PT.isMatch (m.thisID.toUpperCase (), s, true, true))) switch (tok) {
 case 1665140738:
 m.mad = md.mad;
 break;
@@ -467,10 +447,7 @@ info.put ("index", Integer.$valueOf (index));
 info.put ("type", (count == 2 ? "distance" : count == 3 ? "angle" : "dihedral"));
 info.put ("strMeasurement", m.getString ());
 info.put ("count", Integer.$valueOf (count));
-info.put ("id", "" + m.thisID);
 info.put ("value", Float.$valueOf (m.value));
-info.put ("hidden", Boolean.$valueOf (m.isHidden));
-info.put ("visible", Boolean.$valueOf (m.isVisible));
 var tickInfo = m.tickInfo;
 if (tickInfo != null) {
 info.put ("ticks", tickInfo.ticks);
@@ -512,6 +489,4 @@ if (modelIndex >= 0 && !bsModels.get (modelIndex)) continue out;
 m.isVisible = true;
 }
 });
-Clazz.defineStatics (c$,
-"font3d", null);
 });

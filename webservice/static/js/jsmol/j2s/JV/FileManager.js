@@ -119,7 +119,7 @@ if (names.length == 1) return names[0];
 var fullPathName = names[0];
 var fileName = names[1];
 htParams.put ("fullPathName", (fileType == null ? "" : fileType + "::") + JV.FileManager.fixDOSName (fullPathName));
-if (this.vwr.getBoolean (603979879) && this.vwr.getBoolean (603979825)) this.vwr.getChimeMessenger ().update (fullPathName);
+if (this.vwr.getBoolean (603979880) && this.vwr.getBoolean (603979825)) this.vwr.getChimeMessenger ().update (fullPathName);
 var fileReader =  new J.io.FileReader (this.vwr, fileName, fullPathName, nameAsGiven, fileType, null, htParams, isAppend);
 fileReader.run ();
 return fileReader.getAtomSetCollection ();
@@ -214,7 +214,7 @@ return fr;
 }, "~A,~A,~A,~A,java.util.Map,~B");
 Clazz.defineMethod (c$, "createAtomSetCollectionFromDOM", 
 function (DOMNode, htParams) {
-var aDOMReader = J.api.Interface.getOption ("io.DOMReader", this.vwr, "file");
+var aDOMReader = J.api.Interface.getOption ("io.DOMReadaer", this.vwr, "file");
 aDOMReader.set (this, this.vwr, DOMNode, htParams);
 aDOMReader.run ();
 return aDOMReader.getAtomSetCollection ();
@@ -528,16 +528,16 @@ isAsynchronous = false;
 }if (Clazz.instanceOf (image, String)) {
 nameOrError = image;
 image = null;
-}if (!JV.Viewer.isJS && image != null && bytes != null) nameOrError = ";base64," + JU.Base64.getBase64 (bytes).toString ();
-if (!JV.Viewer.isJS || isPopupImage && nameOrError == null || !isPopupImage && image != null) return this.vwr.loadImageData (image, nameOrError, echoName, null);
+}if (!this.vwr.isJS && image != null && bytes != null) nameOrError = ";base64," + JU.Base64.getBase64 (bytes).toString ();
+if (!this.vwr.isJS || isPopupImage && nameOrError == null || !isPopupImage && image != null) return this.vwr.loadImageData (image, nameOrError, echoName, null);
 return isAsynchronous;
 }, "~O,~S,~B");
 Clazz.defineMethod (c$, "getClassifiedName", 
  function (name, isFullLoad) {
 if (name == null) return  Clazz.newArray (-1, [null]);
 var doSetPathForAllFiles = (this.pathForAllFiles.length > 0);
-if (name.startsWith ("?") || name.startsWith ("http://?") || name.startsWith ("https://?")) {
-if (!JV.Viewer.isJS && (name = this.vwr.dialogAsk ("Load", name, null)) == null) return  Clazz.newArray (-1, [isFullLoad ? "#CANCELED#" : null]);
+if (name.startsWith ("?") || name.startsWith ("http://?")) {
+if (!this.vwr.isJS && (name = this.vwr.dialogAsk ("Load", name, null)) == null) return  Clazz.newArray (-1, [isFullLoad ? "#CANCELED#" : null]);
 doSetPathForAllFiles = false;
 }var file = null;
 var url = null;
@@ -656,7 +656,7 @@ if (!forDialog) vwr.setStringProperty ("defaultDirectoryLocal", path);
 }, "JV.Viewer,~S,~B");
 c$.getLocalPathForWritingFile = Clazz.defineMethod (c$, "getLocalPathForWritingFile", 
 function (vwr, file) {
-if (file.startsWith ("http://") || file.startsWith ("https://")) return file;
+if (file.startsWith ("http://")) return file;
 file = JU.PT.rep (file, "?", "");
 if (file.indexOf ("file:/") == 0) return file.substring (6);
 if (file.indexOf ("/") == 0 || file.indexOf (":") >= 0) return file;

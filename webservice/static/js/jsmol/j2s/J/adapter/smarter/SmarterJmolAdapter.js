@@ -1,14 +1,6 @@
 Clazz.declarePackage ("J.adapter.smarter");
-Clazz.load (["J.api.JmolAdapter"], "J.adapter.smarter.SmarterJmolAdapter", ["java.io.BufferedReader", "$.InputStream", "javajs.api.GenericBinaryDocument", "JU.PT", "$.Rdr", "J.adapter.smarter.AtomIterator", "$.AtomSetCollection", "$.AtomSetCollectionReader", "$.BondIterator", "$.Resolver", "$.StructureIterator", "JS.SV", "JU.Logger", "JV.Viewer"], function () {
+Clazz.load (["J.api.JmolAdapter"], "J.adapter.smarter.SmarterJmolAdapter", ["java.io.BufferedReader", "$.InputStream", "javajs.api.GenericBinaryDocument", "JU.PT", "$.Rdr", "J.adapter.smarter.AtomIterator", "$.AtomSetCollection", "$.AtomSetCollectionReader", "$.BondIterator", "$.Resolver", "$.StructureIterator", "JS.SV", "JU.Logger"], function () {
 c$ = Clazz.declareType (J.adapter.smarter, "SmarterJmolAdapter", J.api.JmolAdapter);
-Clazz.makeConstructor (c$, 
-function () {
-Clazz.superConstructor (this, J.adapter.smarter.SmarterJmolAdapter, []);
-});
-Clazz.makeConstructor (c$, 
-function (string) {
-Clazz.superConstructor (this, J.adapter.smarter.SmarterJmolAdapter, []);
-}, "~S");
 Clazz.overrideMethod (c$, "getFileTypeName", 
 function (ascOrReader) {
 if (Clazz.instanceOf (ascOrReader, J.adapter.smarter.AtomSetCollection)) return (ascOrReader).fileTypeName;
@@ -151,7 +143,7 @@ atomsets[i] = ret;
 if (atomsets[i].errorMessage != null) return atomsets[i].errorMessage;
 }} catch (e) {
 JU.Logger.error ("" + e);
-if (!JV.Viewer.isJS) e.printStackTrace ();
+if (!vwr.isJS) e.printStackTrace ();
 return "" + e;
 }
 }

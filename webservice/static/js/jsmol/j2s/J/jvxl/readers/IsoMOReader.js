@@ -120,14 +120,8 @@ break;
 }}
 } else {
 if (mo.containsKey ("energy")) energy = mo.get ("energy");
-}if (line.indexOf ("%E") >= 0) {
-line = JU.PT.formatStringS (line, "E", energy != null && ++rep != 0 ? "" + energy : "");
-} else if (energy != null) {
-var s = JU.PT.formatStringF (line, "E", energy.floatValue ());
-if (s !== line) {
-line = s;
-rep++;
-}}if (line.indexOf ("%U") >= 0) line = JU.PT.formatStringS (line, "U", energy != null && this.params.moData.containsKey ("energyUnits") && ++rep != 0 ? this.params.moData.get ("energyUnits") : "");
+}if (line.indexOf ("%E") >= 0) line = JU.PT.formatStringS (line, "E", energy != null && ++rep != 0 ? "" + energy : "");
+if (line.indexOf ("%U") >= 0) line = JU.PT.formatStringS (line, "U", energy != null && this.params.moData.containsKey ("energyUnits") && ++rep != 0 ? this.params.moData.get ("energyUnits") : "");
 if (line.indexOf ("%S") >= 0) line = JU.PT.formatStringS (line, "S", mo != null && mo.containsKey ("symmetry") && ++rep != 0 ? "" + mo.get ("symmetry") : "");
 if (line.indexOf ("%O") >= 0) {
 var obj = (mo == null ? null : mo.get ("occupancy"));

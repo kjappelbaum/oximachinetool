@@ -1,5 +1,5 @@
 Clazz.declarePackage ("J.io");
-Clazz.load (null, "J.io.JmolUtil", ["java.io.BufferedInputStream", "$.BufferedReader", "java.net.URL", "java.util.Hashtable", "JU.AU", "$.Lst", "$.OC", "$.PT", "$.Rdr", "J.adapter.smarter.AtomSetCollection", "J.api.Interface", "JU.Logger", "JV.FileManager", "$.Viewer"], function () {
+Clazz.load (null, "J.io.JmolUtil", ["java.io.BufferedInputStream", "$.BufferedReader", "java.net.URL", "java.util.Hashtable", "JU.AU", "$.Lst", "$.OC", "$.PT", "$.Rdr", "J.adapter.smarter.AtomSetCollection", "J.api.Interface", "JU.Logger", "JV.FileManager"], function () {
 c$ = Clazz.declareType (J.io, "JmolUtil");
 Clazz.makeConstructor (c$, 
 function () {
@@ -16,10 +16,10 @@ var isBMP = fullPathName.toUpperCase ().endsWith ("BMP");
 if (forceSync || fullPathName.indexOf ("|") > 0 || isBMP) {
 var ret = vwr.fm.getFileAsBytes (fullPathName, null);
 if (!JU.AU.isAB (ret)) return "" + ret;
-if (JV.Viewer.isJS) info =  Clazz.newArray (-1, [echoName, fullPathNameOrBytes, ret]);
+if (vwr.isJS) info =  Clazz.newArray (-1, [echoName, fullPathNameOrBytes, ret]);
  else image = apiPlatform.createImage (ret);
 } else if (JU.OC.urlTypeIndex (fullPathName) >= 0) {
-if (JV.Viewer.isJS) info =  Clazz.newArray (-1, [echoName, fullPathNameOrBytes, null]);
+if (vwr.isJS) info =  Clazz.newArray (-1, [echoName, fullPathNameOrBytes, null]);
  else try {
 image = apiPlatform.createImage ( new java.net.URL (Clazz.castNullAs ("java.net.URL"), fullPathName, null));
 } catch (e) {
@@ -31,7 +31,7 @@ throw e;
 }
 } else {
 createImage = true;
-}} else if (JV.Viewer.isJS) {
+}} else if (vwr.isJS) {
 info =  Clazz.newArray (-1, [echoName, JU.Rdr.guessMimeTypeForBytes (fullPathNameOrBytes), fullPathNameOrBytes]);
 } else {
 createImage = true;

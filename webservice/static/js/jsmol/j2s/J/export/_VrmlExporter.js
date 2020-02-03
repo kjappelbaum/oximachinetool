@@ -536,7 +536,7 @@ this.output ("}");
 this.output (this.fontChild);
 }this.outputChildClose ();
 this.popMatrix ();
-}, "~N,~N,~N,~N,~S,JU.Font");
+}, "~N,~N,~N,~N,~S,javajs.awt.Font");
 Clazz.defineMethod (c$, "setFont", 
  function (colix, text, font3d) {
 this.fontStyle = font3d.fontStyle.toUpperCase ();
@@ -544,7 +544,7 @@ this.fontFace = font3d.fontFace.toUpperCase ();
 this.fontFace = (this.fontFace.equals ("MONOSPACED") ? "TYPEWRITER" : this.fontFace.equals ("SERIF") ? "SERIF" : "Arial");
 this.fontSize = font3d.fontSize * 0.015;
 this.fontChild = this.getDef ("T" + colix + this.fontFace + this.fontStyle + this.fontSize + "_" + text);
-}, "~N,~S,JU.Font");
+}, "~N,~S,javajs.awt.Font");
 Clazz.defineMethod (c$, "getDef", 
 function (key) {
 return (this.useTable == null ? "_" : this.useTable.getDef (key));

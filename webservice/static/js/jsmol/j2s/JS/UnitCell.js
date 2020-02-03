@@ -9,7 +9,7 @@ this.unitCellMultiplier = null;
 this.moreInfo = null;
 this.name = "";
 Clazz.instantialize (this, arguments);
-}, JS, "UnitCell", JU.SimpleUnitCell, Cloneable);
+}, JS, "UnitCell", JU.SimpleUnitCell);
 Clazz.prepareFields (c$, function () {
 this.cartesianOffset =  new JU.P3 ();
 });
@@ -357,13 +357,13 @@ if (i < 0) return null;
 m = symTemp.getSpaceGroupOperation (i);
 (m).doFinalize ();
 if (strans != null) {
-var atrans = JU.PT.split (strans, ",");
+var atrans = JU.PT.split (strans + "0,0,0", ",");
 var ftrans =  Clazz.newFloatArray (3, 0);
-if (atrans.length == 3) for (var j = 0; j < 3; j++) {
+for (var j = 0; j < 3; j++) {
 var s = atrans[j];
 var sfpt = s.indexOf ("/");
 if (sfpt >= 0) {
-ftrans[j] = JU.PT.parseFloat (s.substring (0, sfpt)) / JU.PT.parseFloat (s.substring (sfpt + 1));
+ftrans[j] = JU.PT.parseFloat (s.substring (0, sfpt)) / JU.PT.parseFloat (s.substring (sfpt));
 } else {
 ftrans[j] = JU.PT.parseFloat (s);
 }}
@@ -400,10 +400,9 @@ this.toCartesian (pts[i], true);
 return pts;
 }, "~O");
 Clazz.defineMethod (c$, "toFromPrimitive", 
-function (toPrimitive, type, uc, primitiveToCrystal) {
+function (toPrimitive, type, uc) {
 var offset = uc.length - 3;
-var mf = null;
-if (type == 'r' || primitiveToCrystal == null) {
+var mf;
 switch (type) {
 default:
 return false;
@@ -411,8 +410,8 @@ case 'r':
 JU.SimpleUnitCell.getReciprocal (uc, uc, 1);
 return true;
 case 'P':
-toPrimitive = true;
 mf = JU.M3.newA9 ( Clazz.newFloatArray (-1, [1, 0, 0, 0, 1, 0, 0, 0, 1]));
+toPrimitive = true;
 break;
 case 'A':
 mf = JU.M3.newA9 ( Clazz.newFloatArray (-1, [1, 0, 0, 0, 0.5, 0.5, 0, -0.5, 0.5]));
@@ -434,36 +433,20 @@ mf = JU.M3.newA9 ( Clazz.newFloatArray (-1, [0, 0.5, 0.5, 0.5, 0, 0.5, 0.5, 0.5,
 break;
 }
 if (!toPrimitive) mf.invert ();
-} else {
-mf = JU.M3.newM3 (primitiveToCrystal);
-if (toPrimitive) mf.invert ();
-}for (var i = uc.length; --i >= offset; ) {
+for (var i = uc.length; --i >= offset; ) {
 var p = uc[i];
 this.toFractional (p, false);
 mf.rotate (p);
 this.toCartesian (p, false);
 }
 return true;
-}, "~B,~S,~A,JU.M3");
+}, "~B,~S,~A");
 Clazz.defineMethod (c$, "getConventionalUnitCell", 
-function (latticeType, primitiveToCrystal) {
+function (latticeType) {
 var oabc = this.getUnitCellVectors ();
-if (!latticeType.equals ("P") || primitiveToCrystal != null) this.toFromPrimitive (false, latticeType.charAt (0), oabc, primitiveToCrystal);
+if (!latticeType.equals ("P")) this.toFromPrimitive (false, latticeType.charAt (0), oabc);
 return oabc;
-}, "~S,JU.M3");
-c$.cloneUnitCell = Clazz.defineMethod (c$, "cloneUnitCell", 
-function (uc) {
-var ucnew = null;
-try {
-ucnew = uc.clone ();
-} catch (e) {
-if (Clazz.exceptionOf (e, CloneNotSupportedException)) {
-} else {
-throw e;
-}
-}
-return ucnew;
-}, "JS.UnitCell");
+}, "~S");
 Clazz.defineStatics (c$,
 "twoP2", 19.739208802178716);
 c$.unitVectors = c$.prototype.unitVectors =  Clazz.newArray (-1, [JV.JC.axisX, JV.JC.axisY, JV.JC.axisZ]);

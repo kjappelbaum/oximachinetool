@@ -1,5 +1,5 @@
 Clazz.declarePackage ("J.adapter.readers.xml");
-Clazz.load (["J.adapter.smarter.AtomSetCollectionReader", "JU.SB"], "J.adapter.readers.xml.XmlReader", ["java.io.BufferedInputStream", "java.util.Hashtable", "JU.Rdr", "J.adapter.smarter.AtomSetCollection", "$.Resolver", "J.api.Interface", "JU.Logger", "JV.Viewer"], function () {
+Clazz.load (["J.adapter.smarter.AtomSetCollectionReader", "JU.SB"], "J.adapter.readers.xml.XmlReader", ["java.io.BufferedInputStream", "java.util.Hashtable", "JU.Rdr", "J.adapter.smarter.AtomSetCollection", "$.Resolver", "J.api.Interface", "JU.Logger"], function () {
 c$ = Clazz.decorateAsClass (function () {
 this.atom = null;
 this.bond = null;
@@ -56,7 +56,7 @@ try {
 thisReader.processXml (this, saxReader);
 } catch (e) {
 if (Clazz.exceptionOf (e, Exception)) {
-return "Error reading XML: " + (((this.parent == null ? this.vwr : this.parent.vwr), JV.Viewer).isJS ? e : e.getMessage ());
+return "Error reading XML: " + ((this.parent == null ? this.vwr : this.parent.vwr).isJS ? e : e.getMessage ());
 } else {
 throw e;
 }
@@ -130,7 +130,7 @@ if (this.parent == null) this.applySymTrajASCR ();
  else this.parent.applySymmetryAndSetTrajectory ();
 } catch (e) {
 if (Clazz.exceptionOf (e, Exception)) {
-System.out.println (((this.parent == null ? this : this.parent).vwr, JV.Viewer).isJS ? e : e.getMessage ());
+System.out.println ((this.parent == null ? this : this.parent).vwr.isJS ? e : e.getMessage ());
 JU.Logger.error ("applySymmetry failed: " + e);
 } else {
 throw e;

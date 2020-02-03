@@ -1,11 +1,11 @@
 Clazz.declarePackage ("JSV.js2d");
-Clazz.load (["J.api.GenericPlatform"], "JSV.js2d.JsPlatform", ["java.net.URL", "JU.AjaxURLStreamHandlerFactory", "$.Rdr", "$.SB", "JSV.app.GenericMouse", "JSV.js2d.Display", "$.Image", "$.JsFile", "$.JsFont"], function () {
+Clazz.load (["javajs.awt.GenericPlatform"], "JSV.js2d.JsPlatform", ["java.net.URL", "JU.AjaxURLStreamHandlerFactory", "$.Rdr", "$.SB", "JSV.app.GenericMouse", "JSV.js2d.Display", "$.Image", "$.JsFile", "$.JsFont"], function () {
 c$ = Clazz.decorateAsClass (function () {
 this.canvas = null;
 this.viewer = null;
 this.context = null;
 Clazz.instantialize (this, arguments);
-}, JSV.js2d, "JsPlatform", null, J.api.GenericPlatform);
+}, JSV.js2d, "JsPlatform", null, javajs.awt.GenericPlatform);
 Clazz.overrideMethod (c$, "setViewer", 
 function (viewer, canvas) {
 var context = "";
@@ -22,7 +22,7 @@ try {
 java.net.URL.setURLStreamHandlerFactory ( new JU.AjaxURLStreamHandlerFactory ());
 } catch (e) {
 }
-}, "J.api.PlatformViewer,~O");
+}, "javajs.awt.PlatformViewer,~O");
 Clazz.overrideMethod (c$, "isSingleThreaded", 
 function () {
 return true;
@@ -116,7 +116,7 @@ return this.grabPixels (canvas, width, height, null, 0, 0);
 Clazz.overrideMethod (c$, "getTextPixels", 
 function (text, font3d, context, image, width, height, ascent) {
 return JSV.js2d.Image.getTextPixels (text, font3d, context, width, height, ascent);
-}, "~S,JU.Font,~O,~O,~N,~N,~N");
+}, "~S,javajs.awt.Font,~O,~O,~N,~N,~N");
 Clazz.overrideMethod (c$, "flushImage", 
 function (imagePixelBuffer) {
 }, "~O");
@@ -157,7 +157,7 @@ return false;
 Clazz.overrideMethod (c$, "fontStringWidth", 
 function (font, text) {
 return JSV.js2d.JsFont.stringWidth (font, text);
-}, "JU.Font,~S");
+}, "javajs.awt.Font,~S");
 Clazz.overrideMethod (c$, "getFontAscent", 
 function (context) {
 return JSV.js2d.JsFont.getAscent (context);
@@ -169,7 +169,7 @@ return JSV.js2d.JsFont.getDescent (context);
 Clazz.overrideMethod (c$, "getFontMetrics", 
 function (font, context) {
 return JSV.js2d.JsFont.getFontMetrics (font, context);
-}, "JU.Font,~O");
+}, "javajs.awt.Font,~O");
 Clazz.overrideMethod (c$, "newFont", 
 function (fontFace, isBold, isItalic, fontSize) {
 return JSV.js2d.JsFont.newFont (fontFace, isBold, isItalic, fontSize, "px");

@@ -21,7 +21,6 @@ this.setBoolean (JSV.common.ScriptToken.ENABLEZOOM, true);
 this.setBoolean (JSV.common.ScriptToken.DISPLAY2D, true);
 this.setBoolean (JSV.common.ScriptToken.COORDINATESON, true);
 this.setBoolean (JSV.common.ScriptToken.PEAKTABSON, true);
-this.setBoolean (JSV.common.ScriptToken.POINTSONLY, false);
 this.setBoolean (JSV.common.ScriptToken.GRIDON, true);
 this.setBoolean (JSV.common.ScriptToken.XSCALEON, true);
 this.setBoolean (JSV.common.ScriptToken.YSCALEON, true);
@@ -64,7 +63,6 @@ case JSV.common.ScriptToken.DISPLAY1D:
 case JSV.common.ScriptToken.DISPLAY2D:
 case JSV.common.ScriptToken.ENABLEZOOM:
 case JSV.common.ScriptToken.GRIDON:
-case JSV.common.ScriptToken.POINTSONLY:
 case JSV.common.ScriptToken.PEAKTABSON:
 case JSV.common.ScriptToken.REVERSEPLOT:
 case JSV.common.ScriptToken.TITLEON:

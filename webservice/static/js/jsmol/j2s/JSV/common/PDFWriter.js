@@ -115,7 +115,7 @@ break;
 }
 this.pdf.setFont (fname, font.fontSizeNominal);
 return font;
-}, "~O,JU.Font");
+}, "~O,javajs.awt.Font");
 Clazz.overrideMethod (c$, "setStrokeBold", 
 function (g, tf) {
 this.pdf.setLineWidth (tf ? 2 : 1);

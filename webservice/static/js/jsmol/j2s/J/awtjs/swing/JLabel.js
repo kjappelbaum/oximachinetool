@@ -1,9 +1,9 @@
-Clazz.declarePackage ("JS");
-Clazz.load (["JS.JComponent"], "JS.JLabel", ["JU.SB"], function () {
-c$ = Clazz.declareType (JS, "JLabel", JS.JComponent);
+Clazz.declarePackage ("J.awtjs.swing");
+Clazz.load (["J.awtjs.swing.JComponent"], "J.awtjs.swing.JLabel", ["JU.SB"], function () {
+c$ = Clazz.declareType (J.awtjs.swing, "JLabel", J.awtjs.swing.JComponent);
 Clazz.makeConstructor (c$, 
 function (text) {
-Clazz.superConstructor (this, JS.JLabel, ["lblJL"]);
+Clazz.superConstructor (this, J.awtjs.swing.JLabel, ["lblJL"]);
 this.text = text;
 }, "~S");
 Clazz.overrideMethod (c$, "toHTML", 

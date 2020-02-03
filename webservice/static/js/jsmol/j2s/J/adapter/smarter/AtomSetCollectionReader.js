@@ -1,10 +1,9 @@
 Clazz.declarePackage ("J.adapter.smarter");
-Clazz.load (["javajs.api.GenericLineReader", "JU.SB"], "J.adapter.smarter.AtomSetCollectionReader", ["java.io.BufferedReader", "java.lang.Boolean", "$.Double", "$.Float", "$.NullPointerException", "javajs.api.GenericBinaryDocument", "JU.BS", "$.Lst", "$.M3", "$.P3", "$.PT", "$.Quat", "$.T4", "$.V3", "J.adapter.smarter.Atom", "$.AtomSetCollection", "J.api.Interface", "$.JmolAdapter", "JU.BSUtil", "$.Logger"], function () {
+Clazz.load (["javajs.api.GenericLineReader", "JU.SB"], "J.adapter.smarter.AtomSetCollectionReader", ["java.io.BufferedReader", "java.lang.Boolean", "$.Float", "$.NullPointerException", "javajs.api.GenericBinaryDocument", "JU.BS", "$.Lst", "$.M3", "$.P3", "$.PT", "$.Quat", "$.T4", "$.V3", "J.adapter.smarter.Atom", "$.AtomSetCollection", "J.api.Interface", "$.JmolAdapter", "JU.BSUtil", "$.Logger"], function () {
 c$ = Clazz.decorateAsClass (function () {
 this.isBinary = false;
 this.debugging = false;
 this.requiresBSFilter = false;
-this.primitiveToCrystal = null;
 this.asc = null;
 this.reader = null;
 this.binaryDoc = null;
@@ -163,7 +162,7 @@ this.processBinaryDocument ();
 if (!this.isFinalized) this.finalizeReaderASCR ();
 } catch (e) {
 JU.Logger.info ("Reader error: " + e);
-e.printStackTrace ();
+if (!this.vwr.isJS) e.printStackTrace ();
 this.setError (e);
 }
 if (this.reader != null) this.reader.close ();
@@ -319,12 +318,12 @@ Clazz.defineMethod (c$, "setError",
 var s;
 {
 if (e.getMessage)
-s = e.getMessage();
+s = e.getMessage()
 else
 s = e.toString();
 }if (this.line == null) this.asc.errorMessage = "Error reading file at end of file \n" + s;
  else this.asc.errorMessage = "Error reading file at line " + this.ptLine + ":\n" + this.line + "\n" + s;
-e.printStackTrace ();
+if (!this.vwr.isJS) e.printStackTrace ();
 }, "Throwable");
 Clazz.defineMethod (c$, "initialize", 
  function () {
@@ -509,7 +508,7 @@ this.checkUnitCell (6);
 Clazz.defineMethod (c$, "setUnitCellItem", 
 function (i, x) {
 if (this.ignoreFileUnitCell) return;
-if (i == 0 && x == 1 && !this.checkFilterKey ("TOPOS") || i == 3 && x == 0) return;
+if (i == 0 && x == 1 || i == 3 && x == 0) return;
 if (!Float.isNaN (x) && i >= 6 && Float.isNaN (this.unitCellParams[6])) this.initializeCartesianToFractional ();
 this.unitCellParams[i] = x;
 if (this.debugging) {
@@ -810,21 +809,6 @@ data[i] = JU.PT.getTokens (this.discardLinesUntilNonBlank ());
 if (data[i].length < minLineLen) --i;
 }
 }, "~A,~N");
-Clazz.defineMethod (c$, "fill3x3", 
-function (tokens, pt) {
-var a =  Clazz.newDoubleArray (3, 3, 0);
-var needTokens = (tokens == null);
-var pt0 = pt;
-for (var i = 0; i < 3; i++) {
-if (needTokens || pt >= tokens.length) {
-while ((tokens = JU.PT.getTokens (this.rd ())).length < 3) {
-}
-pt = (pt0 < 0 ? tokens.length + pt0 : pt0);
-}for (var j = 0; j < 3; j++) a[i][j] = Double.$valueOf (tokens[pt++]).doubleValue ();
-
-}
-return a;
-}, "~A,~N");
 Clazz.defineMethod (c$, "fillFloatArray", 
 function (s, width, data) {
 var tokens =  new Array (0);
@@ -848,7 +832,7 @@ return data;
 }, "~S,~N,~A");
 Clazz.defineMethod (c$, "fillFrequencyData", 
 function (iAtom0, ac, modelAtomCount, ignore, isWide, col0, colWidth, atomIndexes, minLineLen, data) {
-var withSymmetry = (ac != 0 && modelAtomCount != ac && data == null);
+var withSymmetry = (modelAtomCount != ac && data == null);
 if (ac == 0 && atomIndexes != null) ac = atomIndexes.length;
 var nLines = (isWide ? ac : ac * 3);
 var nFreq = ignore.length;

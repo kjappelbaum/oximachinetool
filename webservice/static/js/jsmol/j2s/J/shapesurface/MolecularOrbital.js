@@ -244,13 +244,13 @@ this.setPropI ("init", this.sg.params, null);
 this.setOrbital (i, null);
 }this.jvxlData.moleculeXml = this.vwr.getModelCml (this.vwr.getModelUndeletedAtomsBitSet (this.thisMesh.modelIndex), 100, true, false);
 if (!haveHeader) {
-str.append (J.jvxl.data.JvxlCoder.jvxlGetFile (this.jvxlData, null, null, "HEADERONLY", true, nTotal, null, null));
+str.append (J.jvxl.data.JvxlCoder.jvxlGetFileVwr (this.vwr, this.jvxlData, null, null, "HEADERONLY", true, nTotal, null, null));
 haveHeader = true;
-}str.append (J.jvxl.data.JvxlCoder.jvxlGetFile (this.jvxlData, null, this.jvxlData.title, null, false, 1, this.thisMesh.getState (this.myType), (this.thisMesh.scriptCommand == null ? "" : this.thisMesh.scriptCommand)));
+}str.append (J.jvxl.data.JvxlCoder.jvxlGetFileVwr (this.vwr, this.jvxlData, null, this.jvxlData.title, null, false, 1, this.thisMesh.getState (this.myType), (this.thisMesh.scriptCommand == null ? "" : this.thisMesh.scriptCommand)));
 if (!doOneMo) this.setPropI ("delete", "mo_show", null);
 if (nTotal == 1) break;
 }
-str.append (J.jvxl.data.JvxlCoder.jvxlGetFile (this.jvxlData, null, null, "TRAILERONLY", true, 0, null, null));
+str.append (J.jvxl.data.JvxlCoder.jvxlGetFileVwr (this.vwr, this.jvxlData, null, null, "TRAILERONLY", true, 0, null, null));
 return str.toString ();
 }return this.getPropI (propertyName, index);
 }, "~S,~N");

@@ -65,7 +65,7 @@
 var $t$;
 //var c$;
 Clazz_declarePackage ("JS");
-Clazz_load (null, "JS.MathExt", ["java.lang.Float", "$.Number", "java.util.Date", "$.Hashtable", "$.Random", "JU.AU", "$.BS", "$.CU", "$.Lst", "$.M4", "$.Measure", "$.OC", "$.P3", "$.P4", "$.PT", "$.Quat", "$.Rdr", "$.SB", "$.V3", "J.api.Interface", "J.atomdata.RadiusData", "J.bspt.PointIterator", "J.c.VDW", "J.i18n.GT", "JM.BondSet", "JS.SV", "$.ScriptParam", "$.T", "JU.BSUtil", "$.Escape", "$.JmolMolecule", "$.Logger", "$.Parser", "$.Point3fi", "$.SimpleUnitCell", "JV.FileManager", "$.JC", "$.Viewer"], function () {
+Clazz_load (null, "JS.MathExt", ["java.lang.Float", "$.Number", "java.util.Date", "$.Hashtable", "$.Random", "JU.AU", "$.BS", "$.CU", "$.Lst", "$.M4", "$.Measure", "$.OC", "$.P3", "$.P4", "$.PT", "$.Quat", "$.Rdr", "$.SB", "$.V3", "J.api.Interface", "J.atomdata.RadiusData", "J.bspt.PointIterator", "J.c.VDW", "J.i18n.GT", "JM.BondSet", "JS.SV", "$.ScriptParam", "$.T", "JU.BSUtil", "$.Escape", "$.JmolMolecule", "$.Logger", "$.Parser", "$.Point3fi", "$.SimpleUnitCell", "JV.FileManager", "$.JC"], function () {
 c$ = Clazz_decorateAsClass (function () {
 this.vwr = null;
 this.e = null;
@@ -147,7 +147,6 @@ return this.evaluateFormat (mp, op.intValue, args, tok == 1825200146);
 case 134320141:
 return this.evaluateUserFunction (mp, op.value, args, op.intValue, op.tok == 268435665);
 case 1275068449:
-case 1275068437:
 case 1275082245:
 case 1275072526:
 return this.evaluateGetProperty (mp, args, tok, op.tok == 268435665);
@@ -155,7 +154,7 @@ case 136314895:
 return this.evaluateHelix (mp, args);
 case 134219265:
 case 134217750:
-case 134217763:
+case 134219266:
 return this.evaluatePlane (mp, args, tok);
 case 134218759:
 case 134238732:
@@ -187,8 +186,6 @@ return this.evaluateSubstructure (mp, args, tok, op.tok == 268435665);
 case 1275068444:
 case 1275068425:
 return this.evaluateSort (mp, args, tok);
-case 134217764:
-return this.evaluateSpacegroup (mp, args);
 case 1296041986:
 return this.evaluateSymop (mp, args, op.tok == 268435665);
 case 1275068445:
@@ -200,21 +197,6 @@ return this.evaluateWrite (mp, args);
 }
 return false;
 }, "JS.ScriptMathProcessor,JS.T,~A,~N");
-Clazz_defineMethod (c$, "evaluateSpacegroup", 
- function (mp, args) {
-var unitCell = null;
-switch (args.length) {
-case 0:
-return mp.addXObj (this.vwr.getSymTemp ().getSpaceGroupInfo (this.vwr.ms, null, this.vwr.am.cmi, true, null));
-case 2:
-unitCell = JS.SV.flistValue (args[1], 0);
-if (unitCell.length < 6) unitCell = null;
-case 1:
-return mp.addXObj (this.vwr.getSymTemp ().getSpaceGroupInfo (this.vwr.ms, "" + args[0].asString (), -2147483648, true, unitCell));
-default:
-return false;
-}
-}, "JS.ScriptMathProcessor,~A");
 Clazz_defineMethod (c$, "evaluatePointGroup", 
  function (mp, args) {
 var pts = null;
@@ -353,11 +335,8 @@ var toPrimitive = "primitive".equalsIgnoreCase (op);
 if (toPrimitive || "conventional".equalsIgnoreCase (op)) {
 var stype = (++ptParam > lastParam ? "" : args[ptParam].asString ().toUpperCase ());
 if (stype.equals ("BCC")) stype = "I";
- else if (stype.length == 0) stype = this.vwr.getSymmetryInfo (iatom, null, 0, null, null, 1073741994, null, 0, -1, 0);
-if (stype == null || stype.length == 0) return false;
-if (u == null) u = this.vwr.getSymTemp ();
-var m3 = this.vwr.getModelForAtomIndex (iatom).auxiliaryInfo.get ("primitiveToCrystal");
-if (!u.toFromPrimitive (toPrimitive, stype.charAt (0), ucnew, m3)) return false;
+ else if (stype.length == 0) stype = this.vwr.getSymTemp ().getSymmetryInfoAtom (this.vwr.ms, iatom, null, 0, null, null, null, 1073741994, 0, -1);
+if (stype == null || stype.length == 0 || !(u == null ? this.vwr.getSymTemp () : u).toFromPrimitive (toPrimitive, stype.charAt (0), ucnew)) return false;
 } else if ("reciprocal".equalsIgnoreCase (op)) {
 ucnew = JU.SimpleUnitCell.getReciprocal (ucnew, null, scale);
 scale = 1;
@@ -942,7 +921,7 @@ return false;
 Clazz_defineMethod (c$, "getHelixData", 
  function (bs, tokType) {
 var iAtom = bs.nextSetBit (0);
-return (iAtom < 0 ? "null" : this.vwr.ms.at[iAtom].group.getHelixData (tokType, this.vwr.getQuaternionFrame (), this.vwr.getInt (553648144)));
+return (iAtom < 0 ? "null" : this.vwr.ms.at[iAtom].group.getHelixData (tokType, this.vwr.getQuaternionFrame (), this.vwr.getInt (553648145)));
 }, "JU.BS,~N");
 Clazz_defineMethod (c$, "evaluateFind", 
  function (mp, args) {
@@ -1135,21 +1114,19 @@ return mp.addXStr (this.vwr.getJBR ().toStdAmino3 (JS.SV.sValue (x1)));
 }, "JS.ScriptMathProcessor,~A");
 Clazz_defineMethod (c$, "evaluateGetProperty", 
  function (mp, args, tok0, isAtomProperty) {
-var nargs = args.length;
 var isSelect = (isAtomProperty && tok0 == 1275082245);
-var isPivot = (isAtomProperty && tok0 == 1275068437 && nargs > 0);
 var isAuxiliary = (tok0 == 1275068449);
 var pt = 0;
-var tok = (nargs == 0 ? 0 : args[0].tok);
-if (nargs == 2 && (tok == 7 || tok == 6 || tok == 14)) {
+var tok = (args.length == 0 ? 0 : args[0].tok);
+if (args.length == 2 && (tok == 7 || tok == 6 || tok == 14)) {
 return mp.addXObj (this.vwr.extractProperty (args[0].value, args[1].value.toString (), -1));
-}var bsSelect = (isAtomProperty && nargs == 1 && args[0].tok == 10 ? args[0].value : null);
-var pname = (bsSelect == null && nargs > 0 ? JS.SV.sValue (args[pt++]) : "");
+}var bsSelect = (isAtomProperty && args.length == 1 && args[0].tok == 10 ? args[0].value : null);
+var pname = (bsSelect == null && args.length > 0 ? JS.SV.sValue (args[pt++]) : "");
 var propertyName = pname;
 var lc = propertyName.toLowerCase ();
 if (!isSelect && lc.indexOf ("[select ") < 0) propertyName = lc;
 var isJSON = false;
-if (propertyName.equals ("json") && nargs > pt) {
+if (propertyName.equals ("json") && args.length > pt) {
 isJSON = true;
 propertyName = JS.SV.sValue (args[pt++]);
 }var x = null;
@@ -1179,29 +1156,7 @@ data[1] = Integer.$valueOf (-1);
 this.vwr.shm.getShapePropertyData (shapeID, pname.intern (), data);
 }}return (data[1] == null ? mp.addXStr ("") : mp.addXObj (data[1]));
 case 7:
-if (isPivot) {
-var lstx = x.getList ();
-var map =  new java.util.Hashtable ();
-var sep = (nargs > 1 ? JS.SV.sValue (args[nargs - 1]) : null);
-if (sep != null) nargs--;
-var keys =  new Array (nargs);
-for (var i = 0; i < nargs; i++) keys[i] = JS.SV.sValue (args[i]);
-
-for (var i = 0, n = lstx.size (); i < n; i++) {
-var sv = lstx.get (i);
-if (sv.tok != 6) continue;
-var mapi = sv.getMap ();
-var key = "";
-for (var j = 0; j < nargs; j++) {
-var obj = mapi.get (keys[j]);
-key += (j == 0 ? "" : sep) + JS.SV.sValue (obj);
-}
-var vlist = map.get (key);
-if (vlist == null) map.put (key, vlist = JS.SV.newV (7,  new JU.Lst ()));
-vlist.getList ().addLast (sv);
-}
-return mp.addXMap (map);
-}if (bsSelect != null) {
+if (bsSelect != null) {
 var l0 = x.getList ();
 var lst =  new JU.Lst ();
 for (var i = bsSelect.nextSetBit (0); i >= 0; i = bsSelect.nextSetBit (i + 1)) lst.addLast (l0.get (i));
@@ -1211,19 +1166,19 @@ return mp.addXList (lst);
 if (isSelect) propertyName = "[SELECT " + propertyName + "]";
 return mp.addXObj (this.vwr.extractProperty (x, propertyName, -1));
 }
-if (!lc.startsWith ("bondinfo") && !lc.startsWith ("atominfo") && !lc.startsWith ("modelkitinfo")) propertyName = "atomInfo." + propertyName;
+if (!lc.startsWith ("bondinfo") && !lc.startsWith ("atominfo")) propertyName = "atomInfo." + propertyName;
 }var propertyValue = "";
-if (propertyName.equalsIgnoreCase ("fileContents") && nargs >= 2) {
+if (propertyName.equalsIgnoreCase ("fileContents") && args.length > 2) {
 var s = JS.SV.sValue (args[1]);
-for (var i = 2; i < nargs; i++) s += "|" + JS.SV.sValue (args[i]);
+for (var i = 2; i < args.length; i++) s += "|" + JS.SV.sValue (args[i]);
 
 propertyValue = s;
-pt = nargs;
-} else if (nargs > pt) {
+pt = args.length;
+} else if (args.length > pt) {
 switch (args[pt].tok) {
 case 10:
 propertyValue = args[pt++].value;
-if (propertyName.equalsIgnoreCase ("bondInfo") && nargs > pt && args[pt].tok == 10) propertyValue =  Clazz_newArray (-1, [propertyValue, args[pt].value]);
+if (propertyName.equalsIgnoreCase ("bondInfo") && args.length > pt && args[pt].tok == 10) propertyValue =  Clazz_newArray (-1, [propertyValue, args[pt].value]);
 break;
 case 6:
 case 4:
@@ -1238,7 +1193,7 @@ propertyValue = bs;
 }if (isAuxiliary && !isAtomProperty) propertyName = "auxiliaryInfo.models." + propertyName;
 propertyName = JU.PT.rep (propertyName, ".[", "[");
 var property = this.vwr.getProperty (null, propertyName, propertyValue);
-if (pt < nargs) property = this.vwr.extractProperty (property, args, pt);
+if (pt < args.length) property = this.vwr.extractProperty (property, args, pt);
 return mp.addXObj (isJSON ? JS.SV.safeJSON ("value", property) : JS.SV.isVariableType (property) ? property : JU.Escape.toReadable (propertyName, property));
 }, "JS.ScriptMathProcessor,~A,~N,~B");
 Clazz_defineMethod (c$, "evaluateFormat", 
@@ -1496,7 +1451,7 @@ var nBytesMax = (args.length > 1 && args[1].tok == 2 ? args[1].asInt () : -1);
 var asJSON = (args.length > 1 && args[1].asString ().equalsIgnoreCase ("JSON"));
 if (asBytes) return mp.addXMap (this.vwr.fm.getFileAsMap (file, null));
 var isQues = file.startsWith ("?");
-if (JV.Viewer.isJS && (isQues || async)) {
+if (this.vwr.isJS && (isQues || async)) {
 if (isFile && isQues) return mp.addXStr ("");
 file = this.e.loadFileAsync ("load()_", file, mp.oPt, true);
 }var str = isFile ? this.vwr.fm.getFilePath (file, false, false) : this.vwr.getFileAsString4 (file, nBytesMax, false, false, true, "script");
@@ -1642,7 +1597,7 @@ return mp.addXList (this.vwr.ms.getModulationList (bs, (type + "D").toUpperCase 
 }, "JS.ScriptMathProcessor,~A");
 Clazz_defineMethod (c$, "evaluatePlane", 
  function (mp, args, tok) {
-if (tok == 134219265 && args.length != 3 || tok == 134217763 && args.length != 2 && args.length != 3 && args.length != 4 || args.length == 0 || args.length > 4) return false;
+if (tok == 134219265 && args.length != 3 || tok == 134219266 && args.length != 2 && args.length != 3 || args.length == 0 || args.length > 4) return false;
 var pt1;
 var pt2;
 var pt3;
@@ -1660,7 +1615,7 @@ return mp.addXPt4 (JU.Measure.getPlaneThroughPoints (pts.get (0), pts.get (1), p
 if (Clazz_instanceOf (pt, JU.P4)) return mp.addXPt4 (pt);
 return mp.addXStr ("" + pt);
 case 2:
-if (tok == 134217763) {
+if (tok == 134219266) {
 if (args[1].tok != 9) return false;
 pt3 =  new JU.P3 ();
 norm =  new JU.V3 ();
@@ -1678,7 +1633,7 @@ case 4:
 switch (tok) {
 case 134219265:
 return mp.addXPt4 (this.e.getHklPlane (JU.P3.new3 (JS.SV.fValue (args[0]), JS.SV.fValue (args[1]), JS.SV.fValue (args[2]))));
-case 134217763:
+case 134219266:
 pt1 = mp.ptValue (args[0], null);
 pt2 = mp.ptValue (args[1], null);
 if (pt1 == null || pt2 == null) return mp.addXStr ("");
@@ -1694,24 +1649,8 @@ return mp.addXPt (pt1);
 }pt3 = mp.ptValue (args[2], null);
 if (pt3 == null) return mp.addXStr ("");
 var v =  new JU.V3 ();
-pt3 = JU.P3.newP (pt3);
-if (args.length == 3) {
 JU.Measure.projectOntoAxis (pt3, pt1, vLine, v);
 return mp.addXPt (pt3);
-}var r = JS.SV.fValue (args[3]);
-var ptCenter = JU.P3.newP (pt3);
-JU.Measure.projectOntoAxis (pt3, pt1, vLine, v);
-var d = ptCenter.distance (pt3);
-var l =  new JU.Lst ();
-if (d == r) {
-l.addLast (pt3);
-} else if (d < r) {
-d = Math.sqrt (r * r - d * d);
-v.scaleAdd2 (d, vLine, pt3);
-l.addLast (JU.P3.newP (v));
-v.scaleAdd2 (-d, vLine, pt3);
-l.addLast (JU.P3.newP (v));
-}return mp.addXList (l);
 }
 switch (args[0].tok) {
 case 2:
@@ -2194,7 +2133,7 @@ if (bsAtoms == null && this.vwr.ms.mc == 1) bsAtoms = this.vwr.getModelUndeleted
 var narg = args.length;
 if (narg == 0) {
 if (bsAtoms.isEmpty ()) return false;
-var ops = JU.PT.split (JU.PT.trim (this.vwr.getSymTemp ().getSpaceGroupInfo (this.vwr.ms, null, this.vwr.ms.at[bsAtoms.nextSetBit (0)].mi, false, null).get ("symmetryInfo"), "\n"), "\n");
+var ops = JU.PT.split (JU.PT.trim (this.vwr.getSymTemp ().getSpaceGroupInfo (this.vwr.ms, null, this.vwr.ms.at[bsAtoms.nextSetBit (0)].mi, false).get ("symmetryInfo"), "\n"), "\n");
 var lst =  new JU.Lst ();
 for (var i = 0, n = ops.length; i < n; i++) lst.addLast (JU.PT.split (ops[i], "\t"));
 
@@ -2223,26 +2162,22 @@ if (apt + 1 < narg && args[apt + 1].tok == 10) (bsAtoms == null ? (bsAtoms =  ne
 var pt2 = null;
 if ((pt1 = (narg > apt ? mp.ptValue (args[apt], bsAtoms) : null)) != null) apt++;
 if ((pt2 = (narg > apt ? mp.ptValue (args[apt], bsAtoms) : null)) != null) apt++;
-var nth = (pt2 != null && args.length > apt && iOp == -2147483648 && args[apt].tok == 2 ? args[apt].intValue : -1);
-if (nth >= 0) apt++;
+var nth = (pt2 != null && args.length > apt && iOp == -2147483648 && args[apt].tok == 2 ? args[apt].intValue : 0);
+if (nth > 0) apt++;
 if (iOp == -2147483648) iOp = 0;
 var desc = (narg == apt ? (pt2 != null ? "all" : pt1 != null ? "point" : "matrix") : JS.SV.sValue (args[apt++]).toLowerCase ());
-return (bsAtoms != null && !bsAtoms.isEmpty () && apt == args.length && mp.addXObj (this.vwr.getSymmetryInfo (bsAtoms.nextSetBit (0), xyz, iOp, pt1, pt2, 0, desc, 0, nth, 0)));
+return (bsAtoms != null && !bsAtoms.isEmpty () && apt == args.length && mp.addXObj (this.vwr.getSymTemp ().getSymmetryInfoAtom (this.vwr.ms, bsAtoms.nextSetBit (0), xyz, iOp, pt1, pt2, desc, 0, 0, nth)));
 }, "JS.ScriptMathProcessor,~A,~B");
 Clazz_defineMethod (c$, "evaluateTensor", 
  function (mp, args) {
-System.out.println (args[1].tok + " " + 1275068445);
-var isTensor = (args.length == 2 && args[1].tok == 1275068445);
-var x = (isTensor ? null : mp.getX ());
-if (args.length > 2 || !isTensor && x.tok != 10) return false;
+var x = mp.getX ();
+if (args.length > 2 || x.tok != 10) return false;
 var bs = x.value;
-var tensorType = (isTensor || args.length == 0 ? null : JS.SV.sValue (args[0]).toLowerCase ());
+var tensorType = (args.length == 0 ? null : JS.SV.sValue (args[0]).toLowerCase ());
 var calc = this.vwr.getNMRCalculation ();
 if ("unique".equals (tensorType)) return mp.addXBs (calc.getUniqueTensorSet (bs));
 var infoType = (args.length < 2 ? null : JS.SV.sValue (args[1]).toLowerCase ());
-if (isTensor) {
-return mp.addXObj ((args[0].value).getInfo (infoType));
-}return mp.addXList (calc.getTensorInfo (tensorType, infoType, bs));
+return mp.addXList (calc.getTensorInfo (tensorType, infoType, bs));
 }, "JS.ScriptMathProcessor,~A");
 Clazz_defineMethod (c$, "evaluateUserFunction", 
  function (mp, name, args, tok, isSelector) {
@@ -2515,7 +2450,7 @@ var ndata = 0;
 var htPivot = null;
 while (true) {
 if (JU.AU.isAF (floatOrSVArray)) {
-if (tok == 1275068437) return "NaN";
+if (tok == 1140850707) return "NaN";
 data = floatOrSVArray;
 ndata = data.length;
 if (ndata == 0) break;
@@ -2523,7 +2458,7 @@ if (ndata == 0) break;
 sv = floatOrSVArray;
 ndata = sv.size ();
 if (ndata == 0) {
-if (tok != 1275068437) break;
+if (tok != 1140850707) break;
 } else {
 var sv0 = sv.get (0);
 if (sv0.tok == 8) return this.getMinMaxPoint (sv, tok);
@@ -2538,7 +2473,7 @@ break;
 var minMax;
 var isMin = false;
 switch (tok) {
-case 1275068437:
+case 1140850707:
 htPivot =  new java.util.Hashtable ();
 sum = minMax = 0;
 break;
@@ -2557,7 +2492,7 @@ sum = minMax = 0;
 var sum2 = 0;
 var n = 0;
 var isInt = true;
-var isPivot = (tok == 1275068437);
+var isPivot = (tok == 1140850707);
 for (var i = ndata; --i >= 0; ) {
 var svi = (sv == null ? JS.SV.vF : sv.get (i));
 var v = (isPivot ? 1 : data == null ? JS.SV.fValue (svi) : data[i]);
@@ -2571,7 +2506,7 @@ case 128:
 case 96:
 sum += v;
 break;
-case 1275068437:
+case 1140850707:
 isInt = new Boolean (isInt & (svi.tok == 2)).valueOf ();
 var key = svi.asString ();
 var ii = htPivot.get (key);
@@ -2586,7 +2521,7 @@ if (isInt) minMax = svi.intValue;
 }break;
 }
 }
-if (tok == 1275068437) {
+if (tok == 1140850707) {
 return htPivot;
 }if (n == 0) break;
 switch (tok) {
@@ -2718,7 +2653,7 @@ bs = JU.BSUtil.copy (bsA);
 bs.or (bsB);
 var nModels = this.vwr.ms.getModelBS (bs, false).cardinality ();
 withinAllModels = (nModels > 1);
-if (warnMultiModel && nModels > 1 && !this.e.tQuiet) this.e.showString (J.i18n.GT.$ ("Note: More than one model is involved in this contact!"));
+if (warnMultiModel && nModels > 1 && !this.e.tQuiet) this.e.showString (J.i18n.GT._ ("Note: More than one model is involved in this contact!"));
 }if (!bsA.equals (bsB)) {
 var setBfirst = (!localOnly || bsA.cardinality () < bsB.cardinality ());
 if (setBfirst) {

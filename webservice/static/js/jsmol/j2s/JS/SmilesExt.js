@@ -91,7 +91,6 @@ throw ex;
 }var b;
 if (bsMatch3D == null) {
 var isSmarts = ((flags & 2) == 2);
-var isOK = true;
 try {
 if (smiles == null) {
 b = this.e.vwr.getSubstructureSetArray (pattern, bsSelected, flags);

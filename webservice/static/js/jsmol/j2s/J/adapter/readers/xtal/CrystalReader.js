@@ -19,19 +19,17 @@ this.nuclearCharges = null;
 this.lstCoords = null;
 this.energy = null;
 this.ptOriginShift = null;
+this.primitiveToCryst = null;
 this.directLatticeVectors = null;
 this.spaceGroupName = null;
 this.checkModelTrigger = false;
-this.fullSymmetry = false;
-this.htCriticalPoints = null;
-this.directLatticeVectorsFirst = false;
-this.cpno = -1;
 this.symops = null;
 this.f14 = null;
 this.f16 = null;
 this.primitiveVolume = 0;
 this.primitiveDensity = 0;
 this.firstLine = null;
+this.vPrimitiveMapping = null;
 Clazz.instantialize (this, arguments);
 }, J.adapter.readers.xtal, "CrystalReader", J.adapter.smarter.AtomSetCollectionReader);
 Clazz.prepareFields (c$, function () {
@@ -40,12 +38,6 @@ this.symops =  new JU.Lst ();
 this.f14 =  Clazz.newFloatArray (14, 0);
 this.f16 =  Clazz.newFloatArray (16, 0);
 });
-Clazz.defineMethod (c$, "rd", 
-function () {
-while (Clazz.superCall (this, J.adapter.readers.xtal.CrystalReader, "rd", []) != null && (this.line.startsWith (" PROCESS") || this.line.startsWith (" INFORMATION") || this.line.startsWith (" WARNING"))) {
-}
-return this.line;
-});
 Clazz.overrideMethod (c$, "initializeReader", 
 function () {
 this.doProcessLines = false;
@@ -53,9 +45,8 @@ this.inputOnly = this.checkFilterKey ("INPUT");
 this.isPrimitive = !this.inputOnly && !this.checkFilterKey ("CONV");
 this.addVibrations = new Boolean (this.addVibrations & (!this.inputOnly && this.desiredModelNumber < 0)).valueOf ();
 this.getLastConventional = (!this.isPrimitive && this.desiredModelNumber == 0);
-this.fullSymmetry = this.checkFilterKey ("FULLSYM");
 this.setFractionalCoordinates (this.readHeader ());
-this.asc.checkLatticeOnly = !this.inputOnly;
+this.asc.checkLatticeOnly = true;
 });
 Clazz.overrideMethod (c$, "checkLine", 
 function () {
@@ -83,8 +74,8 @@ return true;
 }if (this.line.startsWith (" INPUT COORDINATES")) {
 this.state = 1;
 if (this.inputOnly) {
-this.newAtomSet ();
 this.readCoordLines ();
+this.processCoordLines ();
 this.continuing = false;
 }return true;
 }if (this.line.startsWith (" GEOMETRY INPUT FROM EXTERNAL")) {
@@ -110,6 +101,7 @@ return true;
 this.readPrimitiveLatticeVectors ();
 return true;
 }if (this.line.startsWith (" COORDINATES OF THE EQUIVALENT ATOMS") || this.line.startsWith (" INPUT LIST - ATOM N.")) {
+this.readPrimitiveMapping ();
 return true;
 }if (this.line.indexOf ("SYMMOPS - ") >= 0) {
 this.readSymmetryOperators ();
@@ -133,16 +125,18 @@ this.readCoordLines ();
 this.readFreqFragments ();
 return true;
 }if (this.checkModelTrigger) {
-if (this.line.indexOf ("CARTESIAN COORDINATES") >= 0 || this.line.indexOf ("TOTAL ENERGY") >= 0 || this.line.indexOf ("REFERENCE GEOMETRY DEFINED") >= 0 || this.line.indexOf ("FUNCTIONS") >= 0) {
+if (this.line.indexOf ("CARTESIAN COORDINATES") >= 0 || this.line.indexOf ("TOTAL ENERGY") >= 0 || this.line.indexOf ("REFERENCE GEOMETRY DEFINED") >= 0) {
 this.checkModelTrigger = false;
 if (!this.addModel ()) return true;
 }}if (this.line.startsWith (" ATOMS IN THE ASYMMETRIC UNIT")) {
-if (this.isMolecular) return (this.doGetModel (++this.modelNumber, null) ? this.readAtoms () : this.checkLastModel ());
-this.readCoordLines ();
+if (this.isMolecular) {
+if (!this.doGetModel (++this.modelNumber, null)) return this.checkLastModel ();
+return this.readAtoms ();
+}this.readCoordLines ();
 this.checkModelTrigger = true;
 }if (this.isProperties && this.line.startsWith ("   ATOM N.AT.")) {
-if (this.doGetModel (++this.modelNumber, null)) this.readAtoms ();
- else this.checkLastModel ();
+if (!this.doGetModel (++this.modelNumber, null)) return this.checkLastModel ();
+return this.readAtoms ();
 }if (!this.doProcessLines) return true;
 if (this.line.startsWith (" TOTAL ENERGY(")) {
 this.line = JU.PT.rep (this.line, "( ", "(");
@@ -151,7 +145,7 @@ this.energy = Double.$valueOf (Double.parseDouble (tokens[2]));
 this.setEnergy ();
 this.rd ();
 if (this.line.startsWith (" ********")) this.discardLinesUntilContains ("SYMMETRY ALLOWED");
- else if (this.line.startsWith (" TTTTTTTT")) this.discardLinesUntilContains (" ********");
+ else if (this.line.startsWith (" TTTTTTTT")) this.discardLinesUntilContains2 ("PREDICTED ENERGY CHANGE", "HHHHHHH");
 return true;
 }if (this.line.startsWith (" MULLIKEN POPULATION ANALYSIS")) return this.readPartialCharges ();
 if (this.line.startsWith (" TOTAL ATOMIC CHARGES")) return this.readTotalAtomicCharges ();
@@ -164,105 +158,15 @@ if (this.line.startsWith (" DEFINITION OF TRACELESS")) return this.getQuadrupole
 if (this.line.startsWith (" MULTIPOLE ANALYSIS BY ATOMS")) {
 this.appendLoadNote ("Multipole Analysis");
 return true;
-}if (this.line.startsWith (" CP N. ")) {
-this.cpno = this.parseIntAt (this.line, 6);
-return true;
-}if (this.line.startsWith (" CP TYPE ")) {
-this.processNextCriticalPoint ();
-return true;
 }return true;
-});
-Clazz.defineMethod (c$, "processNextCriticalPoint", 
- function () {
-if (this.htCriticalPoints == null) {
-this.htCriticalPoints =  new java.util.Hashtable ();
-this.asc.setModelInfoForSet ("criticalPoints", this.htCriticalPoints, 0);
-}var nblank = 0;
-var id = null;
-var entry = null;
-var f = 0.5291772;
-var m = null;
-var v = NaN;
-var g = NaN;
-var rho = NaN;
-var evalues = null;
-var type = null;
-while (this.line != null || this.rd ().length > 0 || ++nblank < 2) {
-if (this.line.indexOf ("CLUSTER") >= 0) {
-break;
-}if (this.line.length > 0) nblank = 0;
-var pt = this.line.indexOf (":");
-if (pt > 0) {
-var key = this.line.substring (0, pt).trim ();
-var value = this.line.substring (pt + 1);
-if (key.equals ("CP TYPE")) {
-type = J.adapter.readers.xtal.CrystalReader.crtypes[Clazz.doubleToInt ("??,-3,-1,+1,+3".indexOf (value.substring (5, 7)) / 3)];
-entry = this.htCriticalPoints.get (type);
-if (entry == null) {
-this.htCriticalPoints.put (type, entry =  new JU.Lst ());
-}m =  new java.util.Hashtable ();
-entry.addLast (m);
-var i = entry.size ();
-id = "cp_" + i;
-m.put ("cpno", Integer.$valueOf (this.cpno));
-m.put ("id", id);
-m.put ("type", type);
-m.put ("index", Integer.$valueOf (i));
-} else if (key.equals ("COORD(AU)  (X  Y  Z)")) {
-var xyz = JU.P3.new3 (f * this.parseFloatStr (value.substring (0, 12)), f * this.parseFloatStr (value.substring (12, 24)), f * this.parseFloatStr (value.substring (24, 36)));
-m.put ("point", xyz);
-JU.Logger.info ("CRYSTAL TOPOND critical point " + type + " " + xyz);
-} else if (key.equals ("PROPERTIES (RHO,GRHO,LAP)")) {
-rho = this.parseFloatStr (value.substring (0, 12));
-m.put ("rho", Float.$valueOf (rho));
-m.put ("lap", Float.$valueOf (this.parseFloatStr (value.substring (24, 36))));
-} else if (key.equals ("PROPERTIES (-LAP,GLAP,RHO)")) {
-m.put ("lap", Float.$valueOf (-this.parseFloatStr (value.substring (0, 12))));
-rho = this.parseFloatStr (value.substring (24, 36));
-m.put ("rho", Float.$valueOf (rho));
-} else if (key.equals ("KINETIC ENERGY DENSITIES (G,K)")) {
-g = this.parseFloatStr (value.substring (0, 12));
-m.put ("kineticEnergyG", Float.$valueOf (g));
-} else if (key.equals ("VIRIAL DENSITY")) {
-v = this.parseFloatStr (value.substring (0, 12));
-m.put ("virialDensityV", Float.$valueOf (v));
-m.put ("ratioVG", Float.$valueOf (Math.abs (v) / g));
-m.put ("energyDensityH", Float.$valueOf (g + v));
-m.put ("ratioHRho", Float.$valueOf ((g + v) / rho));
-} else if (key.equals ("EIGENVALUES (L1 L2 L3)")) {
-var e1 = this.parseFloatStr (value.substring (0, 12));
-var e2 = this.parseFloatStr (value.substring (12, 24));
-var e3 = this.parseFloatStr (value.substring (24, 36));
-evalues =  Clazz.newFloatArray (-1, [e1, e2, e3]);
-m.put ("eigenvalues", evalues);
-m.put ("ellipticity", Float.$valueOf (e1 / e2 - 1));
-m.put ("anisotropy", Float.$valueOf (e3 - Math.abs (e1 + e2) / 2));
-} else if (key.equals ("EIGENVECTORS")) {
-value = value + this.rd ().substring (33) + this.rd ().substring (33);
-var ev =  Clazz.newDoubleArray (3, 3, 0);
-for (var ei = 0, p = 0; ei < 3; ei++) {
-for (var ej = 0; ej < 3; ej++, p += 12) {
-ev[ej][ei] = this.parseFloatStr (value.substring (p, p + 12));
-}
-}
-var evectors =  new Array (3);
-evectors[0] = JU.P3.new3 (ev[0][0], ev[0][1], ev[0][2]);
-evectors[1] = JU.P3.new3 (ev[1][0], ev[1][1], ev[1][2]);
-evectors[2] = JU.P3.new3 (ev[2][0], ev[2][1], ev[2][2]);
-System.out.println ("evpts " + evectors[0] + " " + evectors[1] + " " + evectors[2]);
-m.put ("eigenvectors", evectors);
-var t =  new JU.Tensor ().setFromEigenVectors (evectors, evalues, "cp", id, null);
-m.put ("tensor", t);
-}}this.line = null;
-}
 });
 Clazz.defineMethod (c$, "newLattice", 
  function (isConv) {
 this.lstCoords = null;
 this.readLatticeParams (!isConv);
 this.symops.clear ();
-if (!isConv) this.primitiveToCrystal = null;
-if (!this.directLatticeVectorsFirst) this.directLatticeVectors = null;
+this.primitiveToCryst = null;
+this.directLatticeVectors = null;
 }, "~B");
 Clazz.defineMethod (c$, "addModel", 
  function () {
@@ -282,46 +186,28 @@ this.symops.clear ();
 this.rd ();
 this.f16[15] = 1;
 while (this.rd () != null && this.line.length > 0 && this.line.indexOf ("END") < 0) {
-if (this.line.indexOf ("V INV") >= 0) continue;
 this.fillFloatArray (this.line, 0, this.f14);
-if (Float.isNaN (this.f14[0])) break;
 for (var i = 0; i < 12; i++) this.f16[i] = this.f14[J.adapter.readers.xtal.CrystalReader.smap[i]];
 
-var m4 = JU.M4.newA16 (this.f16);
-var xyz = JS.SymmetryOperation.getXYZFromMatrix (m4, false, false, false);
-if (xyz.indexOf ("0y") >= 0 || xyz.indexOf ("0z") >= 0) {
-JU.Logger.error ("Symmetry operator could not be created for " + this.line);
-} else {
+var xyz = JS.SymmetryOperation.getXYZFromMatrix (JU.M4.newA16 (this.f16), false, false, false);
 this.symops.addLast (xyz);
 JU.Logger.info ("state:" + this.state + " Symmop " + this.symops.size () + ": " + xyz);
-}}
+}
+});
+Clazz.defineMethod (c$, "setSymmOps", 
+ function () {
+if (this.isPrimitive) for (var i = 0, n = this.symops.size (); i < n; i++) this.setSymmetryOperator (this.symops.get (i));
+
 });
 Clazz.overrideMethod (c$, "finalizeSubclassReader", 
 function () {
 this.processCoordLines ();
 if (this.energy != null) this.setEnergy ();
 this.finalizeReaderASCR ();
-this.asc.checkNoEmptyModel ();
-if (this.htCriticalPoints != null) {
-var note = "";
-var list;
-list = this.htCriticalPoints.get ("nuclei");
-if (list != null) note += "\n _M.criticalPoints.nuclei.length = " + list.size ();
-list = this.htCriticalPoints.get ("bonds");
-if (list != null) note += "\n _M.criticalPoints.bonds.length = " + list.size ();
-list = this.htCriticalPoints.get ("rings");
-if (list != null) note += "\n _M.criticalPoints.rings.length = " + list.size ();
-list = this.htCriticalPoints.get ("cages");
-if (list != null) note += "\n _M.criticalPoints.cages.length = " + list.size ();
-note += "\n Use MACRO TOPOND for TOPOND functions.";
-this.addJmolScript ("set drawHover");
-this.appendLoadNote (note);
-this.setLoadNote ();
-}});
+});
 Clazz.defineMethod (c$, "getDirect", 
  function () {
 this.directLatticeVectors = this.read3Vectors (this.line.indexOf ("(BOHR") >= 0);
-if (!this.iHaveUnitCell) this.directLatticeVectorsFirst = true;
 });
 Clazz.defineMethod (c$, "setUnitCellOrientation", 
  function () {
@@ -332,12 +218,12 @@ if (this.isPrimitive) {
 a = this.directLatticeVectors[0];
 b = this.directLatticeVectors[1];
 } else {
-if (this.primitiveToCrystal == null) return;
+if (this.primitiveToCryst == null) return;
 var mp =  new JU.M3 ();
 mp.setColumnV (0, this.directLatticeVectors[0]);
 mp.setColumnV (1, this.directLatticeVectors[1]);
 mp.setColumnV (2, this.directLatticeVectors[2]);
-mp.mul (this.primitiveToCrystal);
+mp.mul (this.primitiveToCryst);
 a =  new JU.V3 ();
 b =  new JU.V3 ();
 mp.getColumnV (0, a);
@@ -347,7 +233,7 @@ JU.Logger.info ("oriented unit cell is in model " + this.asc.atomSetCount);
 });
 Clazz.defineMethod (c$, "readPrimitiveLatticeVectors", 
  function () {
-this.primitiveToCrystal = JU.M3.newA9 (this.fillFloatArray (null, 0,  Clazz.newFloatArray (9, 0)));
+this.primitiveToCryst = JU.M3.newA9 (this.fillFloatArray (null, 0,  Clazz.newFloatArray (9, 0)));
 });
 Clazz.defineMethod (c$, "readHeader", 
  function () {
@@ -356,11 +242,9 @@ this.discardLinesUntilContains ("***********************************************
 this.readLines (2);
 this.isVersion3 = (this.line.indexOf ("CRYSTAL03") >= 0);
 this.discardLinesUntilContains ("EEEEEEEEEE");
-this.rd ();
 var name;
-if (this.line.length == 0) {
-this.discardLinesUntilContains ("*********");
-name = this.rd ().trim ();
+if (this.rd ().length == 0) {
+name = this.readLines (2).trim ();
 } else {
 name = this.line.trim ();
 this.rd ();
@@ -392,12 +276,12 @@ this.doApplySymmetry = this.isProperties;
 return !this.isProperties;
 });
 Clazz.defineMethod (c$, "readLatticeParams", 
- function (isPrimitive) {
+ function (isNewSet) {
 var f = (this.line.indexOf ("(BOHR") >= 0 ? 0.5291772 : 1);
-if (isPrimitive) this.newAtomSet ();
+if (isNewSet) this.newAtomSet ();
 this.primitiveVolume = 0;
 this.primitiveDensity = 0;
-if (this.isPolymer && !isPrimitive && this.line.indexOf ("BOHR =") < 0) {
+if (this.isPolymer && !this.isPrimitive) {
 this.setUnitCell (this.parseFloatStr (this.line.substring (this.line.indexOf ("CELL") + 4)) * f, -1, -1, 90, 90, 90);
 } else {
 while (this.rd ().indexOf ("GAMMA") < 0) if (this.line.indexOf ("VOLUME=") >= 0) {
@@ -406,13 +290,24 @@ this.primitiveDensity = this.parseFloatStr (this.line.substring (66));
 }
 var tokens = JU.PT.getTokens (this.rd ());
 if (this.isSlab) {
-if (isPrimitive) this.setUnitCell (this.parseFloatStr (tokens[0]) * f, this.parseFloatStr (tokens[1]) * f, -1, this.parseFloatStr (tokens[3]), this.parseFloatStr (tokens[4]), this.parseFloatStr (tokens[5]));
+if (this.isPrimitive) this.setUnitCell (this.parseFloatStr (tokens[0]) * f, this.parseFloatStr (tokens[1]) * f, -1, this.parseFloatStr (tokens[3]), this.parseFloatStr (tokens[4]), this.parseFloatStr (tokens[5]));
  else this.setUnitCell (this.parseFloatStr (tokens[0]) * f, this.parseFloatStr (tokens[1]) * f, -1, 90, 90, this.parseFloatStr (tokens[2]));
 } else if (this.isPolymer) {
 this.setUnitCell (this.parseFloatStr (tokens[0]) * f, -1, -1, this.parseFloatStr (tokens[3]), this.parseFloatStr (tokens[4]), this.parseFloatStr (tokens[5]));
 } else {
 this.setUnitCell (this.parseFloatStr (tokens[0]) * f, this.parseFloatStr (tokens[1]) * f, this.parseFloatStr (tokens[2]) * f, this.parseFloatStr (tokens[3]), this.parseFloatStr (tokens[4]), this.parseFloatStr (tokens[5]));
 }}}, "~B");
+Clazz.defineMethod (c$, "readPrimitiveMapping", 
+ function () {
+if (this.havePrimitiveMapping) return;
+this.vPrimitiveMapping =  new JU.Lst ();
+while (this.rd () != null && this.line.indexOf ("NUMBER") < 0) this.vPrimitiveMapping.addLast (this.line);
+
+});
+Clazz.defineMethod (c$, "setPrimitiveMapping", 
+ function () {
+if (this.havePrimitiveMapping || this.lstCoords == null || this.vPrimitiveMapping == null) return;
+});
 Clazz.defineMethod (c$, "getAtomIndexFromPrimitiveIndex", 
  function (iPrim) {
 return (this.primitiveToIndex == null ? iPrim : this.primitiveToIndex[iPrim]);
@@ -429,11 +324,7 @@ this.isMolecular = true;
 var i = this.atomIndexLast;
 var doNormalizePrimitive = false;
 this.atomIndexLast = this.asc.ac;
-var isFractional = this.iHaveFractionalCoordinates;
-if (!isFractional) {
-this.setUnitCellOrientation ();
-if (this.matUnitCellOrientation != null) this.getSymmetry ().initializeOrientation (this.matUnitCellOrientation);
-}while (this.rd () != null && this.line.length > 0 && this.line.indexOf (this.isPrimitive ? "*" : "=") < 0) {
+while (this.rd () != null && this.line.length > 0 && this.line.indexOf (this.isPrimitive ? "*" : "=") < 0) {
 var atom = this.asc.addNewAtom ();
 var tokens = this.getTokens ();
 var pt = (this.isProperties ? 1 : 2);
@@ -444,7 +335,7 @@ var x = this.parseFloatStr (tokens[pt++]);
 var y = this.parseFloatStr (tokens[pt++]);
 var z = this.parseFloatStr (tokens[pt]);
 if (this.haveCharges) atom.partialCharge = this.asc.atoms[i++].partialCharge;
-if (isFractional && !this.isProperties) {
+if (this.iHaveFractionalCoordinates && !this.isProperties) {
 if (x < 0 && (this.isPolymer || this.isSlab || doNormalizePrimitive)) x += 1;
 if (y < 0 && (this.isSlab || doNormalizePrimitive)) y += 1;
 if (z < 0 && doNormalizePrimitive) z += 1;
@@ -463,11 +354,11 @@ return this.parseIntStr (token) % 100;
 }, "~S");
 Clazz.defineMethod (c$, "readCoordLines", 
  function () {
-var atom = (this.inputOnly ? " ATOM" : "  ATOM");
-if (this.line.indexOf (atom) < 0) this.discardLinesUntilContains (atom);
+if (this.line.indexOf ("  ATOM") < 0) this.discardLinesUntilContains ("  ATOM");
 this.lstCoords =  new JU.Lst ();
 while (this.rd () != null && this.line.length > 0) if (this.line.indexOf ("****") < 0) this.lstCoords.addLast (this.line);
 
+this.setPrimitiveMapping ();
 });
 Clazz.defineMethod (c$, "processCoordLines", 
  function () {
@@ -512,20 +403,7 @@ this.asc.setModelInfoForSet ("primitiveDensity", Float.$valueOf (this.primitiveD
 Clazz.overrideMethod (c$, "applySymmetryAndSetTrajectory", 
 function () {
 this.setUnitCellOrientation ();
-var m4p2c;
-var m4c2p;
-if (this.primitiveToCrystal != null) {
-this.asc.setModelInfoForSet ("primitiveToCrystal", this.primitiveToCrystal, this.asc.iSet);
-m4p2c =  new JU.M4 ();
-m4p2c.setRotationScale (this.primitiveToCrystal);
-m4p2c.m33 = 1;
-this.asc.setModelInfoForSet ("mat4PrimitiveToCrystal", m4p2c, this.asc.iSet);
-m4c2p = JU.M4.newM4 (m4p2c);
-m4c2p.invert ();
-this.asc.setModelInfoForSet ("mat4CrystalToPrimitive", m4c2p, this.asc.iSet);
-if (this.symops.size () > 0) {
-this.asc.setModelInfoForSet ("fileSymmetryOperations", this.symops.clone (), this.asc.iSet);
-}}this.iHaveSymmetryOperators = false;
+if (!this.isPrimitive) this.setSymmOps ();
 this.applySymTrajASCR ();
 });
 Clazz.defineMethod (c$, "newAtomSet", 
@@ -566,7 +444,7 @@ while (this.rd () != null && this.line.indexOf ("T") < 0) data.append (this.line
 
 var tokens = JU.PT.getTokens (data.toString ());
 var charges =  Clazz.newFloatArray (tokens.length, 0);
-if (this.nuclearCharges == null || this.nuclearCharges.length != charges.length) this.nuclearCharges = charges;
+if (this.nuclearCharges == null) this.nuclearCharges = charges;
 if (this.asc.ac == 0) return true;
 var atoms = this.asc.atoms;
 var i0 = this.asc.getLastAtomSetAtomIndex ();
@@ -602,7 +480,7 @@ this.discardLinesUntilContains ("MODES");
 var haveIntensities = (this.line.indexOf ("INTENS") >= 0);
 this.rd ();
 var vData =  new JU.Lst ();
-var freqAtomCount = (this.atomFrag == null ? this.ac : 0);
+var freqAtomCount = this.ac;
 while (this.rd () != null && this.line.length > 0) {
 var i0 = this.parseIntRange (this.line, 1, 5);
 var i1 = this.parseIntRange (this.line, 6, 10);
@@ -792,7 +670,13 @@ while (this.rd ().startsWith (" ATOM")) {
 var index = this.parseIntAt (this.line, 5) - 1;
 var atom = atoms[index];
 this.readLines (2);
-atom.addTensor ( new JU.Tensor ().setFromAsymmetricTensor (this.fill3x3 (null, -3), "charge", atom.elementSymbol + (index + 1)), null, false);
+var a =  Clazz.newDoubleArray (3, 3, 0);
+for (var i = 0; i < 3; i++) {
+var tokens = JU.PT.getTokens (this.rd ());
+for (var j = 0; j < 3; j++) a[i][j] = this.parseFloatStr (tokens[j + 1]);
+
+}
+atom.addTensor ( new JU.Tensor ().setFromAsymmetricTensor (a, "charge", atom.elementSymbol + (index + 1)), null, false);
 this.rd ();
 }
 this.appendLoadNote ("Ellipsoids set \"charge\": Born charge tensors");
@@ -806,6 +690,5 @@ Clazz.defineStatics (c$,
 "STATE_OPT_POINT", 4,
 "STATE_OPT_FINAL", 5,
 "STATE_FREQ", 6,
-"crtypes",  Clazz.newArray (-1, ["??", "nuclei", "bonds", "rings", "cages"]),
 "smap",  Clazz.newIntArray (-1, [2, 3, 4, 11, 5, 6, 7, 12, 8, 9, 10, 13]));
 });

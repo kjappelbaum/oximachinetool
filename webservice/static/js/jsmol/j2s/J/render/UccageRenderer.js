@@ -114,7 +114,7 @@ Clazz.defineMethod (c$, "renderInfo",
  function () {
 if (this.isExport || !this.vwr.getBoolean (603979828) || this.unitcell.isSimple () || this.vwr.isPreviewOnly || !this.vwr.gdata.setC (this.vwr.cm.colixBackgroundContrast) || this.vwr.gdata.getTextPosition () != 0) return;
 this.vwr.gdata.setFontFid (this.vwr.gdata.getFontFidFS ("Monospaced", 14 * this.imageFontScaling));
-this.xpos = Clazz.doubleToInt (Math.floor (10 * this.imageFontScaling));
+this.xpos = Clazz.doubleToInt (Math.floor (5 * this.imageFontScaling));
 this.ypos = this.lineheight = Clazz.doubleToInt (Math.floor (15 * this.imageFontScaling));
 var sgName = (this.isPolymer ? "polymer" : this.isSlab ? "slab" : this.unitcell.getSpaceGroupName ());
 if (sgName != null) {

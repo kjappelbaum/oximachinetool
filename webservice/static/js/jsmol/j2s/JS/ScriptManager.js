@@ -87,10 +87,9 @@ var n = 0;
 while (this.isQueueProcessing ()) {
 try {
 Thread.sleep (100);
-if (((n++) % 10) == 0) {
-if (JU.Logger.debugging) {
+if (((n++) % 10) == 0) if (JU.Logger.debugging) {
 JU.Logger.debug ("...scriptManager waiting for queue: " + this.scriptQueue.size () + " thread=" + Thread.currentThread ().getName ());
-}}} catch (e) {
+}} catch (e) {
 if (Clazz.exceptionOf (e, InterruptedException)) {
 } else {
 throw e;
@@ -227,7 +226,7 @@ return null;
 Clazz.defineMethod (c$, "checkResume", 
  function (str) {
 if (str.equalsIgnoreCase ("resume")) {
-this.vwr.scriptStatusMsg ("", "execution resumed");
+this.vwr.setScriptStatus ("", "execution resumed", 0, null);
 this.eval.resumePausedExecution ();
 return true;
 }return false;
@@ -256,13 +255,13 @@ if (strScript.indexOf ("moveto ") == 0) this.flushQueue ("moveto ");
 return "!" + strScript;
 }this.vwr.setInsertedCommand ("");
 if (isQuiet) strScript += "\u0001## EDITOR_IGNORE ##";
-return this.addScript (strScript, isQuiet && !this.vwr.getBoolean (603979879));
+return this.addScript (strScript, isQuiet && !this.vwr.getBoolean (603979880));
 }, "~S,~B,~B");
 Clazz.overrideMethod (c$, "checkHalt", 
 function (str, isInsert) {
 if (str.equalsIgnoreCase ("pause")) {
 this.vwr.pauseScriptExecution ();
-if (this.vwr.scriptEditorVisible) this.vwr.scriptStatusMsg ("", "paused -- type RESUME to continue");
+if (this.vwr.scriptEditorVisible) this.vwr.setScriptStatus ("", "paused -- type RESUME to continue", 0, null);
 return true;
 }if (str.equalsIgnoreCase ("menu")) {
 this.vwr.getProperty ("DATA_API", "getPopupMenu", "\0");
@@ -398,8 +397,7 @@ vwr.stateScriptVersionInt = 2147483647;
 }, "JV.Viewer,~S");
 Clazz.overrideMethod (c$, "addHydrogensInline", 
 function (bsAtoms, vConnections, pts) {
-var iatom = bsAtoms.nextSetBit (0);
-var modelIndex = (iatom < 0 ? this.vwr.ms.mc - 1 : this.vwr.ms.at[iatom].mi);
+var modelIndex = this.vwr.ms.at[bsAtoms.nextSetBit (0)].mi;
 if (modelIndex != this.vwr.ms.mc - 1) return  new JU.BS ();
 var bsA = this.vwr.getModelUndeletedAtomsBitSet (modelIndex);
 this.vwr.g.appendNew = false;

@@ -1,5 +1,5 @@
-Clazz.declarePackage ("JS");
-Clazz.load (["JS.ColumnSelectionModel", "$.JComponent", "$.ListSelectionModel"], "JS.JTable", ["JU.BS", "$.SB"], function () {
+Clazz.declarePackage ("J.awtjs.swing");
+Clazz.load (["J.awtjs.swing.ColumnSelectionModel", "$.JComponent", "$.ListSelectionModel"], "J.awtjs.swing.JTable", ["JU.BS", "$.SB"], function () {
 c$ = Clazz.decorateAsClass (function () {
 this.tableModel = null;
 this.bsSelectedCells = null;
@@ -8,14 +8,14 @@ this.rowSelectionAllowed = false;
 this.cellSelectionEnabled = false;
 this.selectionListener = null;
 Clazz.instantialize (this, arguments);
-}, JS, "JTable", JS.JComponent, [JS.ListSelectionModel, JS.ColumnSelectionModel]);
+}, J.awtjs.swing, "JTable", J.awtjs.swing.JComponent, [J.awtjs.swing.ListSelectionModel, J.awtjs.swing.ColumnSelectionModel]);
 Clazz.makeConstructor (c$, 
 function (tableModel) {
-Clazz.superConstructor (this, JS.JTable, ["JT"]);
+Clazz.superConstructor (this, J.awtjs.swing.JTable, ["JT"]);
 this.tableModel = tableModel;
 this.bsSelectedCells =  new JU.BS ();
 this.bsSelectedRows =  new JU.BS ();
-}, "JS.AbstractTableModel");
+}, "J.awtjs.swing.AbstractTableModel");
 Clazz.overrideMethod (c$, "getSelectionModel", 
 function () {
 return this;
@@ -28,7 +28,7 @@ Clazz.defineMethod (c$, "setPreferredScrollableViewportSize",
 function (dimension) {
 this.width = dimension.width;
 this.height = dimension.height;
-}, "JS.Dimension");
+}, "javajs.awt.Dimension");
 Clazz.defineMethod (c$, "clearSelection", 
 function () {
 this.bsSelectedCells.clearAll ();

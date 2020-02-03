@@ -1,7 +1,6 @@
 Clazz.declarePackage ("J.shapespecial");
-Clazz.load (["J.shape.AtomShape", "java.util.Hashtable", "JU.P3i"], "J.shapespecial.Ellipsoids", ["java.lang.Float", "JU.BS", "$.Lst", "$.PT", "$.SB", "$.V3", "J.api.Interface", "J.c.PAL", "J.shapespecial.Ellipsoid", "JU.BSUtil", "$.C", "$.Escape"], function () {
+Clazz.load (["J.shape.AtomShape", "java.util.Hashtable"], "J.shapespecial.Ellipsoids", ["JU.BS", "$.Lst", "$.PT", "$.SB", "$.V3", "J.api.Interface", "J.c.PAL", "J.shapespecial.Ellipsoid", "JU.BSUtil", "$.C", "$.Escape"], function () {
 c$ = Clazz.decorateAsClass (function () {
-this.ptXY = null;
 this.simpleEllipsoids = null;
 this.atomEllipsoids = null;
 this.typeSelected = "1";
@@ -10,55 +9,9 @@ this.ellipsoidSet = null;
 Clazz.instantialize (this, arguments);
 }, J.shapespecial, "Ellipsoids", J.shape.AtomShape);
 Clazz.prepareFields (c$, function () {
-this.ptXY =  new JU.P3i ();
 this.simpleEllipsoids =  new java.util.Hashtable ();
 this.atomEllipsoids =  new java.util.Hashtable ();
 });
-Clazz.overrideMethod (c$, "checkObjectHovered", 
-function (x, y, bsModels) {
-if (!this.vwr.getDrawHover () || this.simpleEllipsoids == null || this.simpleEllipsoids.isEmpty ()) return false;
-var e = this.findPickedObject (x, y, false, bsModels);
-if (e == null) return false;
-if (this.vwr.gdata.antialiasEnabled) {
-x <<= 1;
-y <<= 1;
-}this.vwr.hoverOnPt (x, y, e.label, e.id, e.center);
-return true;
-}, "~N,~N,JU.BS");
-Clazz.overrideMethod (c$, "checkObjectClicked", 
-function (x, y, action, bsModels, drawPicking) {
-if (action == 0 || !drawPicking || this.simpleEllipsoids == null || this.simpleEllipsoids.isEmpty ()) return null;
-var e = this.findPickedObject (x, y, false, bsModels);
-if (e == null) return null;
-var map = null;
-map =  new java.util.Hashtable ();
-map.put ("id", e.id);
-if (e.label != null) map.put ("label", e.label);
-map.put ("pt", e.center);
-map.put ("modelIndex", Integer.$valueOf (e.modelIndex));
-map.put ("model", this.vwr.getModelNumberDotted (e.modelIndex));
-map.put ("type", "ellipsoid");
-if (action != 0) this.vwr.setStatusAtomPicked (-2, "[\"ellipsoid\"," + JU.PT.esc (e.id) + "," + +e.modelIndex + ",1," + e.center.x + "," + e.center.y + "," + e.center.z + "," + (e.label == null ? "\"\"" : JU.PT.esc (e.label)) + "]", map, false);
-return map;
-}, "~N,~N,~N,JU.BS,~B");
-Clazz.defineMethod (c$, "findPickedObject", 
- function (x, y, isPicking, bsModels) {
-var dmin2 = 100;
-if (this.vwr.gdata.isAntialiased ()) {
-x <<= 1;
-y <<= 1;
-dmin2 <<= 1;
-}var picked = null;
-for (var id, $id = this.simpleEllipsoids.keySet ().iterator (); $id.hasNext () && ((id = $id.next ()) || true);) {
-var e = this.simpleEllipsoids.get (id);
-if (!e.visible || !bsModels.get (e.modelIndex)) continue;
-var d2 = this.coordinateInRange (x, y, e.center, dmin2, this.ptXY);
-if (d2 >= 0) {
-dmin2 = d2;
-picked = e;
-}}
-return picked;
-}, "~N,~N,~B,JU.BS");
 Clazz.defineMethod (c$, "isActive", 
 function () {
 return !this.atomEllipsoids.isEmpty () || !this.simpleEllipsoids.isEmpty ();
@@ -138,7 +91,7 @@ while (e.hasNext ()) if (e.next ().modelIndex == modelIndex) e.remove ();
 
 this.ellipsoidSet.clear ();
 return;
-}var mode = "ax ce co de eq mo on op sc tr la".indexOf ((propertyName + "  ").substring (0, 2));
+}var mode = "ax ce co de eq mo on op sc tr".indexOf ((propertyName + "  ").substring (0, 2));
 if (this.ellipsoidSet.size () > 0) {
 if ("translucentLevel" === propertyName) {
 this.setPropS (propertyName, value, bs);
@@ -199,42 +152,34 @@ Clazz.defineMethod (c$, "setProp",
 switch (mode) {
 case 0:
 e.setTensor ((J.api.Interface.getUtil ("Tensor", this.vwr, "script")).setFromAxes (value));
-break;
+return;
 case 1:
 e.setCenter (value);
-break;
+return;
 case 2:
 e.colix = JU.C.getColixO (value);
-break;
+return;
 case 3:
 this.simpleEllipsoids.remove (e.id);
-break;
+return;
 case 4:
 e.setTensor ((J.api.Interface.getUtil ("Tensor", this.vwr, "script")).setFromThermalEquation (value, null));
-e.tensor.modelIndex = e.modelIndex;
-break;
+return;
 case 5:
-e.modelIndex = (value).intValue ();
-if (e.tensor != null) e.tensor.modelIndex = e.modelIndex;
-break;
+e.tensor.modelIndex = (value).intValue ();
+return;
 case 6:
 e.isOn = (value).booleanValue ();
-break;
+return;
 case 7:
 e.options = (value).toLowerCase ();
-break;
+return;
 case 8:
-if (Clazz.instanceOf (value, Float)) {
 e.setScale ((value).floatValue (), false);
-} else {
-e.scaleAxes (value);
-}break;
+return;
 case 9:
 e.colix = JU.C.getColixTranslucent3 (e.colix, value.equals ("translucent"), this.translucentLevel);
-break;
-case 10:
-e.label = value;
-break;
+return;
 }
 return;
 }, "J.shapespecial.Ellipsoid,~N,~O");
@@ -260,7 +205,6 @@ v1.scale (ellipsoid.lengths[i]);
 sb.append (" ").append (JU.Escape.eP (v1));
 }
 sb.append (" " + J.shape.Shape.getColorCommandUnk ("", ellipsoid.colix, this.translucentAllowed));
-if (ellipsoid.label != null) sb.append (" label " + JU.PT.esc (ellipsoid.label));
 if (ellipsoid.options != null) sb.append (" options ").append (JU.PT.esc (ellipsoid.options));
 if (!ellipsoid.isOn) sb.append (" off");
 sb.append (";\n");
@@ -318,6 +262,5 @@ atom.setClickable (this.vf);
 }
 });
 Clazz.defineStatics (c$,
-"MAX_OBJECT_CLICK_DISTANCE_SQUARED", 100,
-"PROPERTY_MODES", "ax ce co de eq mo on op sc tr la");
+"PROPERTY_MODES", "ax ce co de eq mo on op sc tr");
 });

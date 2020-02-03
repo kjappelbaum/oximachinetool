@@ -1,2 +1,2 @@
-Clazz.declarePackage ("JS");
-Clazz.declareInterface (JS, "ColumnSelectionModel");
+Clazz.declarePackage ("J.awtjs.swing");
+Clazz.declareInterface (J.awtjs.swing, "ColumnSelectionModel");

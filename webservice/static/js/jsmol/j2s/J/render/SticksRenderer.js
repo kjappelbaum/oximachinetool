@@ -386,7 +386,7 @@ return ((this.dx * dyAC - this.dy * dxAC) < 0 ? 2 : 1);
 });
 Clazz.defineMethod (c$, "drawBanana", 
  function (a, b, x, deg) {
-this.g3d.addRenderer (553648145);
+this.g3d.addRenderer (553648146);
 this.vectorT.sub2 (b, a);
 if (this.rot == null) {
 this.rot =  new JU.M3 ();

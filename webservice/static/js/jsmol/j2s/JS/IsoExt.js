@@ -1,5 +1,5 @@
 Clazz.declarePackage ("JS");
-Clazz.load (["JS.ScriptExt"], "JS.IsoExt", ["java.lang.Boolean", "$.Float", "$.Short", "JU.AU", "$.BS", "$.Lst", "$.M4", "$.P3", "$.PT", "$.Quat", "$.SB", "$.V3", "J.api.Interface", "J.atomdata.RadiusData", "J.c.VDW", "JS.SV", "$.ScriptEval", "$.ScriptInterruption", "$.T", "JU.BSUtil", "$.BoxInfo", "$.C", "$.Escape", "$.Logger", "$.Parser", "$.TempArray", "$.Triangulator", "JV.JC"], function () {
+Clazz.load (["JS.ScriptExt"], "JS.IsoExt", ["java.lang.Boolean", "$.Float", "$.Short", "JU.AU", "$.BS", "$.Lst", "$.M4", "$.P3", "$.PT", "$.Quat", "$.SB", "$.V3", "J.api.Interface", "J.atomdata.RadiusData", "J.c.VDW", "JS.SV", "$.ScriptEval", "$.ScriptInterruption", "$.T", "JU.BSUtil", "$.BoxInfo", "$.C", "$.Escape", "$.Logger", "$.Parser", "$.TempArray", "$.Triangulator"], function () {
 c$ = Clazz.declareType (JS, "IsoExt", JS.ScriptExt);
 Clazz.makeConstructor (c$, 
 function () {
@@ -226,7 +226,7 @@ break;
 case 1275203608:
 type = ":poly";
 break;
-case 134217764:
+case 1073742152:
 if (center == null) center =  new JU.P3 ();
 var crpts = this.vwr.ms.generateCrystalClass (this.vwr.bsA ().nextSetBit (0), JU.P3.new3 (NaN, NaN, NaN));
 if (pts != null) this.invArg ();
@@ -302,7 +302,7 @@ default:
 this.invArg ();
 }
 break;
-case 134217763:
+case 134219266:
 switch (this.getToken (i + 1).tok) {
 case 1814695966:
 case 1678381065:
@@ -389,14 +389,13 @@ v = null;
 }propertyValue = v;
 i = eval.iToken;
 break;
-case 134217764:
+case 1073742152:
 case 1296041986:
 var xyz = null;
 var iSym = 2147483647;
 plane = null;
 var target = null;
 var bsAtoms = null;
-var options = 0;
 if (tok == 1296041986) {
 iSym = 0;
 switch (this.tokAt (++i)) {
@@ -420,30 +419,12 @@ center = this.centerParameter (++i);
 bsAtoms = (eval.isAtomExpression (i) ? this.atomExpressionAt (i) : null);
 i = eval.iToken;
 }var nth = (target != null && this.tokAt (i + 1) == 2 ? eval.getToken (++i).intValue : -1);
-if (this.tokAt (i + 1) == 1814695966) {
-target =  new JU.P3 ();
-options = 1073742066;
-i++;
-eval.iToken = i;
-} else if (this.tokAt (i + 1) == 1073742066) {
-i++;
-target = this.getPoint3f (i + 1, false);
-options = 1073742066;
-i = eval.iToken;
-}eval.checkLast (eval.iToken);
+eval.checkLast (eval.iToken);
 if (!this.chk) {
 var s = "";
 if (bsAtoms == null && this.vwr.am.cmi >= 0) bsAtoms = this.vwr.getModelUndeletedAtomsBitSet (this.vwr.am.cmi);
-if (bsAtoms != null) {
-s = null;
-var iatom = bsAtoms.nextSetBit (0);
-if (options != 0) {
-var o = this.vwr.getSymmetryInfo (iatom, xyz, iSym, center, target, 134217751, null, intScale / 100, nth, options);
-if (Clazz.instanceOf (o, JU.P3)) target = o;
- else s = "";
-}if (thisId == null) thisId = "sym";
-if (s == null) s = this.vwr.getSymmetryInfo (iatom, xyz, iSym, center, target, 135176, thisId, intScale / 100, nth, options);
-}eval.runBufferedSafely (s.length > 0 ? s : "draw ID \"" + thisId + "_*\" delete", eval.outputBuffer);
+if (bsAtoms != null) s = this.vwr.getSymTemp ().getSymmetryInfoAtom (this.vwr.ms, bsAtoms.nextSetBit (0), xyz, iSym, center, target, thisId, 135176, intScale / 100, nth);
+eval.runScript (s.length > 0 ? s : "draw ID \"sym_" + thisId + "*\" delete");
 }return;
 case 4115:
 isFrame = true;
@@ -466,22 +447,9 @@ havePoints = true;
 break;
 case 134219265:
 case 134217750:
-if (!havePoints && !isIntersect && tokIntersect == 0) {
-if (eval.theTok == 134219265) {
-havePoints = true;
-this.setShapeProperty (22, "plane", null);
-plane = eval.hklParameter (++i);
-i = eval.iToken;
-propertyName = "coords";
-var list =  new JU.Lst ();
-list.addLast (JU.P3.newP (eval.pt1));
-list.addLast (JU.P3.newP (eval.pt2));
-list.addLast (JU.P3.newP (eval.pt3));
-propertyValue = list;
-} else {
+if (!havePoints && !isIntersect && tokIntersect == 0 && eval.theTok != 134219265) {
 propertyName = "plane";
-iArray = i + 1;
-}break;
+break;
 }if (eval.theTok == 134217750) {
 plane = eval.planeParameter (i);
 } else {
@@ -864,7 +832,7 @@ moLabel = "" + moNumber;
 }, "~B,~N");
 Clazz.defineMethod (c$, "setNBOType", 
  function (moData, type) {
-var ext = JV.JC.getNBOTypeFromName (type);
+var ext = ";AO;  ;PNAO;;NAO; ;PNHO;;NHO; ;PNBO;;NBO; ;PNLMO;NLMO;;MO;  ;NO;".indexOf (";" + type + ";");
 if (ext < 0) this.invArg ();
 if (!moData.containsKey ("nboLabels")) this.error (27);
 if (this.chk) return;
@@ -1033,7 +1001,6 @@ var isColorSchemeTranslucent = false;
 var isInline = false;
 var isSign = false;
 var onlyOneModel = null;
-var filesData = null;
 var translucency = null;
 var colorScheme = null;
 var mepOrMlp = null;
@@ -1057,7 +1024,7 @@ case 603979868:
 smoothing = (this.getToken (++i).tok == 1073742335 ? Boolean.TRUE : eval.theTok == 1073742334 ? Boolean.FALSE : null);
 if (smoothing == null) this.invArg ();
 continue;
-case 553648148:
+case 553648149:
 smoothingPower = this.intParameter (++i);
 continue;
 case 4128:
@@ -1135,7 +1102,7 @@ sbCommand.append (" pmesh");
 propertyName = "fileType";
 propertyValue = "Pmesh";
 break;
-case 134217763:
+case 134219266:
 bsSelect = this.atomExpressionAt (++i);
 if (this.chk) {
 bs =  new JU.BS ();
@@ -1588,7 +1555,7 @@ i = eval.iToken;
 case 1073741828:
 propertyName = "addHydrogens";
 propertyValue = Boolean.TRUE;
-sbCommand.append (" addHydrogens");
+sbCommand.append (" mp.addHydrogens");
 break;
 case 1073741836:
 propertyName = "angstroms";
@@ -1992,44 +1959,12 @@ this.addShapeProperty (propertyList, "fileName", "");
 sbCommand.append (" INLINE ").append (JU.PT.esc (str));
 surfaceObjectSeen = true;
 break;
-case 268435520:
-case 1073742195:
-case 7:
-if (filesData != null || isWild) this.invArg ();
-var list = eval.listParameter4 (i, 2, 2147483647, true);
-i = eval.iToken;
-var n = Clazz.doubleToInt (list.size () / 2);
-if (n == 0 || n * 2 != list.size ()) this.invArg ();
-var files =  new Array (n);
-var factors =  Clazz.newFloatArray (n, 0);
-sbCommand.append ("[");
-try {
-for (var j = 0, ptf = 0; j < n; j++) {
-factors[j] = (list.get (ptf++)).floatValue ();
-files[j] = this.e.checkFileExists ("ISOSURFACE_" + j + "_", false, list.get (ptf++), i, false);
-sbCommand.appendF (factors[j]);
-sbCommand.append (" /*file*/").append (JU.PT.esc (files[j]));
-}
-sbCommand.append ("]");
-} catch (e) {
-if (Clazz.exceptionOf (e, Exception)) {
-this.invArg ();
-} else {
-throw e;
-}
-}
-filesData =  Clazz.newArray (-1, [files, factors]);
-propertyName = (!surfaceObjectSeen && !planeSeen && !isMapped ? "readFile" : "mapColor");
-surfaceObjectSeen = true;
-if (this.chk) break;
-this.addShapeProperty (propertyList, "filesData", filesData);
-break;
 case 545259556:
 case 545259557:
 case 4:
 var firstPass = (!surfaceObjectSeen && !planeSeen);
-var filename;
 propertyName = (firstPass && !isMapped ? "readFile" : "mapColor");
+var filename;
 if (eval.theTok == 4) {
 filename = this.paramAsStr (i);
 } else {
@@ -2092,8 +2027,10 @@ filename = localName;
 localName = null;
 } else {
 this.addShapeProperty (propertyList, "localName", localName);
-}}}if (stype == null) {
-filename = this.e.checkFileExists ("ISOSURFACE_" + (isMapped ? "MAP_" : ""), false, filename, i, false);
+}}}if (!filename.startsWith ("cache://") && stype == null) {
+fullPathNameOrError = this.vwr.getFullPathNameOrError (filename);
+filename = fullPathNameOrError[0];
+if (fullPathNameOrError[1] != null) eval.errorStr (17, filename + ":" + fullPathNameOrError[1]);
 }this.showString ("reading isosurface data from " + filename);
 if (stype != null) {
 propertyValue = this.vwr.fm.cacheGet (filename, false);

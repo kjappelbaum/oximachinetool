@@ -81,7 +81,7 @@ this.cmd ("axes unitcell; axes on; axes scale 2.0;axes 0.01;axes labels \"b1\" \
 this.bzLatticePts =  new JU.Lst ();
 this.bzPlanePts =  new JU.Lst ();
 this.bzFaceCenters =  new JU.Lst ();
-var wasPrecise = this.vwr.getBoolean (603979874);
+var wasPrecise = this.vwr.getBoolean (603979875);
 this.vwr.setBooleanProperty ("legacyJavaFloat", true);
 this.getLatticePoints (n);
 this.bzones.addLast (null);

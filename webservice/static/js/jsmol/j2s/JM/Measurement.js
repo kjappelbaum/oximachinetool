@@ -26,7 +26,6 @@ this.type = null;
 this.tainted = false;
 this.renderAxis = null;
 this.renderArc = null;
-this.newUnits = null;
 Clazz.instantialize (this, arguments);
 }, JM, "Measurement");
 Clazz.prepareFields (c$, function () {
@@ -165,7 +164,7 @@ if (pt >= 0) {
 label = label.substring (0, pt);
 if (label.length == 0) label = "%VALUE";
 }var f = this.fixValue (units, (label.indexOf ("%V") >= 0));
-return this.formatString (f, this.newUnits, label);
+return this.formatString (f, units, label);
 }, "~S");
 c$.fixUnits = Clazz.defineMethod (c$, "fixUnits", 
  function (units) {
@@ -177,7 +176,6 @@ return units;
 }, "~S");
 Clazz.defineMethod (c$, "fixValue", 
 function (units, andRound) {
-this.newUnits = units;
 if (this.count != 2) return this.value;
 var dist = this.value;
 if (units != null) {
@@ -188,24 +186,12 @@ var i2 = this.getAtomIndex (2);
 if (i1 >= 0 && i2 >= 0) {
 var a1 = this.getAtom (1);
 var a2 = this.getAtom (2);
-var itype = JM.Measurement.nmrType (units);
-var isDC = (!isPercent && itype == 1);
-this.type = (isPercent ? "percent" : isDC ? "dipoleCouplingConstant" : itype == 3 ? "NOE or 3JHH" : "J-CouplingConstant");
-if (itype == 3) {
-var result = this.vwr.getNMRCalculation ().getNOEorJHH ( Clazz.newArray (-1, [a1, null, null, a2]), 11);
-if (result == null) {
-dist = NaN;
-this.newUnits = units = "";
-} else {
-dist = result[1];
-units = this.newUnits = (result.length == 2 ? "noe" : "hz");
-}} else {
+var isDC = (!isPercent && JM.Measurement.nmrType (units) == 1);
+this.type = (isPercent ? "percent" : isDC ? "dipoleCouplingConstant" : "J-CouplingConstant");
 dist = (isPercent ? dist / (a1.getVanderwaalsRadiusFloat (this.vwr, J.c.VDW.AUTO) + a2.getVanderwaalsRadiusFloat (this.vwr, J.c.VDW.AUTO)) : isDC ? this.vwr.getNMRCalculation ().getDipolarConstantHz (a1, a2) : this.vwr.getNMRCalculation ().getIsoOrAnisoHz (true, a1, a2, units, null));
-}this.$isValid = !Float.isNaN (dist);
+this.$isValid = !Float.isNaN (dist);
 if (isPercent) units = "pm";
-}}if (units.equals ("hz")) return (andRound ? Math.round (dist * 10) / 10 : dist);
-if (units.equals ("noe")) return (andRound ? Math.round (dist * 100) / 100 : dist);
-if (units.equals ("nm")) return (andRound ? Math.round (dist * 100) / 1000 : dist / 10);
+}}if (units.equals ("nm")) return (andRound ? Math.round (dist * 100) / 1000 : dist / 10);
 if (units.equals ("pm")) return (andRound ? Math.round (dist * 1000) / 10 : dist * 100);
 if (units.equals ("au")) return (andRound ? Math.round (dist / 0.5291772 * 1000) / 1000 : dist / 0.5291772);
 if (units.endsWith ("khz")) return (andRound ? Math.round (dist / 10) / 100 : dist / 1000);
@@ -213,7 +199,7 @@ if (units.endsWith ("khz")) return (andRound ? Math.round (dist / 10) / 100 : di
 }, "~S,~B");
 c$.nmrType = Clazz.defineMethod (c$, "nmrType", 
 function (units) {
-return (units.indexOf ("hz") < 0 ? 0 : units.equals ("noe_hz") ? 3 : units.startsWith ("dc_") || units.equals ("khz") ? 1 : 2);
+return (units.indexOf ("hz") < 0 ? 0 : units.startsWith ("dc_") || units.equals ("khz") ? 1 : 2);
 }, "~S");
 Clazz.defineMethod (c$, "formatAngle", 
  function (angle) {
@@ -376,6 +362,5 @@ return (min != null && d == min.intValue ());
 Clazz.defineStatics (c$,
 "NMR_NOT", 0,
 "NMR_DC", 1,
-"NMR_JC", 2,
-"NMR_NOE_OR_J", 3);
+"NMR_JC", 2);
 });

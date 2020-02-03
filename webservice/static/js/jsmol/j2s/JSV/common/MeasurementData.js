@@ -134,9 +134,5 @@ info.put ("header", this.getDataHeader ());
 info.put ("table", this.getMeasurementListArrayReal ("ppm"));
 if (this.units != null) info.put ("units", this.units);
 }, "java.util.Map");
-Clazz.overrideMethod (c$, "isDialog", 
-function () {
-return false;
-});
 c$.HEADER = c$.prototype.HEADER =  Clazz.newArray (-1, ["", "start", "end", "value"]);
 });

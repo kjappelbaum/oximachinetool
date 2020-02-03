@@ -563,10 +563,6 @@ Clazz.defineMethod (c$, "getPatternIndex",
 function () {
 return this.patternIndex;
 });
-Clazz.overrideMethod (c$, "modelIsRawPDB", 
-function () {
-return false;
-});
 Clazz.defineStatics (c$,
 "UNBRACKETED_SET", "B, C, N, O, P, S, F, Cl, Br, I, *,");
 });

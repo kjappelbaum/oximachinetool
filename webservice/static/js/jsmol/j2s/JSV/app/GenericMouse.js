@@ -1,5 +1,5 @@
 Clazz.declarePackage ("JSV.app");
-Clazz.load (["J.api.GenericMouseInterface"], "JSV.app.GenericMouse", ["JU.Logger"], function () {
+Clazz.load (["javajs.awt.GenericMouseInterface", "javajs.awt.event.Event"], "JSV.app.GenericMouse", ["JU.Logger"], function () {
 c$ = Clazz.decorateAsClass (function () {
 this.pd = null;
 this.jsvp = null;
@@ -9,7 +9,7 @@ this.modifiersWhenPressed10 = 0;
 this.isMouseDown = false;
 this.disposed = false;
 Clazz.instantialize (this, arguments);
-}, JSV.app, "GenericMouse", null, J.api.GenericMouseInterface);
+}, JSV.app, "GenericMouse", null, javajs.awt.GenericMouseInterface);
 Clazz.makeConstructor (c$, 
 function (jsvp) {
 this.jsvp = jsvp;

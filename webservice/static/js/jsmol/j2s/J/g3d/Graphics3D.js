@@ -1,5 +1,5 @@
 Clazz.declarePackage ("J.g3d");
-Clazz.load (["J.api.JmolRendererInterface", "JU.GData", "JU.P3i", "$.V3"], "J.g3d.Graphics3D", ["java.lang.NullPointerException", "java.util.Arrays", "JU.AU", "J.api.Interface", "J.c.STER", "J.g3d.CylinderRenderer", "$.LineRenderer", "$.Pixelator", "$.PixelatorScreened", "$.PixelatorShaded", "$.PixelatorT", "$.Platform3D", "$.SphereRenderer", "$.TextRenderer", "$.TextString", "JU.C", "$.Font", "$.Normix"], function () {
+Clazz.load (["J.api.JmolRendererInterface", "JU.GData", "JU.P3i", "$.V3"], "J.g3d.Graphics3D", ["java.lang.NullPointerException", "java.util.Arrays", "javajs.awt.Font", "JU.AU", "J.api.Interface", "J.c.STER", "J.g3d.CylinderRenderer", "$.LineRenderer", "$.Pixelator", "$.PixelatorScreened", "$.PixelatorShaded", "$.PixelatorT", "$.Platform3D", "$.SphereRenderer", "$.TextRenderer", "$.TextString", "JU.C", "$.Normix"], function () {
 c$ = Clazz.decorateAsClass (function () {
 this.platform = null;
 this.line3d = null;
@@ -96,14 +96,14 @@ this.graphicsForMetrics = this.platform.getGraphicsForMetrics ();
 this.line3d =  new J.g3d.LineRenderer (this);
 this.sphere3d =  new J.g3d.SphereRenderer (this);
 this.cylinder3d =  new J.g3d.CylinderRenderer (this);
-}, "JV.Viewer,J.api.GenericPlatform");
+}, "JV.Viewer,javajs.awt.GenericPlatform");
 Clazz.overrideMethod (c$, "addRenderer", 
 function (tok) {
 switch (tok) {
 case 1073741880:
 if (this.circle3d == null) this.circle3d = this.getRenderer ("Circle");
 break;
-case 553648145:
+case 553648146:
 if (this.hermite3d == null) this.hermite3d = this.getRenderer ("Hermite");
 case 1073742182:
 if (this.triangle3d == null) {
@@ -559,7 +559,7 @@ this.currentShadeIndex = 0;
 if (str == null) return;
 if (this.isClippedZ (zSlab)) return;
 this.drawStringNoSlab (str, font3d, xBaseline, yBaseline, z, bgColix);
-}, "~S,JU.Font,~N,~N,~N,~N,~N");
+}, "~S,javajs.awt.Font,~N,~N,~N,~N,~N");
 Clazz.overrideMethod (c$, "drawStringNoSlab", 
 function (str, font3d, xBaseline, yBaseline, z, bgColix) {
 if (str == null) return;
@@ -568,7 +568,7 @@ if (this.stringCount == this.strings.length) this.strings = JU.AU.doubleLength (
 var t =  new J.g3d.TextString ();
 t.setText (str, font3d == null ? this.currentFont : (this.currentFont = font3d), this.argbCurrent, JU.C.isColixTranslucent (bgColix) ? (this.getColorArgbOrGray (bgColix) & 0xFFFFFF) | ((bgColix & 30720) << 13) : 0, xBaseline, yBaseline, z);
 this.strings[this.stringCount++] = t;
-}, "~S,JU.Font,~N,~N,~N,~N");
+}, "~S,javajs.awt.Font,~N,~N,~N,~N");
 Clazz.overrideMethod (c$, "renderAllStrings", 
 function (jmolRenderer) {
 if (this.strings == null) return;
@@ -585,7 +585,7 @@ this.stringCount = 0;
 Clazz.overrideMethod (c$, "plotText", 
 function (x, y, z, argb, bgargb, text, font3d, jmolRenderer) {
 J.g3d.TextRenderer.plot (x, y, z, argb, bgargb, text, font3d, this, jmolRenderer, this.antialiasThisFrame);
-}, "~N,~N,~N,~N,~N,~S,JU.Font,J.api.JmolRendererInterface");
+}, "~N,~N,~N,~N,~N,~S,javajs.awt.Font,J.api.JmolRendererInterface");
 Clazz.overrideMethod (c$, "drawImage", 
 function (objImage, x, y, z, zSlab, bgcolix, width, height) {
 if (objImage != null && width > 0 && height > 0 && !this.isClippedZ (zSlab)) this.plotImage (x, y, z, objImage, null, bgcolix, width, height);
@@ -631,12 +631,12 @@ if ((b & 0xFF000000) == (-16777216)) jmolRenderer.plotImagePixel (b, x + j, y + 
 }}, "~N,~N,~N,~O,J.api.JmolRendererInterface,~N,~N,~N");
 Clazz.overrideMethod (c$, "setFontFid", 
 function (fid) {
-this.currentFont = JU.Font.getFont3D (fid);
+this.currentFont = javajs.awt.Font.getFont3D (fid);
 }, "~N");
 Clazz.overrideMethod (c$, "setFont", 
 function (font3d) {
 this.currentFont = font3d;
-}, "JU.Font");
+}, "javajs.awt.Font");
 Clazz.overrideMethod (c$, "drawPixel", 
 function (x, y, z) {
 this.plotPixelClippedArgb (this.argbCurrent, x, y, z, this.width, this.zbuf, this.pixel);
@@ -657,22 +657,10 @@ this.plotPoints (count, coordinates, 0, 0);
 }}, "~N,~A,~N");
 Clazz.overrideMethod (c$, "drawDashedLineBits", 
 function (run, rise, pointA, pointB) {
-if (this.isAntialiased ()) {
-run += run;
-rise += rise;
-}this.setScreeni (pointA, this.sA);
+this.setScreeni (pointA, this.sA);
 this.setScreeni (pointB, this.sB);
 this.line3d.plotLineBits (this.argbCurrent, this.argbCurrent, this.sA, this.sB, run, rise, true);
-if (this.isAntialiased ()) {
-if (Math.abs (pointA.x - pointB.x) < Math.abs (pointA.y - pointB.y)) {
-this.sA.x += 1;
-this.sB.x += 1;
-this.line3d.plotLineBits (this.argbCurrent, this.argbCurrent, this.sA, this.sB, run, rise, true);
-} else {
-this.sA.y += 1;
-this.sB.y += 1;
-this.line3d.plotLineBits (this.argbCurrent, this.argbCurrent, this.sA, this.sB, run, rise, true);
-}}}, "~N,~N,JU.P3,JU.P3");
+}, "~N,~N,JU.P3,JU.P3");
 Clazz.defineMethod (c$, "setScreeni", 
  function (pt, p) {
 p.x = Math.round (pt.x);

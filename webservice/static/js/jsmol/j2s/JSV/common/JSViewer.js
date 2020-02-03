@@ -1,5 +1,5 @@
 Clazz.declarePackage ("JSV.common");
-Clazz.load (["javajs.api.BytePoster", "J.api.PlatformViewer", "JSV.common.Spectrum"], "JSV.common.JSViewer", ["java.io.File", "java.lang.Boolean", "$.Character", "$.Double", "$.Float", "$.Thread", "java.net.URL", "java.util.Arrays", "$.Hashtable", "JU.CU", "$.Lst", "$.OC", "$.PT", "$.SB", "JSV.common.Annotation", "$.ExportType", "$.JSVFileManager", "$.PanelData", "$.PanelNode", "$.Parameters", "$.PeakInfo", "$.PrintLayout", "$.RepaintManager", "$.ScriptToken", "$.ScriptTokenizer", "JSV.source.JDXReader", "$.JDXSource", "JSV.tree.SimpleTree", "JU.Logger"], function () {
+Clazz.load (["javajs.api.BytePoster", "javajs.awt.PlatformViewer", "$.Dimension", "JSV.common.Spectrum"], "JSV.common.JSViewer", ["java.io.File", "java.lang.Boolean", "$.Character", "$.Double", "$.Float", "$.Thread", "java.net.URL", "java.util.Arrays", "$.Hashtable", "JU.CU", "$.Lst", "$.OC", "$.PT", "$.SB", "JSV.common.Annotation", "$.ExportType", "$.JSVFileManager", "$.PanelData", "$.PanelNode", "$.Parameters", "$.PeakInfo", "$.PrintLayout", "$.RepaintManager", "$.ScriptToken", "$.ScriptTokenizer", "JSV.source.JDXReader", "$.JDXSource", "JSV.tree.SimpleTree", "JU.Logger"], function () {
 c$ = Clazz.decorateAsClass (function () {
 this.si = null;
 this.g2d = null;
@@ -23,11 +23,13 @@ this.interfaceOverlaid = false;
 this.autoIntegrate = false;
 this.autoShowLegend = false;
 this.obscureTitleFromUser = null;
+this.allowCompoundMenu = true;
 this.allowMenu = true;
 this.initialStartIndex = -1;
 this.initialEndIndex = -1;
 this.isSingleThreaded = false;
 this.isApplet = false;
+this.isJS = false;
 this.isSigned = false;
 this.recentScript = "";
 this.appletName = null;
@@ -36,8 +38,7 @@ this.syncID = null;
 this.html5Applet = null;
 this.display = null;
 this.maximumSize = 2147483647;
-this.screenHeight = 0;
-this.screenWidth = 0;
+this.dimScreen = null;
 this.fileCount = 0;
 this.nViews = 0;
 this.scriptLevelCount = 0;
@@ -56,9 +57,10 @@ this.recentOpenURL = "http://";
 this.recentURL = null;
 this.recentSimulation = "tylenol";
 Clazz.instantialize (this, arguments);
-}, JSV.common, "JSViewer", null, [J.api.PlatformViewer, javajs.api.BytePoster]);
+}, JSV.common, "JSViewer", null, [javajs.awt.PlatformViewer, javajs.api.BytePoster]);
 Clazz.prepareFields (c$, function () {
 this.irMode = JSV.common.Spectrum.IRMode.NO_CONVERT;
+this.dimScreen =  new javajs.awt.Dimension (0, 0);
 });
 Clazz.defineMethod (c$, "setProperty", 
 function (key, value) {
@@ -71,14 +73,10 @@ this.si.siSendPanelChange ();
 this.si.siNodeSet (node);
 }, "JSV.common.PanelNode");
 Clazz.makeConstructor (c$, 
-function (si, isApplet, isJSApplet) {
+function (si, isApplet, isJS) {
 this.si = si;
 this.isApplet = isApplet;
-JSV.common.JSViewer.isJS = isApplet && isJSApplet;
-var jmol = null;
-{
-self.Jmol && (jmol = Jmol);
-}JSV.common.JSViewer.jmolObject = jmol;
+this.isJS = isApplet && isJS;
 this.isSigned = si.isSigned ();
 this.apiPlatform = this.getPlatformInterface ("Platform");
 this.apiPlatform.setViewer (this, this.display);
@@ -1000,7 +998,7 @@ this.si.writeStatus (filePath + " is already open");
 }if (!isAppend && !isView) this.close ("all");
 this.si.setCursor (3);
 try {
-this.si.siSetCurrentSource (isView ? JSV.source.JDXSource.createView (specs) : JSV.source.JDXReader.createJDXSource (data, filePath, this.obscureTitleFromUser === Boolean.TRUE, this.loadImaginary, firstSpec, lastSpec, this.nmrMaxY));
+this.si.siSetCurrentSource (isView ? JSV.source.JDXSource.createView (specs) : JSV.source.JDXReader.createJDXSource (JSV.common.JSVFileManager.getBufferedReaderForData (data), filePath, this.obscureTitleFromUser === Boolean.TRUE, this.loadImaginary, firstSpec, lastSpec, this.nmrMaxY));
 } catch (e) {
 if (Clazz.exceptionOf (e, Exception)) {
 {
@@ -1082,11 +1080,7 @@ if (this.selectedPanel == null && this.panelNodes.size () > 0) this.si.siSetSele
 Clazz.defineMethod (c$, "execLoad", 
 function (value, script) {
 var applet = this.html5Applet;
-var isID = false;
-if (isID) {
-applet._search (value);
-return;
-}var tokens = JSV.common.ScriptToken.getTokens (value);
+var tokens = JSV.common.ScriptToken.getTokens (value);
 var filename = tokens.get (0);
 var id = null;
 var pt = 0;
@@ -1312,17 +1306,17 @@ Clazz.defineMethod (c$, "setScreenDimension",
 function (width, height) {
 height = Math.min (height, this.maximumSize);
 width = Math.min (width, this.maximumSize);
-if (this.screenWidth == width && this.screenHeight == height) return;
+if (this.dimScreen.width == width && this.dimScreen.height == height) return;
 this.resizeImage (width, height);
 }, "~N,~N");
 Clazz.defineMethod (c$, "resizeImage", 
 function (width, height) {
 if (width > 0) {
-this.screenWidth = width;
-this.screenHeight = height;
+this.dimScreen.width = width;
+this.dimScreen.height = height;
 } else {
-width = (this.screenWidth == 0 ? this.screenWidth = 500 : this.screenWidth);
-height = (this.screenHeight == 0 ? this.screenHeight = 500 : this.screenHeight);
+width = (this.dimScreen.width == 0 ? this.dimScreen.width = 500 : this.dimScreen.width);
+height = (this.dimScreen.height == 0 ? this.dimScreen.height = 500 : this.dimScreen.height);
 }this.g2d.setWindowParameters (width, height);
 }, "~N,~N");
 Clazz.defineMethod (c$, "updateJS", 
@@ -1351,15 +1345,15 @@ this.runScript ("load " + pre + " \"" + fileName + "\"" + post);
 }, "~S,~N");
 Clazz.defineMethod (c$, "getHeight", 
 function () {
-return this.screenHeight;
+return this.dimScreen.height;
 });
 Clazz.defineMethod (c$, "getWidth", 
 function () {
-return this.screenWidth;
+return this.dimScreen.width;
 });
 Clazz.defineMethod (c$, "getPlatformInterface", 
 function (type) {
-return JSV.common.JSViewer.getInterface ("JSV." + (JSV.common.JSViewer.isJS ? "js2d.Js" : "java.Awt") + type);
+return JSV.common.JSViewer.getInterface ("JSV." + (this.isJS ? "js2d.Js" : "java.Awt") + type);
 }, "~S");
 Clazz.defineMethod (c$, "getDialogManager", 
 function () {
@@ -1396,7 +1390,7 @@ this.dialogManager.showSourceErrors (null, this.currentSource);
 if (this.currentSource == null) {
 if (this.panelNodes.size () > 0) this.dialogManager.showMessageDialog (null, "Please Select a Spectrum", "Select Spectrum", 0);
 return;
-}this.dialogManager.showSource (this, this.pd ().getSpectrum ());
+}this.dialogManager.showSource (this, this.pd ().getSpectrum ().getFilePath ());
 } else if (what.startsWith ("solutioncolorfill")) {
 if (what.indexOf ("all") >= 0) {
 for (var i = this.panelNodes.size (); --i >= 0; ) this.panelNodes.get (i).pd ().setSolutionColor (what);
@@ -1406,14 +1400,14 @@ this.pd ().setSolutionColor (what);
 }} else if (what.startsWith ("solutioncolor")) {
 var msg = this.getSolutionColorStr (what.indexOf ("false") < 0);
 msg = "background-color:rgb(" + msg + ")'><br />Predicted Solution Colour- RGB(" + msg + ")<br /><br />";
-if (JSV.common.JSViewer.isJS) {
+if (this.isJS) {
 this.dialogManager.showMessage (this, "<div style='width:100%;height:100%;" + msg + "</div>", "Predicted Colour");
 } else {
 this.selectedPanel.showMessage ("<html><body style='" + msg + "</body></html>", "Predicted Colour");
 }}}, "~S");
 Clazz.defineMethod (c$, "getDialogPrint", 
 function (isJob) {
-if (!JSV.common.JSViewer.isJS) try {
+if (!this.isJS) try {
 var pl = (this.getPlatformInterface ("PrintDialog")).set (this.offWindowFrame, this.lastPrintLayout, isJob).getPrintLayout ();
 if (pl != null) this.lastPrintLayout = pl;
 return pl;
@@ -1444,7 +1438,7 @@ return this.execWrite ("PDF \"" + fileName + "\"");
 }, "~S");
 Clazz.defineMethod (c$, "execWrite", 
  function (value) {
-if (JSV.common.JSViewer.isJS && value == null) value = "PDF";
+if (this.isJS && value == null) value = "PDF";
 var msg = (JSV.common.JSViewer.getInterface ("JSV.export.Exporter")).write (this, value == null ? null : JSV.common.ScriptToken.getTokens (value), false);
 this.si.writeStatus (msg);
 return msg;
@@ -1475,8 +1469,8 @@ Clazz.defineMethod (c$, "getOutputChannel",
 function (fileName, isBinary) {
 var os = null;
 {
-while (fileName.startsWith("/")) fileName =
-fileName.substring(1);
+while (fileName.startsWith("/"))
+fileName = fileName.substring(1);
 }return  new JU.OC ().setParams (this, fileName, !isBinary, os);
 }, "~S,~B");
 c$.getInterface = Clazz.defineMethod (c$, "getInterface", 
@@ -1568,13 +1562,15 @@ case JSV.common.ScriptToken.APPLETID:
 this.fullName = this.appletName + "__" + (this.appletName = value) + "__";
 var applet = null;
 {
-self.Jmol && (applet = Jmol._applets[value]);
+if(typeof Jmol != "undefined") applet =
+Jmol._applets[value];
 }this.html5Applet = applet;
 break;
 case JSV.common.ScriptToken.AUTOINTEGRATE:
 this.autoIntegrate = JSV.common.Parameters.isTrue (value);
 break;
 case JSV.common.ScriptToken.COMPOUNDMENUON:
+this.allowCompoundMenu = Boolean.parseBoolean (value);
 break;
 case JSV.common.ScriptToken.APPLETREADYCALLBACKFUNCTIONNAME:
 case JSV.common.ScriptToken.COORDCALLBACKFUNCTIONNAME:
@@ -1689,6 +1685,17 @@ this.getDialogManager ().showMessage (null, s, "HELP " + value);
 this.selectedPanel.showMessage (s, "Help " + value);
 }System.out.println (s);
 }, "~S");
+Clazz.defineMethod (c$, "menuShowPopup", 
+function (popup, x, y, isTainted) {
+try {
+(popup).show (isTainted ? this.getApplet () : null, x, y);
+} catch (e) {
+if (Clazz.exceptionOf (e, Exception)) {
+} else {
+throw e;
+}
+}
+}, "javajs.awt.SC,~N,~N,~B");
 Clazz.defineStatics (c$,
 "sourceLabel", "Original...",
 "FILE_OPEN_OK", 0,
@@ -1701,8 +1708,5 @@ Clazz.defineStatics (c$,
 "PAGE_EXISTS", 0,
 "NO_SUCH_PAGE", 1,
 "testScript", "<PeakData  index=\"1\" title=\"\" model=\"~1.1\" type=\"1HNMR\" xMin=\"3.2915\" xMax=\"3.2965\" atoms=\"15,16,17,18,19,20\" multiplicity=\"\" integral=\"1\"> src=\"JPECVIEW\" file=\"http://SIMULATION/$caffeine\"",
-"NLEVEL_MAX", 100,
-"isJS", false,
-"isSwingJS", false,
-"jmolObject", null);
+"NLEVEL_MAX", 100);
 });

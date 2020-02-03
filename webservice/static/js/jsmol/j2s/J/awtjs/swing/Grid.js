@@ -1,12 +1,12 @@
-Clazz.declarePackage ("JS");
-Clazz.load (null, "JS.Grid", ["JU.AU", "$.SB", "JS.Cell"], function () {
+Clazz.declarePackage ("J.awtjs.swing");
+Clazz.load (null, "J.awtjs.swing.Grid", ["JU.AU", "$.SB", "J.awtjs.swing.Cell"], function () {
 c$ = Clazz.decorateAsClass (function () {
 this.nrows = 0;
 this.ncols = 0;
 this.grid = null;
 this.renderer = null;
 Clazz.instantialize (this, arguments);
-}, JS, "Grid");
+}, J.awtjs.swing, "Grid");
 Clazz.makeConstructor (c$, 
 function (rows, cols) {
 this.grid =  Clazz.newArray (0, 0, null);
@@ -26,8 +26,8 @@ for (var i = g.length; --i >= this.nrows; ) g[i] =  new Array (this.ncols * 2 + 
 
 this.grid = g;
 this.nrows = c.gridy + 1;
-}this.grid[c.gridy][c.gridx] =  new JS.Cell (btn, c);
-}, "JS.JComponent,JS.GridBagConstraints");
+}this.grid[c.gridy][c.gridx] =  new J.awtjs.swing.Cell (btn, c);
+}, "J.awtjs.swing.JComponent,J.awtjs.swing.GridBagConstraints");
 Clazz.defineMethod (c$, "toHTML", 
 function (id) {
 var sb =  new JU.SB ();

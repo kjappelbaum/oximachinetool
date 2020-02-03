@@ -304,7 +304,7 @@ var atomA = atom12[j];
 var bb = (atomA).getEdges ();
 for (var b = 0; b < bb.length; b++) {
 var other;
-if (bb[b].getCovalentOrder () != 1 || (other = bb[b].getOtherNode (atomA)).getElementNumber () == 1 && other.getIsotopeNumber () == 0) continue;
+if (bb[b].getCovalentOrder () != 1 || !this.explicitH && (other = bb[b].getOtherNode (atomA)).getElementNumber () == 1 && other.getIsotopeNumber () == 0) continue;
 edges[j][edgeCount++] = bb[b];
 if (this.getBondStereochemistry (bb[b], atomA) != '\0') {
 b0 = bb[b];

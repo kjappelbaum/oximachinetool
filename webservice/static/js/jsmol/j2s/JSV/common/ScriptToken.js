@@ -22,13 +22,17 @@ Clazz.makeConstructor (c$,
 this.tip = tip;
 this.description = "-- " + description;
 }, "~S,~S");
-c$.getScriptToken = Clazz.defineMethod (c$, "getScriptToken", 
-function (name) {
+c$.getParams = Clazz.defineMethod (c$, "getParams", 
+ function () {
 if (JSV.common.ScriptToken.htParams == null) {
 JSV.common.ScriptToken.htParams =  new java.util.Hashtable ();
 for (var item, $item = 0, $$item = JSV.common.ScriptToken.values (); $item < $$item.length && ((item = $$item[$item]) || true); $item++) JSV.common.ScriptToken.htParams.put (item.name (), item);
 
-}var st = JSV.common.ScriptToken.htParams.get (name.toUpperCase ());
+}return JSV.common.ScriptToken.htParams;
+});
+c$.getScriptToken = Clazz.defineMethod (c$, "getScriptToken", 
+function (name) {
+var st = JSV.common.ScriptToken.getParams ().get (name.toUpperCase ());
 return (st == null ? JSV.common.ScriptToken.UNKNOWN : st);
 }, "~S");
 c$.getScriptTokenList = Clazz.defineMethod (c$, "getScriptTokenList", 
@@ -39,7 +43,7 @@ if (isExact) {
 var st = JSV.common.ScriptToken.getScriptToken (name);
 if (st != null) list.addLast (st);
 } else {
-for (var entry, $entry = JSV.common.ScriptToken.htParams.entrySet ().iterator (); $entry.hasNext () && ((entry = $entry.next ()) || true);) if ((name == null || entry.getKey ().startsWith (name)) && entry.getValue ().tip != null) list.addLast (entry.getValue ());
+for (var entry, $entry = JSV.common.ScriptToken.getParams ().entrySet ().iterator (); $entry.hasNext () && ((entry = $entry.next ()) || true);) if ((name == null || entry.getKey ().startsWith (name)) && entry.getValue ().tip != null) list.addLast (entry.getValue ());
 
 }return list;
 }, "~S,~B");
@@ -161,45 +165,46 @@ Clazz.defineEnumConstant (c$, "PEAKTABSON", 51, ["T", "show peak tabs for simula
 Clazz.defineEnumConstant (c$, "PLOTAREACOLOR", 52, ["C", "sets the color of the plot background"]);
 Clazz.defineEnumConstant (c$, "PLOTCOLOR", 53, ["C", "sets the color of the graph line"]);
 Clazz.defineEnumConstant (c$, "PLOTCOLORS", 54, ["color,color,color,...", "sets the colors of multiple plots"]);
-Clazz.defineEnumConstant (c$, "PRINT", 55, ["", "prints the current spectrum"]);
-Clazz.defineEnumConstant (c$, "REVERSEPLOT", 56, ["T", "reverses the x-axis of a spectrum"]);
-Clazz.defineEnumConstant (c$, "SCALEBY", 57, ["factor", "multiplies the y-scale of the spectrum by a factor"]);
-Clazz.defineEnumConstant (c$, "SCALECOLOR", 58, ["C", "sets the color of the x-axis and y-axis scales"]);
-Clazz.defineEnumConstant (c$, "SCRIPT", 59, ["filename.jsv", "runs a script from a file"]);
-Clazz.defineEnumConstant (c$, "SELECT", 60, ["spectrumID, spectrumID,...", "selects one or more spectra based on IDs"]);
-Clazz.defineEnumConstant (c$, "SETPEAK", 61, ["xNew, xOld xNew, ?, or NONE", "sets nearest peak to xOld ppm to a new value; NONE resets (1D NMR only)"]);
-Clazz.defineEnumConstant (c$, "SETX", 62, ["xNew, xOld xNew, ?, or NONE", "sets an old ppm position in the spectrum to a new value; NONE resets (1D NMR only)"]);
-Clazz.defineEnumConstant (c$, "SHIFTX", 63, ["dx or NONE", "shifts the x-axis of a 1D NMR spectrum by the given ppm; NONE resets (1D NMR only)"]);
-Clazz.defineEnumConstant (c$, "SHOWERRORS", 64, ["shows recent errors"]);
-Clazz.defineEnumConstant (c$, "SHOWINTEGRATION", 65, ["T", "shows an integration listing"]);
-Clazz.defineEnumConstant (c$, "SHOWKEY", 66, ["T", "shows a color key when multiple spectra are displayed"]);
-Clazz.defineEnumConstant (c$, "SHOWMEASUREMENTS", 67, ["T", "shows a listing of measurements"]);
-Clazz.defineEnumConstant (c$, "SHOWMENU", 68, ["displays the popup menu"]);
-Clazz.defineEnumConstant (c$, "SHOWPEAKLIST", 69, ["T", "shows a listing for peak picking"]);
-Clazz.defineEnumConstant (c$, "SHOWPROPERTIES", 70, ["displays the header information of a JDX file"]);
-Clazz.defineEnumConstant (c$, "SHOWSOURCE", 71, ["displays the source JDX file associated with the selected data"]);
-Clazz.defineEnumConstant (c$, "SPECTRUM", 72, ["id", "displays a specific spectrum, where id is a number 1, 2, 3... or a file.spectrum number such as 2.1"]);
-Clazz.defineEnumConstant (c$, "SPECTRUMNUMBER", 73, ["n", "displays the nth spectrum loaded"]);
-Clazz.defineEnumConstant (c$, "STACKOFFSETY", 74, ["percent", "sets the y-axis offset of stacked spectra"]);
-Clazz.defineEnumConstant (c$, "STARTINDEX", 75, []);
-Clazz.defineEnumConstant (c$, "SYNCCALLBACKFUNCTIONNAME", 76, []);
-Clazz.defineEnumConstant (c$, "SYNCID", 77, []);
-Clazz.defineEnumConstant (c$, "TEST", 78, []);
-Clazz.defineEnumConstant (c$, "TITLEON", 79, ["T", "turns the title in the bottom left corner on or off"]);
-Clazz.defineEnumConstant (c$, "TITLEBOLDON", 80, ["T", "makes the title bold"]);
-Clazz.defineEnumConstant (c$, "TITLECOLOR", 81, ["C", "sets the color of the title"]);
-Clazz.defineEnumConstant (c$, "TITLEFONTNAME", 82, ["fontName", "sets the title font"]);
-Clazz.defineEnumConstant (c$, "UNITSCOLOR", 83, ["C", "sets the color of the x-axis and y-axis units"]);
-Clazz.defineEnumConstant (c$, "VERSION", 84, []);
-Clazz.defineEnumConstant (c$, "VIEW", 85, ["spectrumID, spectrumID, ... Example: VIEW 3.1, 3.2  or  VIEW \"acetophenone\"", "creates a view of one or more spectra"]);
-Clazz.defineEnumConstant (c$, "XSCALEON", 86, ["T", "set FALSE to turn off the x-axis scale"]);
-Clazz.defineEnumConstant (c$, "XUNITSON", 87, ["T", "set FALSE to turn off the x-axis units"]);
-Clazz.defineEnumConstant (c$, "YSCALE", 88, ["[ALL] lowValue highValue"]);
-Clazz.defineEnumConstant (c$, "YSCALEON", 89, ["T", "set FALSE to turn off the y-axis scale"]);
-Clazz.defineEnumConstant (c$, "YUNITSON", 90, ["T", "set FALSE to turn off the y-axis units"]);
-Clazz.defineEnumConstant (c$, "WINDOW", 91, []);
-Clazz.defineEnumConstant (c$, "WRITE", 92, ["[XY,DIF,DIFDUP,PAC,FIX,SQZ,AML,CML,JPG,PDF,PNG,SVG] \"filename\"", "writes a file in the specified format"]);
-Clazz.defineEnumConstant (c$, "ZOOM", 93, ["OUT or PREVIOUS or NEXT or x1,x2 or x1,y1 x2,y2", "sets the zoom"]);
-Clazz.defineEnumConstant (c$, "ZOOMBOXCOLOR", 94, []);
-Clazz.defineEnumConstant (c$, "ZOOMBOXCOLOR2", 95, []);
+Clazz.defineEnumConstant (c$, "POINTSONLY", 55, ["TF", "show points only for all data"]);
+Clazz.defineEnumConstant (c$, "PRINT", 56, ["", "prints the current spectrum"]);
+Clazz.defineEnumConstant (c$, "REVERSEPLOT", 57, ["T", "reverses the x-axis of a spectrum"]);
+Clazz.defineEnumConstant (c$, "SCALEBY", 58, ["factor", "multiplies the y-scale of the spectrum by a factor"]);
+Clazz.defineEnumConstant (c$, "SCALECOLOR", 59, ["C", "sets the color of the x-axis and y-axis scales"]);
+Clazz.defineEnumConstant (c$, "SCRIPT", 60, ["filename.jsv", "runs a script from a file"]);
+Clazz.defineEnumConstant (c$, "SELECT", 61, ["spectrumID, spectrumID,...", "selects one or more spectra based on IDs"]);
+Clazz.defineEnumConstant (c$, "SETPEAK", 62, ["xNew, xOld xNew, ?, or NONE", "sets nearest peak to xOld ppm to a new value; NONE resets (1D NMR only)"]);
+Clazz.defineEnumConstant (c$, "SETX", 63, ["xNew, xOld xNew, ?, or NONE", "sets an old ppm position in the spectrum to a new value; NONE resets (1D NMR only)"]);
+Clazz.defineEnumConstant (c$, "SHIFTX", 64, ["dx or NONE", "shifts the x-axis of a 1D NMR spectrum by the given ppm; NONE resets (1D NMR only)"]);
+Clazz.defineEnumConstant (c$, "SHOWERRORS", 65, ["shows recent errors"]);
+Clazz.defineEnumConstant (c$, "SHOWINTEGRATION", 66, ["T", "shows an integration listing"]);
+Clazz.defineEnumConstant (c$, "SHOWKEY", 67, ["T", "shows a color key when multiple spectra are displayed"]);
+Clazz.defineEnumConstant (c$, "SHOWMEASUREMENTS", 68, ["T", "shows a listing of measurements"]);
+Clazz.defineEnumConstant (c$, "SHOWMENU", 69, ["displays the popup menu"]);
+Clazz.defineEnumConstant (c$, "SHOWPEAKLIST", 70, ["T", "shows a listing for peak picking"]);
+Clazz.defineEnumConstant (c$, "SHOWPROPERTIES", 71, ["displays the header information of a JDX file"]);
+Clazz.defineEnumConstant (c$, "SHOWSOURCE", 72, ["displays the source JDX file associated with the selected data"]);
+Clazz.defineEnumConstant (c$, "SPECTRUM", 73, ["id", "displays a specific spectrum, where id is a number 1, 2, 3... or a file.spectrum number such as 2.1"]);
+Clazz.defineEnumConstant (c$, "SPECTRUMNUMBER", 74, ["n", "displays the nth spectrum loaded"]);
+Clazz.defineEnumConstant (c$, "STACKOFFSETY", 75, ["percent", "sets the y-axis offset of stacked spectra"]);
+Clazz.defineEnumConstant (c$, "STARTINDEX", 76, []);
+Clazz.defineEnumConstant (c$, "SYNCCALLBACKFUNCTIONNAME", 77, []);
+Clazz.defineEnumConstant (c$, "SYNCID", 78, []);
+Clazz.defineEnumConstant (c$, "TEST", 79, []);
+Clazz.defineEnumConstant (c$, "TITLEON", 80, ["T", "turns the title in the bottom left corner on or off"]);
+Clazz.defineEnumConstant (c$, "TITLEBOLDON", 81, ["T", "makes the title bold"]);
+Clazz.defineEnumConstant (c$, "TITLECOLOR", 82, ["C", "sets the color of the title"]);
+Clazz.defineEnumConstant (c$, "TITLEFONTNAME", 83, ["fontName", "sets the title font"]);
+Clazz.defineEnumConstant (c$, "UNITSCOLOR", 84, ["C", "sets the color of the x-axis and y-axis units"]);
+Clazz.defineEnumConstant (c$, "VERSION", 85, []);
+Clazz.defineEnumConstant (c$, "VIEW", 86, ["spectrumID, spectrumID, ... Example: VIEW 3.1, 3.2  or  VIEW \"acetophenone\"", "creates a view of one or more spectra"]);
+Clazz.defineEnumConstant (c$, "XSCALEON", 87, ["T", "set FALSE to turn off the x-axis scale"]);
+Clazz.defineEnumConstant (c$, "XUNITSON", 88, ["T", "set FALSE to turn off the x-axis units"]);
+Clazz.defineEnumConstant (c$, "YSCALE", 89, ["[ALL] lowValue highValue"]);
+Clazz.defineEnumConstant (c$, "YSCALEON", 90, ["T", "set FALSE to turn off the y-axis scale"]);
+Clazz.defineEnumConstant (c$, "YUNITSON", 91, ["T", "set FALSE to turn off the y-axis units"]);
+Clazz.defineEnumConstant (c$, "WINDOW", 92, []);
+Clazz.defineEnumConstant (c$, "WRITE", 93, ["[XY,DIF,DIFDUP,PAC,FIX,SQZ,AML,CML,JPG,PDF,PNG,SVG] \"filename\"", "writes a file in the specified format"]);
+Clazz.defineEnumConstant (c$, "ZOOM", 94, ["OUT or PREVIOUS or NEXT or x1,x2 or x1,y1 x2,y2", "sets the zoom"]);
+Clazz.defineEnumConstant (c$, "ZOOMBOXCOLOR", 95, []);
+Clazz.defineEnumConstant (c$, "ZOOMBOXCOLOR2", 96, []);
 });

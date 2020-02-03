@@ -220,9 +220,13 @@ this.alphaBeta = tokens[1].toLowerCase ();
 }tokens = this.getMoTokens (null);
 }
 var pt = 0;
+var offset = 0;
 while (tokens != null && tokens.length > 0 && this.parseIntStr (tokens[0]) != -2147483648) {
 if (tokens.length != 2) throw  new Exception ("invalid MO coefficient specification");
 var i = this.parseIntStr (tokens[0]);
+if (pt == 0 && i == this.nCoef + 1 && this.alphaBeta.equals ("beta")) {
+offset = -this.nCoef;
+}i += offset;
 while (i > ++pt) data.addLast ("0");
 
 data.addLast (tokens[1]);

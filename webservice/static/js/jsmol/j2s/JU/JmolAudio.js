@@ -1,5 +1,5 @@
 Clazz.declarePackage ("JU");
-Clazz.load (["J.api.JmolAudioPlayer"], "JU.JmolAudio", ["JU.Logger"], function () {
+Clazz.load (["J.api.JmolAudioPlayer"], "JU.JmolAudio", ["JU.Logger", "JV.Viewer"], function () {
 c$ = Clazz.decorateAsClass (function () {
 this.params = null;
 this.myClip = null;
@@ -24,9 +24,11 @@ this.params = htParams;
 this.params.put ("audioPlayer", this);
 this.fileName = htParams.get ("audioFile");
 vwr.sm.registerAudio (this.id, htParams);
-{
-Jmol._playAudio(vwr.html5Applet, htParams);
-}if (this.myClip == null) return;
+var applet = vwr.html5Applet;
+var jmol = JV.Viewer.jmolObject;
+if (jmol == null) this.getClip ();
+ else jmol.playAudio (applet, htParams);
+if (this.myClip == null) return;
 if (htParams.containsKey ("action")) this.action (htParams.get ("action"));
  else if (htParams.containsKey ("loop")) {
 this.action ("loop");

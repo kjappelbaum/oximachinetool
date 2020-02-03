@@ -128,7 +128,7 @@ function labelOxStates(viewer, atom_indices, labeltext) {
     if ($("#labels-input").is(":checked")){
         for (const [index, label] of labeltext.entries()) {
             var num = atom_indices[index] + 1;
-            jmolscript+= 'select atomno=' + num + '; ';
+            jmolscript+= '; select atomno=' + num + '; ';
             jmolscript+= 'label ' + '"' + label + '"' + '; ';
         }
     } else {
@@ -136,7 +136,6 @@ function labelOxStates(viewer, atom_indices, labeltext) {
             var num = atom_indices[index] + 1;
             jmolscript+= 'select atomno=' + num + '; ';
             jmolscript+= 'label off; ';
-            // jmolscript+= 'color label black';
         }
     }
     Jmol.script(eval(viewer), jmolscript);

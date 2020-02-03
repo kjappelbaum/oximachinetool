@@ -237,7 +237,7 @@ i += 2;
 break;
 }v = this.getAssocArray (i);
 } else {
-v = this.getPointOrPlane (i, false, true, true, false, 3, 4);
+v = this.getPointOrPlane (i, false, true, true, false, 3, 4, true);
 }i = this.iToken;
 break;
 case 1073742325:
@@ -481,7 +481,7 @@ if (nExpress > 0) continue;
 break expression_loop;
 case 1073742332:
 if (this.isPoint3f (pc)) {
-var pt = this.getPoint3f (pc, true);
+var pt = this.getPoint3f (pc, true, true);
 if (pt != null) {
 rpn.addXPt (pt);
 pc = this.iToken;
@@ -521,7 +521,7 @@ pc = this.iToken;
 break;
 case 1073742329:
 rpn.addX (JS.SV.newT (instruction));
-rpn.addXPt (this.getPoint3f (pc + 2, true));
+rpn.addXPt (this.getPoint3f (pc + 2, true, true));
 pc = this.iToken;
 break;
 case 4:

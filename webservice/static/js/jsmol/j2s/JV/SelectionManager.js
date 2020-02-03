@@ -63,7 +63,7 @@ break;
 }
 JU.BSUtil.andNot (this.bsHidden, this.bsDeleted);
 modelSet.setBsHidden (this.bsHidden);
-if (!isQuiet) this.vwr.reportSelection (J.i18n.GT.i (J.i18n.GT._ ("{0} atoms hidden"), this.bsHidden.cardinality ()));
+if (!isQuiet) this.vwr.reportSelection (J.i18n.GT.i (J.i18n.GT.$ ("{0} atoms hidden"), this.bsHidden.cardinality ()));
 }, "JM.ModelSet,JU.BS,~N,~B");
 Clazz.defineMethod (c$, "hide", 
 function (modelSet, bs, addRemove, isQuiet) {
@@ -71,7 +71,7 @@ var bsNotSubset = (addRemove == 0 || this.bsSubset == null ? null : JU.BSUtil.an
 JV.SelectionManager.setBitSet (this.bsHidden, bs, addRemove);
 if (bsNotSubset != null) this.bsHidden.or (bsNotSubset);
 if (modelSet != null) modelSet.setBsHidden (this.bsHidden);
-if (!isQuiet) this.vwr.reportSelection (J.i18n.GT.i (J.i18n.GT._ ("{0} atoms hidden"), this.bsHidden.cardinality ()));
+if (!isQuiet) this.vwr.reportSelection (J.i18n.GT.i (J.i18n.GT.$ ("{0} atoms hidden"), this.bsHidden.cardinality ()));
 }, "JM.ModelSet,JU.BS,~N,~B");
 Clazz.defineMethod (c$, "setSelectionSet", 
 function (set, addRemove) {
@@ -119,11 +119,11 @@ this.setSelectionSet (bs, addRemove);
 if (!this.vwr.getBoolean (1612709900)) this.excludeSelectionSet (this.vwr.ms.getAtoms (1612709900, null));
 if (!this.vwr.getBoolean (1612709894)) this.excludeSelectionSet (this.vwr.ms.getAtoms (1612709894, null));
 }this.selectionChanged (false);
-var reportChime = this.vwr.getBoolean (603979880);
+var reportChime = this.vwr.getBoolean (603979879);
 if (!reportChime && isQuiet) return;
 var n = this.getSelectionCount ();
 if (reportChime) this.vwr.getChimeMessenger ().reportSelection (n);
- else if (!isQuiet) this.vwr.reportSelection (J.i18n.GT.i (J.i18n.GT._ ("{0} atoms selected"), n));
+ else if (!isQuiet) this.vwr.reportSelection (J.i18n.GT.i (J.i18n.GT.$ ("{0} atoms selected"), n));
 }, "JU.BS,~N,~B");
 Clazz.defineMethod (c$, "selectAll", 
 function (isQuiet) {

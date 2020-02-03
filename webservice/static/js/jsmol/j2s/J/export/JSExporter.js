@@ -111,7 +111,7 @@ function (x, y, z, image, bgcolix, width, height) {
 }, "~N,~N,~N,~O,~N,~N,~N");
 Clazz.overrideMethod (c$, "plotText", 
 function (x, y, z, colix, text, font3d) {
-}, "~N,~N,~N,~N,~S,javajs.awt.Font");
+}, "~N,~N,~N,~N,~S,JU.Font");
 Clazz.defineMethod (c$, "getColors", 
  function (colixes) {
 if (colixes == null) return null;

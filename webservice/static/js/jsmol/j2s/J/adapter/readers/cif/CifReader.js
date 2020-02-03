@@ -104,13 +104,18 @@ Clazz.defineMethod (c$, "readCifData",
  function () {
 this.parser = this.getCifDataParser ();
 this.line = "";
-while ((this.key = this.parser.peekToken ()) != null) if (!this.readAllData ()) break;
+while (this.continueWith (this.key = this.parser.peekToken ())) if (!this.readAllData ()) break;
 
 if (this.appendedData != null) {
 this.parser = (this.getInterface ("JU.CifDataParser")).set (null, JU.Rdr.getBR (this.appendedData), this.debugging);
 while ((this.key = this.parser.peekToken ()) != null) if (!this.readAllData ()) break;
 
 }});
+Clazz.defineMethod (c$, "continueWith", 
+ function (key) {
+var ret = (key != null && !key.equals ("_shelx_hkl_file"));
+return ret;
+}, "~S");
 Clazz.defineMethod (c$, "getCifDataParser", 
 function () {
 return  new JU.CifDataParser ().set (this, null, this.debugging);
@@ -439,6 +444,7 @@ return;
 Clazz.defineMethod (c$, "getData", 
  function () {
 this.key = this.parser.getTokenPeeked ();
+if (!this.continueWith (this.key)) return false;
 this.data = this.parser.getNextToken ();
 if (this.debugging && this.data != null && this.data.length > 0 && this.data.charAt (0) != '\0') JU.Logger.debug (">> " + this.key + " " + this.data);
 if (this.data == null) {

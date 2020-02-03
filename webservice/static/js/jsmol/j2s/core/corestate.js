@@ -67,7 +67,7 @@ var $t$;
 Clazz_declarePackage ("JV");
 c$ = Clazz_declareType (JV, "JmolStateCreator");
 Clazz_declarePackage ("JV");
-Clazz_load (["JV.JmolStateCreator", "java.util.Hashtable"], "JV.StateCreator", ["java.lang.Float", "java.util.Arrays", "$.Date", "javajs.awt.Font", "JU.BS", "$.P3", "$.PT", "$.SB", "J.c.PAL", "$.STR", "$.VDW", "JM.Atom", "$.AtomCollection", "$.Bond", "$.BondSet", "JS.T", "J.shape.Shape", "JU.BSUtil", "$.C", "$.ColorEncoder", "$.Edge", "$.Escape", "$.Logger", "JV.GlobalSettings", "$.JC", "$.StateManager", "$.Viewer"], function () {
+Clazz_load (["JV.JmolStateCreator", "java.util.Hashtable"], "JV.StateCreator", ["java.lang.Float", "java.util.Arrays", "$.Date", "JU.BS", "$.P3", "$.PT", "$.SB", "J.c.PAL", "$.STR", "$.VDW", "JM.Atom", "$.AtomCollection", "$.Bond", "$.BondSet", "JS.T", "J.shape.Measures", "$.Shape", "JU.BSUtil", "$.C", "$.ColorEncoder", "$.Edge", "$.Escape", "$.Font", "$.Logger", "JV.GlobalSettings", "$.JC", "$.StateManager", "$.Viewer"], function () {
 c$ = Clazz_decorateAsClass (function () {
 this.vwr = null;
 this.temp = null;
@@ -457,7 +457,7 @@ var pointer = JV.JC.getPointerName (l.defaultPointer);
 this.app (s, "set labelPointer " + (pointer.length == 0 ? "off" : pointer));
 if ((l.defaultZPos & 32) != 0) this.app (s, "set labelFront");
  else if ((l.defaultZPos & 16) != 0) this.app (s, "set labelGroup");
-this.app (s, J.shape.Shape.getFontCommand ("label", javajs.awt.Font.getFont3D (l.defaultFontId)));
+this.app (s, J.shape.Shape.getFontCommand ("label", JU.Font.getFont3D (l.defaultFontId)));
 return s.toString ();
 }, "J.shape.Labels");
 Clazz_defineMethod (c$, "getSelectionState", 
@@ -592,7 +592,7 @@ if (s.length () < 3) return "";
 var fcmd = J.shape.Shape.getFontCommand (myType, font3d);
 if (fcmd.length > 0) fcmd = "  " + fcmd + ";\n";
 return (s + fcmd);
-}, "~S,javajs.awt.Font");
+}, "~S,JU.Font");
 Clazz_defineMethod (c$, "appendTickInfo", 
  function (myType, sb, t) {
 sb.append ("  ");
@@ -614,7 +614,7 @@ Clazz_defineMethod (c$, "getMeasurementState",
  function (shape) {
 var mList = shape.measurements;
 var measurementCount = shape.measurementCount;
-var font3d = shape.font3d;
+var font3d = J.shape.Measures.font3d;
 var ti = shape.defaultTickInfo;
 var commands =  new JU.SB ();
 this.app (commands, "measures delete");
@@ -656,7 +656,7 @@ if (ti != null) {
 commands.append (" measure ");
 JV.StateCreator.addTickInfo (commands, ti, true);
 commands.append (";\n");
-}if (shape.mad >= 0) commands.append (" set measurements " + (shape.mad / 2000)).append (";\n");
+}if (shape.mad >= 0) commands.append (" set measurements ").appendF (shape.mad / 2000).append (";\n");
 var s = this.getCommands (temp, null, "select measures");
 if (s != null && s.length != 0) {
 commands.append (s);
@@ -694,7 +694,7 @@ var bondCount = modelSet.bondCount;
 var r;
 if (reportAll || shape.bsSizeSet != null) {
 var i0 = (reportAll ? bondCount - 1 : shape.bsSizeSet.nextSetBit (0));
-for (var i = i0; i >= 0; i = (reportAll ? i - 1 : shape.bsSizeSet.nextSetBit (i + 1))) JU.BSUtil.setMapBitSet (this.temp, i, i, "wireframe " + ((r = bonds[i].mad) == 1 ? "on" : "" + (r / 2000)));
+for (var i = i0; i >= 0; i = (reportAll ? i - 1 : shape.bsSizeSet.nextSetBit (i + 1))) JU.BSUtil.setMapBitSet (this.temp, i, i, "wireframe " + ((r = bonds[i].mad) == 1 ? "on" : "" + JU.PT.escF (r / 2000)));
 
 }if (reportAll || bsOrderSet != null) {
 var i0 = (reportAll ? bondCount - 1 : bsOrderSet.nextSetBit (0));
@@ -800,7 +800,7 @@ if ((offsetFull & 32) != 0) JU.BSUtil.setMapBitSet (this.temp2, i, i, "set label
  else if ((offsetFull & 16) != 0) JU.BSUtil.setMapBitSet (this.temp2, i, i, "set labelGroup");
 if (align.length > 0) JU.BSUtil.setMapBitSet (this.temp3, i, i, "set labelAlignment " + align);
 }if (l.mads != null && l.mads[i] < 0) JU.BSUtil.setMapBitSet (this.temp2, i, i, "set toggleLabel");
-if (l.bsFontSet != null && l.bsFontSet.get (i)) JU.BSUtil.setMapBitSet (this.temp2, i, i, J.shape.Shape.getFontCommand ("label", javajs.awt.Font.getFont3D (l.fids[i])));
+if (l.bsFontSet != null && l.bsFontSet.get (i)) JU.BSUtil.setMapBitSet (this.temp2, i, i, J.shape.Shape.getFontCommand ("label", JU.Font.getFont3D (l.fids[i])));
 }
 s = this.getCommands (this.temp, this.temp2, "select") + this.getCommands (null, this.temp3, "select");
 this.temp3.clear ();
@@ -817,7 +817,7 @@ var r = 0;
 for (var i = 0; i < ac; i++) {
 if (shape.bsSizeSet != null && shape.bsSizeSet.get (i)) {
 if ((r = atoms[i].madAtom) < 0) JU.BSUtil.setMapBitSet (this.temp, i, i, "Spacefill on");
- else JU.BSUtil.setMapBitSet (this.temp, i, i, "Spacefill " + (r / 2000));
+ else JU.BSUtil.setMapBitSet (this.temp, i, i, "Spacefill " + JU.PT.escF (r / 2000));
 }if (shape.bsColixSet != null && shape.bsColixSet.get (i)) {
 var pid = atoms[i].paletteID;
 if (pid != J.c.PAL.CPK.id || JU.C.isColixTranslucent (atoms[i].colixAtom)) JU.BSUtil.setMapBitSet (this.temp, i, i, J.shape.Shape.getColorCommand ("atoms", pid, atoms[i].colixAtom, shape.translucentAllowed));
@@ -881,7 +881,7 @@ Clazz_defineMethod (c$, "getTextState",
  function (t) {
 var s =  new JU.SB ();
 var text = t.text;
-if (text == null || t.isLabelOrHover || t.target.equals ("error")) return "";
+if (text == null || !t.isEcho || t.target.equals ("error")) return "";
 var isImage = (t.image != null);
 var strOff = null;
 var echoCmd = "set echo ID " + JU.PT.esc (t.target);

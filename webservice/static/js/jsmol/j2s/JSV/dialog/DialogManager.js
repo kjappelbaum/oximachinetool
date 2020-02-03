@@ -1,5 +1,5 @@
 Clazz.declarePackage ("JSV.dialog");
-Clazz.load (null, "JSV.dialog.DialogManager", ["java.util.Hashtable", "JU.PT", "JSV.common.JSVFileManager"], function () {
+Clazz.load (null, "JSV.dialog.DialogManager", ["java.util.Hashtable", "JU.PT", "JSV.common.JSVFileManager", "$.JSViewer"], function () {
 c$ = Clazz.decorateAsClass (function () {
 this.vwr = null;
 this.htSelectors = null;
@@ -40,13 +40,17 @@ if (errorLog != null && errorLog.length > 0) this.showMessage (frame, errorLog, 
  else this.showMessageDialog (frame, "No errors found.", "Error Log", 1);
 }, "~O,JSV.source.JDXSource");
 Clazz.defineMethod (c$, "showSource", 
-function (frame, filePath) {
+function (frame, spec) {
+var filePath = spec.getFilePath ();
 if (filePath == null) {
 this.showMessageDialog (frame, "Please Select a Spectrum", "Select Spectrum", 2);
 return;
+}if (filePath === "[inline]") {
+this.showMessage (null, spec.getInlineData (), "Inline data");
+return;
 }try {
 var s = JSV.common.JSVFileManager.getFileAsString (filePath);
-if (this.vwr.isJS) s = JU.PT.rep (s, "<", "&lt;");
+if (JSV.common.JSViewer.isJS) s = JU.PT.rep (s, "<", "&lt;");
 this.showMessage (null, s, JSV.dialog.DialogManager.fixTitle (filePath));
 } catch (ex) {
 if (Clazz.exceptionOf (ex, Exception)) {
@@ -55,7 +59,7 @@ this.showMessageDialog (frame, "File Not Found", "SHOWSOURCE", 0);
 throw ex;
 }
 }
-}, "~O,~S");
+}, "~O,JSV.common.Spectrum");
 Clazz.defineMethod (c$, "processClick", 
 function (eventId) {
 var pt = eventId.lastIndexOf ("/");

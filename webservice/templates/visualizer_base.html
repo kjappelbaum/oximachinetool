@@ -270,14 +270,6 @@
                 </div>
 
                 <div class="option-section">
-                    <h4 class="inline-header">Axes:</h4>
-                    <select id="axesMenu" onchange="jsmolDrawAxes(jmolApplet);">
-                        <option value="xyz" selected>xyz axes</option>
-                        <option value="abc">abc vectors</option>
-                        <option value="noaxes">no axes</option>
-                    </select>
-                </div>
-                <div class="option-section">
                     <div class="row">
                         <div class="checkbox-option" id="bonds">
                             <label>
@@ -419,7 +411,6 @@
         structureviewer= jsmolCrystal({{ xsfstructure|tojson|safe }}, "structure-content","jmolApplet", [1,1,1]);
         var metal_indices = {{ metal_indices|tojson|safe }};
         var prediction_labels = {{ prediction_labels|tojson|safe }};
-        labelOxStates(jmolApplet, metal_indices, prediction_labels); 
 
         $(document).ready(function () {
             var divjsmol = document.getElementById('crystal');
@@ -428,6 +419,8 @@
             $('[data-toggle="tooltip"]').tooltip({
                 placement: "top"
             });
+
+            labelOxStates(jmolApplet, metal_indices, prediction_labels); 
 
             enableDoubleTap(structureviewer['_mouseInterface'], function () {
                 toggleStrVisInteraction(false);

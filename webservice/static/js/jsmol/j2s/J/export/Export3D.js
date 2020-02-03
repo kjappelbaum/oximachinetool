@@ -152,7 +152,7 @@ this.fillQuadrilateral (this.ptA, this.ptB, this.ptC, this.ptD, false);
 Clazz.overrideMethod (c$, "drawString", 
 function (str, font3d, xBaseline, yBaseline, z, zSlab, bgcolix) {
 if (str != null && !this.gdata.isClippedZ (zSlab)) this.drawStringNoSlab (str, font3d, xBaseline, yBaseline, z, bgcolix);
-}, "~S,javajs.awt.Font,~N,~N,~N,~N,~N");
+}, "~S,JU.Font,~N,~N,~N,~N,~N");
 Clazz.overrideMethod (c$, "drawStringNoSlab", 
 function (str, font3d, xBaseline, yBaseline, z, bgcolix) {
 if (str == null) return;
@@ -160,7 +160,7 @@ z = Math.max (this.slab, z);
 if (font3d == null) font3d = this.gdata.getFont3DCurrent ();
  else this.gdata.setFont (font3d);
 this.exporter.plotText (xBaseline, yBaseline, z, this.colix, str, font3d);
-}, "~S,javajs.awt.Font,~N,~N,~N,~N");
+}, "~S,JU.Font,~N,~N,~N,~N");
 Clazz.overrideMethod (c$, "drawImage", 
 function (objImage, x, y, z, zSlab, bgcolix, width, height) {
 if (this.isCartesian || objImage == null || width == 0 || height == 0 || this.gdata.isClippedZ (zSlab)) return;
@@ -362,7 +362,7 @@ function (TF) {
 }, "~B");
 Clazz.overrideMethod (c$, "addRenderer", 
 function (tok) {
-if (tok == 553648146) this.hermite3d =  new J.g3d.HermiteRenderer ().set (this, this.gdata);
+if (tok == 553648145) this.hermite3d =  new J.g3d.HermiteRenderer ().set (this, this.gdata);
 }, "~N");
 Clazz.overrideMethod (c$, "plotImagePixel", 
 function (argb, x, y, z, shade, bgargb, width, height, pbuf, p, transpLog) {

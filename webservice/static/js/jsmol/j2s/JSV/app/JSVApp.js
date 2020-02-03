@@ -64,7 +64,7 @@ return this.vwr.getCoordinate ();
 });
 Clazz.overrideMethod (c$, "loadInline", 
 function (data) {
-this.siOpenDataOrFile (data, null, null, null, -1, -1, true, null, null);
+this.siOpenDataOrFile (data, "[inline]", null, null, -1, -1, true, null, null);
 this.appletFrame.validateContent (3);
 }, "~S");
 Clazz.overrideMethod (c$, "exportSpectrum", 
@@ -90,6 +90,10 @@ this.toggle (JSV.common.ScriptToken.GRIDON);
 Clazz.overrideMethod (c$, "toggleCoordinate", 
 function () {
 this.toggle (JSV.common.ScriptToken.COORDINATESON);
+});
+Clazz.overrideMethod (c$, "togglePointsOnly", 
+function () {
+this.toggle (JSV.common.ScriptToken.POINTSONLY);
 });
 Clazz.overrideMethod (c$, "toggleIntegration", 
 function () {
@@ -136,8 +140,10 @@ this.appletFrame.createMainPanel (this.vwr);
 Clazz.overrideMethod (c$, "repaint", 
 function () {
 var applet = (this.vwr == null ? null : this.vwr.html5Applet);
-{
-applet && self.Jmol && Jmol._repaint &&(Jmol._repaint(applet,true));
+if (JSV.common.JSViewer.jmolObject == null) {
+this.appletFrame.repaint ();
+} else if (applet != null) {
+JSV.common.JSViewer.jmolObject.repaint (applet, true);
 }});
 Clazz.defineMethod (c$, "updateJS", 
 function (width, height) {
@@ -176,7 +182,8 @@ var applet = this.vwr.html5Applet;
 var panel = (applet == null ? null : this.vwr.selectedPanel);
 {
 applet && applet._viewSet != null && applet._updateView(panel, msg);
-}}, "~S");
+}applet._updateView (panel, msg);
+}, "~S");
 Clazz.overrideMethod (c$, "syncToJmol", 
 function (msg) {
 this.updateJSView (msg);
@@ -244,7 +251,6 @@ default:
 this.siSetSelectedPanel (null);
 return;
 }
-if (this.vwr.jsvpPopupMenu != null) this.vwr.jsvpPopupMenu.setCompoundMenu (this.vwr.panelNodes, this.vwr.allowCompoundMenu);
 JU.Logger.info (this.appletFrame.getAppletInfo () + " File " + this.vwr.currentSource.getFilePath () + " Loaded Successfully");
 }, "~O,~S,JU.Lst,~S,~N,~N,~B,~S,~S");
 Clazz.overrideMethod (c$, "siProcessCommand", 

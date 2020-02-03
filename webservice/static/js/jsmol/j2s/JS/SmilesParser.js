@@ -37,7 +37,6 @@ if (pattern.indexOf ("$(select") >= 0) pattern = this.parseNested (search, patte
 var ret =  Clazz.newIntArray (1, 0);
 pattern = JS.SmilesParser.extractFlags (pattern, ret);
 this.flags = ret[0];
-this.ignoreStereochemistry = ((this.flags & 32) == 32);
 search.setFlags (this.flags);
 if (pattern.indexOf ("$") >= 0) pattern = this.parseVariables (pattern);
 if (this.isSmarts && pattern.indexOf ("[$") >= 0) pattern = this.parseVariableLength (pattern);

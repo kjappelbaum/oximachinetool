@@ -185,7 +185,13 @@ case JSV.common.ExportType.PDF:
 return this.printPDF (viewer, "PDF", asBase64);
 case JSV.common.ExportType.SOURCE:
 if (jsvp == null) return null;
-return JSV["export"].Exporter.fileCopy (jsvp.getPanelData ().getSpectrum ().getFilePath (), out);
+var data = jsvp.getPanelData ().getSpectrum ().getInlineData ();
+if (data != null) {
+out.append (data);
+out.closeChannel ();
+return "OK " + out.getByteCount () + " bytes";
+}var path = jsvp.getPanelData ().getSpectrum ().getFilePath ();
+return JSV["export"].Exporter.fileCopy (path, out);
 case JSV.common.ExportType.UNK:
 return null;
 }
@@ -214,7 +220,7 @@ helper.setFileChooser (JSV.common.ExportType.PDF);
 if (pdfFileName.equals ("?") || pdfFileName.equalsIgnoreCase ("PDF")) pdfFileName = this.getSuggestedFileName (viewer, JSV.common.ExportType.PDF);
 var file = helper.getFile (pdfFileName, jsvp, true);
 if (file == null) return null;
-if (!viewer.isJS) viewer.setProperty ("directoryLastExportedFile", helper.setDirLastExported (file.getParentAsFile ().getFullPath ()));
+if (!JSV.common.JSViewer.isJS) viewer.setProperty ("directoryLastExportedFile", helper.setDirLastExported (file.getParentAsFile ().getFullPath ()));
 pdfFileName = file.getFullPath ();
 }var s = null;
 try {
@@ -426,7 +432,7 @@ break;
 }
 this.pdf.setFont (fname, font.fontSizeNominal);
 return font;
-}, "~O,javajs.awt.Font");
+}, "~O,JU.Font");
 Clazz_overrideMethod (c$, "setStrokeBold", 
 function (g, tf) {
 this.pdf.setLineWidth (tf ? 2 : 1);

@@ -1,5 +1,5 @@
-Jmol.___JSVDate="$Date: 2017-04-14 11:34:29 -0500 (Fri, 14 Apr 2017) $"
-Jmol.___JSVSvnRev="$LastChangedRevision: 1764 $"
+Jmol.___JSVDate="$Date: 2019-04-26 13:58:53 -0500 (Fri, 26 Apr 2019) $"
+Jmol.___JSVSvnRev="$LastChangedRevision: 21963 $"
 Jmol.___JSVVersion="14.2.8"
 Clazz.declarePackage ("JSV.common");
 c$ = Clazz.declareType (JSV.common, "JSVersion");

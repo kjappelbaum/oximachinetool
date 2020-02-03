@@ -226,5 +226,5 @@ function (pt, argb) {
 }, "JU.P3,~N");
 Clazz.overrideMethod (c$, "plotText", 
 function (x, y, z, colix, text, font3d) {
-}, "~N,~N,~N,~N,~S,javajs.awt.Font");
+}, "~N,~N,~N,~N,~S,JU.Font");
 });

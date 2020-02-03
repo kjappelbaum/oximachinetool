@@ -140,7 +140,10 @@ JS.SymmetryOperation.newPoint (this.finalOperations[i], atom1, atom2, transX, tr
 }, "~N,JU.P3,JU.P3,~N,~N,~N");
 c$.getInfo = Clazz.defineMethod (c$, "getInfo", 
 function (sg, spaceGroup, cellInfo, asMap) {
-if (cellInfo != null) {
+if (sg != null && sg.index >= JS.SpaceGroup.SG.length) {
+var sgDerived = JS.SpaceGroup.findSpaceGroup (sg.operationCount, sg.getCanonicalSeitzList ());
+if (sgDerived != null) sg = sgDerived;
+}if (cellInfo != null) {
 if (sg == null) {
 if (spaceGroup.indexOf ("[") >= 0) spaceGroup = spaceGroup.substring (0, spaceGroup.indexOf ("[")).trim ();
 if (spaceGroup.equals ("unspecified!")) return "no space group identified in file";
@@ -151,40 +154,21 @@ return JS.SpaceGroup.dumpAll ();
 return JS.SpaceGroup.dumpAllSeitz ();
 } else {
 sg = JS.SpaceGroup.determineSpaceGroupN (spaceGroup);
-if (sg == null) {
-sg = JS.SpaceGroup.createSpaceGroupN (spaceGroup);
-} else {
-var sb =  new JU.SB ();
+}if (sg == null) {
+var sgFound = JS.SpaceGroup.createSpaceGroupN (spaceGroup);
+sgFound = JS.SpaceGroup.findSpaceGroup (sgFound.operationCount, sgFound.getCanonicalSeitzList ());
+if (sgFound != null) sg = sgFound;
+}if (sg != null) {
+if (asMap) {
+return sg.dumpInfoObj ();
+}var sb =  new JU.SB ();
 while (sg != null) {
 sb.append (sg.dumpInfo ());
 sg = JS.SpaceGroup.determineSpaceGroupNS (spaceGroup, sg);
 }
 return sb.toString ();
-}}return (asMap ? (sg == null ? null : sg.getInfo (cellInfo)) : sg == null ? "?" : sg.dumpInfo ());
+}return asMap ? null : "?";
 }, "JS.SpaceGroup,~S,J.api.SymmetryInterface,~B");
-Clazz.defineMethod (c$, "getInfo", 
- function (cellInfo) {
-if (this.info == null) {
-if (this.hmSymbol == null || this.hmSymbolExt == null) {
-this.info =  new java.util.Hashtable ();
-this.info.put ("HMSymbol", "??");
-} else {
-var seitz = this.dumpCanonicalSeitzList ();
-this.info.put ("SeitzList", seitz == null ? "" : seitz);
-this.info.put ("HMSymbol", this.hmSymbolExt.length > 0 ? ":" + this.hmSymbolExt : "");
-this.info.put ("ITSNumber", Integer.$valueOf (this.intlTableNumber));
-this.info.put ("ITSNumberFull", this.intlTableNumberFull);
-this.info.put ("crystalClass", this.crystalClass);
-this.info.put ("HallSymbol", this.hallInfo.hallSymbol.equals ("--") ? "" : this.hallInfo.hallSymbol);
-}this.info.put ("operationCount", Integer.$valueOf (this.operationCount));
-var ops =  new JU.Lst ();
-this.info.put ("operationInfo", ops);
-for (var i = 0; i < this.operationCount; i++) ops.addLast (this.operations[i].getInfo ());
-
-}var ucmap = (cellInfo == null ? null : cellInfo.getUnitCellInfoMap ());
-if (ucmap != null) this.info.put ("unitCell", ucmap);
-return this.info;
-}, "J.api.SymmetryInterface");
 Clazz.defineMethod (c$, "dumpInfo", 
 function () {
 var info = this.dumpCanonicalSeitzList ();
@@ -200,6 +184,26 @@ sb.append ("\n").append (this.operations[i].xyz);
 sb.append ("\n\n").append (this.hallInfo == null ? "Hall symbol unknown" : this.hallInfo.dumpInfo ());
 sb.append ("\n\ncanonical Seitz: ").append (info).append ("\n----------------------------------------------------\n");
 return sb.toString ();
+});
+Clazz.defineMethod (c$, "dumpInfoObj", 
+function () {
+var info = this.dumpCanonicalSeitzList ();
+if (Clazz.instanceOf (info, JS.SpaceGroup)) return (info).dumpInfoObj ();
+var map =  new java.util.Hashtable ();
+var s = (this.hmSymbol == null || this.hmSymbolExt == null ? "?" : this.hmSymbol + (this.hmSymbolExt.length > 0 ? ":" + this.hmSymbolExt : ""));
+map.put ("HermannMauguinSymbol", s);
+if (this.intlTableNumber != null) {
+map.put ("ita", Integer.$valueOf (this.intlTableNumber));
+map.put ("itaFull", this.intlTableNumberFull);
+map.put ("crystalClass", this.crystalClass);
+map.put ("operationCount", Integer.$valueOf (this.operationCount));
+}var lst =  new JU.Lst ();
+for (var i = 0; i < this.operationCount; i++) {
+lst.addLast (this.operations[i].xyz);
+}
+map.put ("operationsXYZ", lst);
+map.put ("HallSymbol", (this.hallInfo == null ? "?" : this.hallInfo.hallSymbol));
+return map;
 });
 Clazz.defineMethod (c$, "getName", 
 function () {
@@ -222,7 +226,7 @@ this.generateAllOperators (null);
 }var s = this.getCanonicalSeitzList ();
 if (this.index >= JS.SpaceGroup.SG.length) {
 var sgDerived = JS.SpaceGroup.findSpaceGroup (this.operationCount, s);
-if (sgDerived != null) return sgDerived;
+if (sgDerived != null) return sgDerived.getCanonicalSeitzList ();
 }return (this.index >= 0 && this.index < JS.SpaceGroup.SG.length ? this.hallSymbol + " = " : "") + s;
 });
 Clazz.defineMethod (c$, "getDerivedSpaceGroup", 

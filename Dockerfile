@@ -12,7 +12,5 @@ COPY ./oximachine/compute/requirements.txt /home/app/code/webservice
 RUN pip3  install -r /home/app/code/webservice/requirements.txt
 
 COPY ./oximachine/compute /home/app/code/webservice/compute/
-COPY ./oximachine/config.yaml /home/app/code/webservice/static/config.yaml
-COPY ./oximachine/user_templates/* /home/app/code/webservice/templates/user_templates/
 
 RUN chown -R app:app $HOME

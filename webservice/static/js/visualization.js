@@ -89,9 +89,9 @@ function toggleRotation(viewer) {
 
 function showBonds(viewer) {
     if ($("#bonds-input").is(":checked")){
-        var jmolscript = "select none; wireframe 0.15";
+        var jmolscript = "select; wireframe 0.15";
     } else {
-        var jmolscript = "select none; wireframe off";
+        var jmolscript = "select; wireframe off";
     }
     Jmol.script(eval(viewer), jmolscript);
     return jmolscript;
@@ -125,9 +125,8 @@ function showLabels(viewer) {
 
 function labelOxStates(viewer, atom_indices, labeltext) { 
     var jmolscript = "";
-    const counter = 0; 
+    var counter = 0; 
     const elements = labeltext.length;
-    console.log('The length of elements is' + elements);
 
     if ($("#labels-input").is(":checked")){
         for (const [index, label] of labeltext.entries()) {
@@ -146,14 +145,12 @@ function labelOxStates(viewer, atom_indices, labeltext) {
     } else {
         for (const [index, label] of labeltext.entries()) {
             if (counter < elements){
-                console.log("I'm in the else")
                 var num = atom_indices[index] + 1;
                 jmolscript+= 'select atomno=' + num + '; ';
                 jmolscript+= 'label off; ';
                 counter ++; 
             }
             else {
-                console.log("I'm in the else")
                 var num = atom_indices[index] + 1;
                 jmolscript+= 'select atomno=' + num + '; ';
                 jmolscript+= 'label off; select none';

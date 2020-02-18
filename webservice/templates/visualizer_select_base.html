@@ -42,7 +42,7 @@
             });
         });
 
-        $(document).ready(function(){
+        $(document).ready(function () {
             $('[data-toggle="tooltip"]').tooltip({
                 placement: "top"
             });
@@ -55,13 +55,13 @@
     <script src="../static/js/iframeResizer.contentWindow.min.js"></script>
 </head>
 
-</head>
 
 <body>
     <div id='container'>
         <div id='maintitle'>
             {% block mofoxpredtitle %}
-            <h1 style="text-align: center;"><span style="font-weight: bold;">oxiMACHINE</span>: Predicting oxidation states for MOFs.</h1>
+            <h1 style="text-align: center;"><span style="font-weight: bold;">oxiMACHINE</span>: Predicting oxidation
+                states for MOFs.</h1>
             {% endblock %}
         </div>
 
@@ -84,22 +84,27 @@
         <div id="accordion">
             <h2>What oxiMACHINE does</h2>
             <div>
-                <p>This tool takes  <strong>a crystal structure</strong> and predicts the oxidation state for each metal site. Note that 
+                <p>This tool takes <strong>a crystal structure</strong>
+                    and predicts the oxidation state for each metal site. Note that
                     <ul>
-                        <li>We automatically attempt to calculate the primitive structure and will show the primitive structure in the visualizer</li>
+                        <li>We automatically attempt to calculate the primitive structure and will show the primitive
+                            structure in the visualizer</li>
                         <li>Limit calculations in this web app to structures with less than 500 atoms</li>
                         <li>We attempt to detect atomic overlaps and will return an error if we find overlaps</li>
-                        <li>We trained the model on oxidation states of MOFs deposited in the MOF subset of the Cambridge Structure Database</li>
+                        <li>We trained the model on oxidation states of MOFs deposited in the MOF subset of the
+                            Cambridge Structure Database</li>
                     </ul>
                 </p>
                 <p>
-                In addition to the oxidation state predictions, we also output
-                <ul>
-                    <li>The confidence in the assignment </li>
-                    <li>The feature values for each metal site</li>
-                </ul>
+                    In addition to the oxidation state predictions, we also output
+                    <ul>
+                        <li>The confidence in the assignment </li>
+                        <li>The feature values for each metal site</li>
+                    </ul>
                 </p>
-                <p> More information about this tool can be found in the <a href='https://chemrxiv.org/articles/Using_Collective_Knowledge_to_Assign_Oxidation_States/11604129/1'>preprint on Chemrxiv (DOI: 10.26434/chemrxiv.11604129.v1)</a>. Note that this tool is in development. 
+                <p> More information about this tool can be found in the <a
+                        href='https://chemrxiv.org/articles/Using_Collective_Knowledge_to_Assign_Oxidation_States/11604129/1'>preprint
+                        on Chemrxiv (DOI: 10.26434/chemrxiv.11604129.v1)</a>. Note that this tool is in development.
                 </p>
             </div>
 
@@ -107,80 +112,88 @@
             <div>
 
                 <p>
-                This work is supported by the European Research Council (ERC) Advanced Grant <a   href="https://cordis.europa.eu/project/rcn/197913/factsheet/en">(Agreement No.666983, MaGic)</a> and  the computing facilities of <a href='https://www.epfl.ch/research/facilities/scitas/'>SCITAS, EPFL</a>.
-                 </p>
+                    This work is supported by the European Research Council (ERC) Advanced Grant <a
+                        href="https://cordis.europa.eu/project/rcn/197913/factsheet/en">(Agreement No.666983, MaGic)</a>
+                    and the computing facilities of <a href='https://www.epfl.ch/research/facilities/scitas/'>SCITAS,
+                        EPFL</a>.
+                </p>
 
                 <p>
-                    In our program, we use the following libraries, please also consider acknowledging them: 
+                    In our program, we use the following libraries, please also consider acknowledging them:
                     <ul>
                         <li> <a href='https://pymatgen.org/'> pymatgen </a></li>
                         <li> <a href='https://hackingmaterials.lbl.gov/matminer/'>matminer</a></li>
                         <li> <a href='https://scikit-learn.org/stable/index.html'> sklearn</a></li>
                         <li> <a href='https://shap.readthedocs.io/en/latest/'> shap</a></li>
                         <li> <a href='https://flask.palletsprojects.com/en/1.1.x/'>flask</a></li>
-                        <li> <a href='https://github.com/materialscloud-org/tools-barebone'>tools-barbone</a> template. 
+                        <li> <a href='https://github.com/materialscloud-org/tools-barebone'>tools-barbone</a> template.
                         </li>
                     </ul>
                 </p>
                 <p>
-                    For training of the models, we used the data deposited in the Cambridge Structural Database (CSD), 
+                    For training of the models, we used the data deposited in the Cambridge Structural Database (CSD),
                     the following references describe the MOF subset and the CSD in general.
 
                     <ol>
-                        <li><a href='https://doi.org/10.1021/acs.chemmater.7b00441'>Moghadam, P. Z.; Li, A.; Wiggin, S. B.; Tao, A.; Maloney, A. G. P.; Wood, P. A.; Ward, S. C.; Fairen-Jimenez, D.  
-                            <i> Chem. Mater. </i> <b>2017</b>, 29 (7), 2618–2625.</a></li>
-                        <li> <a href='http://scripts.iucr.org/cgi-bin/paper?S2052520616003954'>C. R.; Bruno, I. J.; Lightfoot, M. P.; Ward, S. C.  
+                        <li><a href='https://doi.org/10.1021/acs.chemmater.7b00441'>Moghadam, P. Z.; Li, A.; Wiggin, S.
+                                B.; Tao, A.; Maloney, A. G. P.; Wood, P. A.; Ward, S. C.; Fairen-Jimenez, D.
+                                <i> Chem. Mater. </i> <b>2017</b>, 29 (7), 2618–2625.</a></li>
+                        <li> <a href='http://scripts.iucr.org/cgi-bin/paper?S2052520616003954'>C. R.; Bruno, I. J.;
+                                Lightfoot, M. P.; Ward, S. C.
                                 <i> Crystallogr B Struct Sci Cryst Eng Mater</i> <b>2016</b>, 72 (2), 171–179.</a></li>
                     </ol>
                 </p>
 
             </div>
 
-            
+
             <h2>How to cite</h2>
             <div>
-             <p>If you use this tool, please cite the <a href='https://chemrxiv.org/articles/Using_Collective_Knowledge_to_Assign_Oxidation_States/11604129/1'>preprint on Chemrxiv (DOI: 10.26434/chemrxiv.11604129.v1)</a>.
-            </p>
-                
+                <p>If you use this tool, please cite the <a
+                        href='https://chemrxiv.org/articles/Using_Collective_Knowledge_to_Assign_Oxidation_States/11604129/1'>preprint
+                        on Chemrxiv (DOI: 10.26434/chemrxiv.11604129.v1)</a>.
+                </p>
+
             </div>
         </div>
         {% endblock %}
-        
-        <div>
-        <h2><a name="tool"></a>Upload your structure</h2>
-        <div style="margin-left: 20px; margin-right: 20px">
-            <form action="../process_structure/" enctype="multipart/form-data" method="post">
-                <div class='alert alert-info'>
-                    <div class='row'>
-                        <div class='col-xs-12 col-sm-6'>
-                            <label for="file">Upload a crystal structure:</label>
-                        </div>
-                        <div class="col-xs-12 col-sm-6">
-                            <input type="file" name="structurefile" size="100">
-                        </div>
-                    </div>
-                    <div class='row'>
-                        <div class='col-sm-6'>
-                            <label for="fileformat">Select here the file format:</label>
-                        </div>
-                        <div class='col-sm-6'>
-                            <select name="fileformat" id="fileformatSelect">
-                                <option value="cif">CIF</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class='row' style="text-align:center">
-                        <p class='small'> <br>By continuing, you agree with the <a href="../termsofuse/"
-                                target="_blank">terms of use</a> of this service.</p>
-                        <input type="submit" value="Calculate my structure" class="btn btn-default" onclick="DisplayProgressMessage()">
-                    </div>
 
-            </form>
+        <div>
+            <h2><a name="tool"></a>Upload your structure</h2>
+            <div style="margin-left: 20px; margin-right: 20px">
+                <form action="../process_structure/" enctype="multipart/form-data" method="post">
+                    <div class='alert alert-info'>
+                        <div class='row'>
+                            <div class='col-xs-12 col-sm-6'>
+                                <label for="file">Upload a crystal structure:</label>
+                            </div>
+                            <div class="col-xs-12 col-sm-6">
+                                <input type="file" name="structurefile" size="100">
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-sm-6'>
+                                <label for="fileformat">Select here the file format:</label>
+                            </div>
+                            <div class='col-sm-6'>
+                                <select name="fileformat" id="fileformatSelect">
+                                    <option value="cif">CIF</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class='row' style="text-align:center">
+                            <p class='small'> <br>By continuing, you agree with the <a href="../termsofuse/"
+                                    target="_blank">terms of use</a> of this service.</p>
+                            <input type="submit" value="Calculate my structure" class="btn btn-default"
+                                onclick="DisplayProgressMessage()">
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-         </div>
         <h2>Otherwise, pick an example</h2>
         <form action="../process_example_structure/" method="post">
-            <div style="margin-left: 20px; margin-right: 20px" >
+            <div style="margin-left: 20px; margin-right: 20px">
                 <div class='alert alert-info'>
                     <div class="row">
                         <div class="col-xs-12 col-sm-6">
@@ -198,16 +211,19 @@
                         </div>
                     </div>
                     <div class='row' style="text-align: center">
-                        <input type="submit" value="Calculate this example" class="btn btn-default" onclick="DisplayProgressMessage()">
+                        <input type="submit" value="Calculate this example" class="btn btn-default"
+                            onclick="DisplayProgressMessage()">
                     </div>
                 </div>
             </div>
         </form>
         <h2>Modify the settings for the feature importance </h2>
-        <div style="margin-left: 20px; margin-right: 20px" >
+        <div style="margin-left: 20px; margin-right: 20px">
             <p>
-                By default we use a crude approximation of the feature importance to give you fast results. 
-                If you care more about feature importance, you can choose here a higher level of fidelity.<a href="#" data-toggle="tooltip" title="Note though that even at the highest fidelity level the results are still biased due to the background data which we use for feature importance calculation, which is a weighted k-mean summarized subset of our training set. "><sup>[?]</sup>
+                By default we use a crude approximation of the feature importance to give you fast results.
+                If you care more about feature importance, you can choose here a higher level of fidelity.<a href="#"
+                    data-toggle="tooltip"
+                    title="Note though that even at the highest fidelity level the results are still biased due to the background data which we use for feature importance calculation, which is a weighted k-mean summarized subset of our training set. "><sup>[?]</sup>
                 </a>
             </p>
             <form action="../set_feature_importance_level/" method="post">
@@ -217,7 +233,7 @@
                             <label for="samples">Select here a fidelity level for the feature importance:</label>
                         </div>
                         <div class="col-xs-12 col-sm-6">
-                            <select name="samples"  onchange="this.form.submit()" default='low'>
+                            <select name="samples" onchange="this.form.submit()" default='low'>
                                 <option value='very_low'>very low</option>
                                 <option value='low'>low</option>
                                 <option value="medium">medium</option>
@@ -226,29 +242,31 @@
                         </div>
                     </div>
                 </div>
+            </form>
         </div>
-        </form >
-    </div>
 
-    <div id='citation'>
-        <p> Note: if you want to use the code on your computer, you can download the
-                Python code from <a href="https://github.com/kjappelbaum/oximachinetool" target="_blank">our Github repo</a>. Also note that this tool is in development, if you experience a bug, try clearing the browser cache. Latest release: v0.4.0.</p>
-    </div>
-    
-    <div style="position: relative" data-iframe-height></div>
-
-
-    <div class="submit-progress hidden">
-        <div>
-        <i class="fa fa-spinner fa-spin" style="font-size: 32px"></i>
-         <label>Please wait while we calculate features, predictions and interpretations ...</label>
+        <div id='citation'>
+            <p> Note: if you want to use the code on your computer, you can download the
+                Python code from <a href="https://github.com/kjappelbaum/oximachinetool" target="_blank">our Github
+                    repo</a>. Also note that this tool is in development, if you experience a bug, try clearing the
+                browser
+                cache. Latest release: v0.4.0.</p>
         </div>
-    </div>
+
+        <div style="position: relative" data-iframe-height></div>
+
+
+        <div class="submit-progress hidden">
+            <div>
+                <i class="fa fa-spinner fa-spin" style="font-size: 32px"></i>
+                <label>Please wait while we calculate features, predictions and interpretations ...</label>
+            </div>
+        </div>
 
 </body>
 
-    <script>
-        function DisplayProgressMessage() {
+<script>
+    function DisplayProgressMessage() {
         $("html").addClass("submit-progress-bg");
         // Wrap in setTimeout so the UI
         // can update the spinners
@@ -256,7 +274,7 @@
             $(".submit-progress").removeClass("hidden");
         }, 1);
         return true;
-        }
-    </script>
+    }
+</script>
 
 </html>

@@ -77,7 +77,7 @@ function jsmolCrystal(data, parentHtmlId, appletName, supercellOptions) {
 
   //setup labels
   //loadingScript+= '; set labeloffset 2 2';
-  loadingScript += "; set fontSize 16";
+  loadingScript += "; set fontSize 21";
 
   Jmol.script(jsmolStructureviewer, loadingScript);
 

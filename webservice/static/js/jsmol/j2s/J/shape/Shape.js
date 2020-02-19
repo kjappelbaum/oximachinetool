@@ -146,7 +146,7 @@ c$.getFontCommand = Clazz.defineMethod (c$, "getFontCommand",
 function (type, font) {
 if (font == null) return "";
 return "font " + type + " " + font.getInfo ();
-}, "~S,JU.Font");
+}, "~S,javajs.awt.Font");
 c$.getColorCommandUnk = Clazz.defineMethod (c$, "getColorCommandUnk", 
 function (type, colix, translucentAllowed) {
 return J.shape.Shape.getColorCommand (type, J.c.PAL.UNKNOWN.id, colix, translucentAllowed);

@@ -39,9 +39,9 @@ throw e;
 }
 }
 }, "java.io.InputStream");
-c$.getBufferedReaderForStringOrBytes = Clazz.defineMethod (c$, "getBufferedReaderForStringOrBytes", 
-function (stringOrBytes) {
-return (stringOrBytes == null ? null :  new java.io.BufferedReader ( new java.io.StringReader (Clazz.instanceOf (stringOrBytes, String) ? stringOrBytes :  String.instantialize (stringOrBytes))));
+c$.getBufferedReaderForData = Clazz.defineMethod (c$, "getBufferedReaderForData", 
+function (data) {
+return (data == null ? null :  new java.io.BufferedReader ( new java.io.StringReader (Clazz.instanceOf (data, String) ? data :  String.instantialize (data))));
 }, "~O");
 c$.getBufferedReaderFromName = Clazz.defineMethod (c$, "getBufferedReaderFromName", 
 function (name, startCode) {
@@ -150,12 +150,12 @@ c$.getSimulationReader = Clazz.defineMethod (c$, "getSimulationReader",
  function (name) {
 var data = JSV.common.JSVFileManager.cacheGet (name);
 if (data == null) JSV.common.JSVFileManager.cachePut (name, data = JSV.common.JSVFileManager.getNMRSimulationJCampDX (name.substring ("http://SIMULATION/".length)));
-return JSV.common.JSVFileManager.getBufferedReaderForStringOrBytes (data);
+return JSV.common.JSVFileManager.getBufferedReaderForData (data);
 }, "~S");
 c$.isAB = Clazz.defineMethod (c$, "isAB", 
 function (x) {
 {
-return Clazz.isAB(x);
+return Clazz.isAI(x);
 }}, "~O");
 c$.isZipFile = Clazz.defineMethod (c$, "isZipFile", 
 function (is) {

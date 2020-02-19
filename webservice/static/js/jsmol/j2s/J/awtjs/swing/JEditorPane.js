@@ -1,9 +1,9 @@
-Clazz.declarePackage ("JS");
-Clazz.load (["JS.JComponent"], "JS.JEditorPane", ["JU.SB"], function () {
-c$ = Clazz.declareType (JS, "JEditorPane", JS.JComponent);
+Clazz.declarePackage ("J.awtjs.swing");
+Clazz.load (["J.awtjs.swing.JComponent"], "J.awtjs.swing.JEditorPane", ["JU.SB"], function () {
+c$ = Clazz.declareType (J.awtjs.swing, "JEditorPane", J.awtjs.swing.JComponent);
 Clazz.makeConstructor (c$, 
 function () {
-Clazz.superConstructor (this, JS.JEditorPane, ["txtJEP"]);
+Clazz.superConstructor (this, J.awtjs.swing.JEditorPane, ["txtJEP"]);
 this.text = "";
 });
 Clazz.overrideMethod (c$, "toHTML", 

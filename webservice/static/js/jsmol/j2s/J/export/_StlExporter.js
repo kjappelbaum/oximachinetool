@@ -129,7 +129,7 @@ function (pt1, pt2, radius, colix, doFill) {
 }, "JU.P3,JU.P3,~N,~N,~B");
 Clazz.overrideMethod (c$, "plotText", 
 function (x, y, z, colix, text, font3d) {
-}, "~N,~N,~N,~N,~S,JU.Font");
+}, "~N,~N,~N,~N,~S,javajs.awt.Font");
 Clazz.defineMethod (c$, "writePoint", 
  function (s, p) {
 if (this.isDebug) this.out.append (s);

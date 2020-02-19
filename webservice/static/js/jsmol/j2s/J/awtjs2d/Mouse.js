@@ -1,5 +1,5 @@
 Clazz.declarePackage ("J.awtjs2d");
-Clazz.load (["J.api.GenericMouseInterface"], "J.awtjs2d.Mouse", ["java.lang.Character", "JU.PT", "$.V3", "JU.Logger"], function () {
+Clazz.load (["javajs.awt.GenericMouseInterface", "javajs.awt.event.Event"], "J.awtjs2d.Mouse", ["java.lang.Character", "JU.PT", "$.V3", "JU.Logger"], function () {
 c$ = Clazz.decorateAsClass (function () {
 this.vwr = null;
 this.manager = null;
@@ -11,7 +11,7 @@ this.xWhenPressed = 0;
 this.yWhenPressed = 0;
 this.modifiersWhenPressed10 = 0;
 Clazz.instantialize (this, arguments);
-}, J.awtjs2d, "Mouse", null, J.api.GenericMouseInterface);
+}, J.awtjs2d, "Mouse", null, javajs.awt.GenericMouseInterface);
 Clazz.makeConstructor (c$, 
 function (privateKey, vwr, display) {
 this.vwr = vwr;

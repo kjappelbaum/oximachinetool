@@ -40,10 +40,6 @@ this.iRowSelected = -1;
 this.iColSelected = -1;
 Clazz.instantialize (this, arguments);
 }, JSV.dialog, "JSVDialog", JSV.common.Annotation, JSV.api.AnnotationData);
-Clazz.overrideMethod (c$, "isDialog", 
-function () {
-return true;
-});
 Clazz.defineMethod (c$, "setParams", 
 function (title, viewer, spec) {
 title = JSV.dialog.DialogManager.fixTitle (title);

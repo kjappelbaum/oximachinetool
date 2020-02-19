@@ -1327,7 +1327,7 @@ this.addTokenToPrefix (this.lastToken);
 break;
 }}break;
 case 134222849:
-if (this.theTok == 12290 && (this.nTokens == 1 || this.lastToken.tok == 1073741940 || this.lastToken.tok == 134217764)) {
+if (this.theTok == 12290 && (this.nTokens == 1 || this.lastToken.tok == 1073741940 || this.lastToken.tok == 1073742152)) {
 this.addTokenToPrefix (JS.T.tokenDefineString);
 return 2;
 }if (this.theTok == 1073741848) this.iHaveQuotedString = false;
@@ -2048,7 +2048,7 @@ Clazz.defineMethod (c$, "handleError",
 this.errorType = this.errorMessage;
 this.errorLine = this.script.substring (this.ichCurrentCommand, this.ichEnd <= this.ichCurrentCommand ? this.ichToken + this.cchToken : this.ichEnd);
 var lineInfo = (this.ichToken < this.ichEnd ? this.errorLine.substring (0, this.ichToken - this.ichCurrentCommand) + " >>>> " + this.errorLine.substring (this.ichToken - this.ichCurrentCommand) : this.errorLine) + " <<<<";
-this.errorMessage = J.i18n.GT.$ ("script compiler ERROR: ") + this.errorMessage + JS.ScriptError.getErrorLineMessage (null, this.filename, this.lineCurrent, this.iCommand, lineInfo);
+this.errorMessage = J.i18n.GT._ ("script compiler ERROR: ") + this.errorMessage + JS.ScriptError.getErrorLineMessage (null, this.filename, this.lineCurrent, this.iCommand, lineInfo);
 if (!this.isSilent) {
 this.ichToken = Math.max (this.ichEnd, this.ichToken);
 while (!this.lookingAtEndOfLine () && !this.lookingAtTerminator ()) this.ichToken++;

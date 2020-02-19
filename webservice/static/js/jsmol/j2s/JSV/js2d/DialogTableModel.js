@@ -1,5 +1,5 @@
 Clazz.declarePackage ("JSV.js2d");
-Clazz.load (["JS.AbstractTableModel"], "JSV.js2d.DialogTableModel", ["javajs.api.GenericColor", "JU.CU"], function () {
+Clazz.load (["J.awtjs.swing.AbstractTableModel"], "JSV.js2d.DialogTableModel", ["javajs.api.GenericColor", "JU.CU"], function () {
 c$ = Clazz.decorateAsClass (function () {
 this.columnNames = null;
 this.data = null;
@@ -8,7 +8,7 @@ this.widths = null;
 this.thisCol = 0;
 this.tableCellAlignLeft = false;
 Clazz.instantialize (this, arguments);
-}, JSV.js2d, "DialogTableModel", null, JS.AbstractTableModel);
+}, JSV.js2d, "DialogTableModel", null, J.awtjs.swing.AbstractTableModel);
 Clazz.makeConstructor (c$, 
 function (columnNames, data, asString, tableCellAlignLeft) {
 this.columnNames = columnNames;

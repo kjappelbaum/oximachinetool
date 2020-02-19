@@ -1,13 +1,13 @@
-Clazz.declarePackage ("JS");
-Clazz.load (["JS.AbstractButton"], "JS.JComboBox", ["JU.SB"], function () {
+Clazz.declarePackage ("J.awtjs.swing");
+Clazz.load (["J.awtjs.swing.AbstractButton"], "J.awtjs.swing.JComboBox", ["JU.SB"], function () {
 c$ = Clazz.decorateAsClass (function () {
 this.info = null;
 this.selectedIndex = 0;
 Clazz.instantialize (this, arguments);
-}, JS, "JComboBox", JS.AbstractButton);
+}, J.awtjs.swing, "JComboBox", J.awtjs.swing.AbstractButton);
 Clazz.makeConstructor (c$, 
 function (info) {
-Clazz.superConstructor (this, JS.JComboBox, ["cmbJCB"]);
+Clazz.superConstructor (this, J.awtjs.swing.JComboBox, ["cmbJCB"]);
 this.info = info;
 }, "~A");
 Clazz.defineMethod (c$, "setSelectedIndex", 

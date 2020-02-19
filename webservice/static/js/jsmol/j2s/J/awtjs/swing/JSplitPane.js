@@ -1,28 +1,28 @@
-Clazz.declarePackage ("JS");
-Clazz.load (["JS.JComponent"], "JS.JSplitPane", ["JU.SB", "JS.JComponentImp"], function () {
+Clazz.declarePackage ("J.awtjs.swing");
+Clazz.load (["J.awtjs.swing.JComponent"], "J.awtjs.swing.JSplitPane", ["JU.SB", "J.awtjs.swing.JComponentImp"], function () {
 c$ = Clazz.decorateAsClass (function () {
 this.isH = true;
 this.split = 1;
 this.right = null;
 this.left = null;
 Clazz.instantialize (this, arguments);
-}, JS, "JSplitPane", JS.JComponent);
+}, J.awtjs.swing, "JSplitPane", J.awtjs.swing.JComponent);
 Clazz.makeConstructor (c$, 
 function (split) {
-Clazz.superConstructor (this, JS.JSplitPane, ["JSpP"]);
+Clazz.superConstructor (this, J.awtjs.swing.JSplitPane, ["JSpP"]);
 this.split = split;
 this.isH = (split == 1);
 }, "~N");
 Clazz.defineMethod (c$, "setRightComponent", 
 function (r) {
-this.right =  new JS.JComponentImp (null);
+this.right =  new J.awtjs.swing.JComponentImp (null);
 this.right.add (r);
-}, "JS.JComponent");
+}, "J.awtjs.swing.JComponent");
 Clazz.defineMethod (c$, "setLeftComponent", 
 function (l) {
-this.left =  new JS.JComponentImp (null);
+this.left =  new J.awtjs.swing.JComponentImp (null);
 this.left.add (l);
-}, "JS.JComponent");
+}, "J.awtjs.swing.JComponent");
 Clazz.defineMethod (c$, "getSubcomponentWidth", 
 function () {
 var w = this.width;

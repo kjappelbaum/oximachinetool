@@ -1,14 +1,14 @@
 Clazz.declarePackage ("J.adapter.readers.molxyz");
-Clazz.load (["J.adapter.smarter.AtomSetCollectionReader"], "J.adapter.readers.molxyz.MolReader", ["java.lang.Exception", "java.util.Hashtable", "JU.Lst", "$.PT", "J.adapter.smarter.Atom", "J.api.JmolAdapter", "JU.Logger"], function () {
+Clazz.load (["J.adapter.smarter.AtomSetCollectionReader"], "J.adapter.readers.molxyz.MolReader", ["java.lang.Exception", "java.util.Hashtable", "JU.PT", "J.adapter.smarter.Atom", "J.api.JmolAdapter", "JU.Logger"], function () {
 c$ = Clazz.decorateAsClass (function () {
 this.optimize2D = false;
 this.haveAtomSerials = false;
+this.dimension = null;
 this.allow2D = true;
 this.iatom0 = 0;
 this.vr = null;
 this.atomCount = 0;
 this.atomData = null;
-this.is2D = false;
 Clazz.instantialize (this, arguments);
 }, J.adapter.readers.molxyz, "MolReader", J.adapter.smarter.AtomSetCollectionReader);
 Clazz.overrideMethod (c$, "initializeReader", 
@@ -57,11 +57,12 @@ header += this.line + "\n";
 this.rd ();
 if (this.line == null) return;
 header += this.line + "\n";
-this.set2D (this.line.length >= 22 && this.line.substring (20, 22).equals ("2D"));
-if (this.is2D) {
+this.dimension = (this.line.length < 22 ? "3D" : this.line.substring (20, 22));
+if (this.dimension.equals ("2D")) {
 if (!this.allow2D) throw  new Exception ("File is 2D, not 3D");
 this.appendLoadNote ("This model is 2D. Its 3D structure has not been generated.");
-}this.rd ();
+}this.asc.setInfo ("dimension", this.dimension);
+this.rd ();
 if (this.line == null) return;
 this.line = this.line.trim ();
 header += this.line + "\n";
@@ -75,7 +76,7 @@ Clazz.defineMethod (c$, "processCtab",
 if (isMDL) this.discardLinesUntilStartsWith ("$CTAB");
 if (this.rd () == null) return;
 if (this.line.indexOf ("V3000") >= 0) {
-this.optimize2D = this.is2D;
+this.optimize2D = (this.dimension.equals ("2D"));
 this.vr = (this.getInterface ("J.adapter.readers.molxyz.V3000Rdr")).set (this);
 this.discardLinesUntilContains ("COUNTS");
 this.vr.readAtomsAndBonds (this.getTokens ());
@@ -99,7 +100,6 @@ var iAtom = -2147483648;
 x = this.parseFloatRange (this.line, 0, 10);
 y = this.parseFloatRange (this.line, 10, 20);
 z = this.parseFloatRange (this.line, 20, 30);
-if (this.is2D && z != 0) this.set2D (false);
 if (len < 34) {
 elementSymbol = this.line.substring (31).trim ();
 } else {
@@ -116,7 +116,6 @@ isotope = J.api.JmolAdapter.getNaturalIsotope (J.api.JmolAdapter.getElementNumbe
 }if (iAtom == -2147483648 && this.haveAtomSerials) iAtom = i + 1;
 }}this.addMolAtom (iAtom, isotope, elementSymbol, charge, x, y, z);
 }
-this.asc.setModelInfoForSet ("dimension", (this.is2D ? "2D" : "3D"), this.asc.iSet);
 this.rd ();
 if (this.line.startsWith ("V  ")) {
 this.readAtomValues ();
@@ -135,11 +134,10 @@ if (this.haveAtomSerials) this.asc.addNewBondFromNames (iAtom1, iAtom2, order);
  else this.asc.addNewBondWithOrder (this.iatom0 + this.parseIntStr (iAtom1) - 1, this.iatom0 + this.parseIntStr (iAtom2) - 1, order);
 }
 var molData =  new java.util.Hashtable ();
-var _keyList =  new JU.Lst ();
 this.rd ();
 while (this.line != null && this.line.indexOf ("$$$$") != 0) {
 if (this.line.indexOf (">") == 0) {
-this.readMolData (molData, _keyList);
+this.readMolData (molData);
 continue;
 }if (this.line.startsWith ("M  ISO")) {
 this.readIsotopes ();
@@ -149,15 +147,8 @@ continue;
 if (this.atomData != null) {
 var atomValueName = molData.get ("atom_value_name");
 molData.put (atomValueName == null ? "atom_values" : atomValueName.toString (), this.atomData);
-}if (!molData.isEmpty ()) {
-this.asc.setCurrentModelInfo ("molDataKeys", _keyList);
-this.asc.setCurrentModelInfo ("molData", molData);
-}}, "~N,~N");
-Clazz.defineMethod (c$, "set2D", 
- function (b) {
-this.is2D = b;
-this.asc.setInfo ("dimension", (b ? "2D" : "3D"));
-}, "~B");
+}if (!molData.isEmpty ()) this.asc.setCurrentModelInfo ("molData", molData);
+}, "~N,~N");
 Clazz.defineMethod (c$, "readAtomValues", 
  function () {
 this.atomData =  new Array (this.atomCount);
@@ -190,7 +181,7 @@ atom.elementSymbol = "" + iso + JU.PT.replaceAllCharacters (atom.elementSymbol, 
 this.rd ();
 });
 Clazz.defineMethod (c$, "readMolData", 
- function (molData, _keyList) {
+ function (molData) {
 var atoms = this.asc.atoms;
 var dataName = JU.PT.trim (this.line, "> <").toLowerCase ();
 var data = "";
@@ -200,7 +191,6 @@ while (this.rd () != null && !this.line.equals ("$$$$") && this.line.length > 0)
 data = JU.PT.trim (data, "\n");
 JU.Logger.info (dataName + ":" + JU.PT.esc (data));
 molData.put (dataName, data);
-_keyList.addLast (dataName);
 var ndata = 0;
 if (dataName.toUpperCase ().contains ("_PARTIAL_CHARGES")) {
 try {
@@ -238,7 +228,7 @@ ndata++;
 JU.Logger.error ("error reading " + dataName + " field");
 }
 JU.Logger.info (ndata + " atom names read");
-}}, "java.util.Map,JU.Lst");
+}}, "java.util.Map");
 Clazz.defineMethod (c$, "addMolAtom", 
 function (iAtom, isotope, elementSymbol, charge, x, y, z) {
 switch (isotope) {

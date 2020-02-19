@@ -333,7 +333,7 @@ this.finalizeObjects ();
 } catch (e) {
 if (Clazz.exceptionOf (e, Exception)) {
 JU.Logger.info ("PyMOLScene exception " + e);
-e.printStackTrace ();
+if (!this.vwr.isJS) e.printStackTrace ();
 } else {
 throw e;
 }
@@ -353,7 +353,7 @@ this.addJmolObject (1140850689, bs, null).argb = icolor;
 }, "~A");
 Clazz.defineMethod (c$, "processSelection", 
 function (selection) {
-var id = J.adapter.readers.pymol.PyMOLReader.stringAt (selection, 0);
+var id = selection.get (0).toString ();
 id = "_" + (id.equals ("sele") ? id : "sele_" + id);
 var g = this.getGroup (id);
 this.getSelectionAtoms (J.adapter.readers.pymol.PyMOLReader.listAt (selection, 5), 0, g.bsAtoms);
@@ -477,7 +477,7 @@ obj.finalizeObject (this, this.vwr.ms, this.mepList, this.doCache);
 } catch (e) {
 if (Clazz.exceptionOf (e, Exception)) {
 System.out.println (e);
-e.printStackTrace ();
+if (!this.vwr.isJS) e.printStackTrace ();
 } else {
 throw e;
 }
@@ -681,7 +681,7 @@ return J.adapter.readers.pymol.PyMOL.getDefaultSetting (i, this.pymolVersion);
 Clazz.defineMethod (c$, "stringSetting", 
 function (i) {
 var setting = this.getSetting (i);
-if (setting != null && setting.size () == 3) return J.adapter.readers.pymol.PyMOLReader.stringAt (setting, 2);
+if (setting != null && setting.size () == 3) return setting.get (2).toString ();
 return J.adapter.readers.pymol.PyMOL.getDefaultSettingS (i, this.pymolVersion);
 }, "~N");
 Clazz.defineMethod (c$, "getSetting", 

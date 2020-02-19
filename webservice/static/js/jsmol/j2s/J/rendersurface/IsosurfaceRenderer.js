@@ -213,7 +213,7 @@ var slabPoints = ((this.volumeRender || this.mesh.pc == 0) && this.selectedPolyO
 var incr = this.imesh.vertexIncrement;
 var diam;
 if (this.mesh.diameter <= 0) {
-diam = this.vwr.getInt (553648142);
+diam = this.vwr.getInt (553648143);
 this.frontOnly = this.isShell = false;
 } else {
 diam = Clazz.doubleToInt (this.vwr.getScreenDim () / (this.volumeRender ? 50 : 100));
@@ -353,7 +353,7 @@ Clazz.defineMethod (c$, "getDiameter",
  function () {
 var diam;
 if (this.mesh.diameter <= 0) {
-diam = (this.meshScale < 0 ? this.meshScale = this.vwr.getInt (553648150) : this.meshScale);
+diam = (this.meshScale < 0 ? this.meshScale = this.vwr.getInt (553648151) : this.meshScale);
 if (this.antialias) diam *= 2;
 } else {
 diam = Clazz.doubleToInt (this.vwr.getScreenDim () / 100);

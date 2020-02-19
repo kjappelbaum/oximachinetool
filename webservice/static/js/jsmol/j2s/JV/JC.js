@@ -1,11 +1,6 @@
 Clazz.declarePackage ("JV");
 Clazz.load (["java.util.Hashtable", "JU.SB", "$.V3", "JU.Elements"], "JV.JC", ["JU.PT"], function () {
 c$ = Clazz.declareType (JV, "JC");
-c$.getNBOTypeFromName = Clazz.defineMethod (c$, "getNBOTypeFromName", 
-function (nboType) {
-var pt = ";AO;;;;PNAO;;NAO;;;PNHO;;NHO;;;PNBO;;NBO;;;PNLMO;NLMO;;MO;;;;NO;;;;;;;;;;;;;;;;PRNBO;RNBO;;".indexOf (";" + nboType + ";");
-return (pt < 0 ? pt : Clazz.doubleToInt (pt / 6) + 31);
-}, "~S");
 c$.getCIPChiralityName = Clazz.defineMethod (c$, "getCIPChiralityName", 
 function (flags) {
 switch (flags) {
@@ -283,7 +278,6 @@ if (type.indexOf ("t") > 0) i |= 16;
 }return i;
 }, "~S");
 Clazz.defineStatics (c$,
-"NBO_TYPES", ";AO;;;;PNAO;;NAO;;;PNHO;;NHO;;;PNBO;;NBO;;;PNLMO;NLMO;;MO;;;;NO;;;;;;;;;;;;;;;;PRNBO;RNBO;;",
 "CIP_CHIRALITY_UNKNOWN", 0,
 "CIP_CHIRALITY_R_FLAG", 1,
 "CIP_CHIRALITY_S_FLAG", 2,
@@ -307,14 +301,13 @@ Clazz.defineStatics (c$,
 "ruleNames",  Clazz.newArray (-1, ["", "1a", "1b", "2", "3", "4a", "4b", "4c", "5", "6"]),
 "PDB_ANNOTATIONS", ";dssr;rna3d;dom;val;",
 "CACTUS_FILE_TYPES", ";alc;cdxml;cerius;charmm;cif;cml;ctx;gjf;gromacs;hyperchem;jme;maestro;mol;mol2;sybyl2;mrv;pdb;sdf;sdf3000;sln;smiles;xyz",
-"defaultMacroDirectory", "https://chemapps.stolaf.edu/jmol/macros",
 "databaseArray",  Clazz.newArray (-1, ["aflowbin", "http://aflowlib.mems.duke.edu/users/jmolers/binary_new/%FILE.aflow_binary", "aflow", "http://aflowlib.mems.duke.edu/users/jmolers/binary_new/%FILE.aflow_binary", "ams", "'http://rruff.geo.arizona.edu/AMS/viewJmol.php?'+(0+'%file'==0? 'mineral':('%file'.length==7? 'amcsd':'id'))+'=%file&action=showcif#_DOCACHE_'", "dssr", "http://dssr-jmol.x3dna.org/report.php?id=%FILE&opts=--json=ebi", "dssrModel", "http://dssr-jmol.x3dna.org/report.php?POST?opts=--json=ebi&model=", "iucr", "http://scripts.iucr.org/cgi-bin/sendcif_yard?%FILE", "cod", "http://www.crystallography.net/cod/cif/%c1/%c2%c3/%c4%c5/%FILE.cif", "nmr", "http://www.nmrdb.org/new_predictor?POST?molfile=", "nmrdb", "http://www.nmrdb.org/service/predictor?POST?molfile=", "nmrdb13", "http://www.nmrdb.org/service/jsmol13c?POST?molfile=", "magndata", "http://webbdcrista1.ehu.es/magndata/mcif/%FILE.mcif", "rna3d", "http://rna.bgsu.edu/rna3dhub/%TYPE/download/%FILE", "mmtf", "https://mmtf.rcsb.org/v1.0/full/%FILE", "chebi", "https://www.ebi.ac.uk/chebi/saveStructure.do?defaultImage=true&chebiId=%file%2D%", "ligand", "https://files.rcsb.org/ligands/download/%FILE.cif", "mp", "https://www.materialsproject.org/materials/mp-%FILE/cif#_DOCACHE_", "nci", "https://cactus.nci.nih.gov/chemical/structure/%FILE", "pdb", "https://files.rcsb.org/download/%FILE.pdb", "pdb0", "https://files.rcsb.org/download/%FILE.pdb", "pdbe", "https://www.ebi.ac.uk/pdbe/entry-files/download/%FILE.cif", "pdbe2", "https://www.ebi.ac.uk/pdbe/static/entry/%FILE_updated.cif", "pubchem", "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/%FILE/SDF?record_type=3d", "map", "https://www.ebi.ac.uk/pdbe/api/%TYPE/%FILE?pretty=false&metadata=true", "pdbemap", "https://www.ebi.ac.uk/pdbe/coordinates/files/%file.ccp4", "pdbemapdiff", "https://www.ebi.ac.uk/pdbe/coordinates/files/%file_diff.ccp4", "pdbemapserver", "https://www.ebi.ac.uk/pdbe/densities/x-ray/%file/box/0,0,0/0,0,0?space=cartesian&encoding=bcif", "pdbemapdiffserver", "https://www.ebi.ac.uk/pdbe/densities/x-ray/%file/box/0,0,0/0,0,0?space=cartesian&encoding=bcif&diff=1"]));
 c$.databases = c$.prototype.databases =  new java.util.Hashtable ();
 {
 for (var i = 0; i < JV.JC.databaseArray.length; i += 2) JV.JC.databases.put (JV.JC.databaseArray[i].toLowerCase (), JV.JC.databaseArray[i + 1]);
 
 }Clazz.defineStatics (c$,
-"macros",  Clazz.newArray (-1, ["aflow", "https://chemapps.stolaf.edu/jmol/macros/AFLOW.spt", "AFLOW macros", "bz", "https://chemapps.stolaf.edu/jmol/macros/bz.spt", "Brillouin Zone/Wigner-Seitz macros", "topology", "https://chemapps.stolaf.edu/jmol/macros/topology.spt", "Topology CIF macros", "topond", "https://chemapps.stolaf.edu/jmol/macros/topond.spt", "CRYSTAL/TOPOND macros", "crystal", "https://chemapps.stolaf.edu/jmol/macros/crystal.spt", "CRYSTAL macros"]),
+"macros",  Clazz.newArray (-1, ["aflow", "http://aflowlib.mems.duke.edu/users/jmolers/jmol/spt/AFLOW.spt", "AFLOW macros", "bz", "http://aflowlib.mems.duke.edu/users/jmolers/jmol/spt/bz.spt", "Brillouin Zone/Wigner-Seitz macros"]),
 "copyright", "(C) 2015 Jmol Development",
 "version", null,
 "majorVersion", null,
@@ -393,6 +386,7 @@ Clazz.defineStatics (c$,
 "DEFAULT_MIN_BOND_DISTANCE", 0.4,
 "DEFAULT_MAX_CONNECT_DISTANCE", 100000000,
 "DEFAULT_MIN_CONNECT_DISTANCE", 0.1,
+"MINIMIZATION_ATOM_MAX", 200,
 "MINIMIZE_FIXED_RANGE", 5.0,
 "ENC_CALC_MAX_DIST", 3,
 "ENV_CALC_MAX_LEVEL", 3,
@@ -494,8 +488,8 @@ Clazz.defineStatics (c$,
 "ADD_HYDROGEN_TITLE", "Viewer.AddHydrogens",
 "DEFAULT_FONTFACE", "SansSerif",
 "DEFAULT_FONTSTYLE", "Plain",
-"MEASURE_DEFAULT_FONTSIZE", 18,
-"AXES_DEFAULT_FONTSIZE", 16,
+"MEASURE_DEFAULT_FONTSIZE", 15,
+"AXES_DEFAULT_FONTSIZE", 14,
 "SHAPE_BALLS", 0,
 "SHAPE_STICKS", 1,
 "SHAPE_HSTICKS", 2,

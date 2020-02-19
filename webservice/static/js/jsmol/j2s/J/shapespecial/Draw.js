@@ -252,12 +252,8 @@ var key = Integer.$valueOf (type);
 var isModelPoints = (type == 5);
 if (isModelPoints) this.vData.addLast ( Clazz.newArray (-1, [key, pts]));
 for (var i = 0, n = pts.size (); i < n; i++) {
-var o = pts.get (i);
+var v = pts.get (i);
 var pt;
-if (Clazz.instanceOf (o, JU.P3)) {
-pt = o;
-} else {
-var v = o;
 switch (v.tok) {
 case 10:
 if (!isModelPoints && (v.value).isEmpty ()) continue;
@@ -268,7 +264,7 @@ if (isModelPoints) continue;
 default:
 pt = JS.SV.ptValue (v);
 }
-}if (isModelPoints) {
+if (isModelPoints) {
 pts.set (i, JS.SV.getVariable (pt));
 } else {
 this.vData.addLast ( Clazz.newArray (-1, [key, pt]));
@@ -852,9 +848,7 @@ if (vertexes == null || vertexes.length == 0) return;
 if (this.vwr.gdata.isAntialiased ()) {
 x <<= 1;
 y <<= 1;
-}var action = moveAll ? 8 : 9;
-if (this.vwr.acm.userActionEnabled (action) && !this.vwr.acm.userAction (action,  Clazz.newArray (-1, [mesh.thisID,  Clazz.newIntArray (-1, [x, y, iVertex])]))) return;
-var pt =  new JU.P3 ();
+}var pt =  new JU.P3 ();
 var ptVertex = vertexes[iVertex];
 var coord = JU.P3.newP (mesh.altVertices == null ? mesh.vs[ptVertex] : mesh.altVertices[ptVertex]);
 var newcoord =  new JU.P3 ();

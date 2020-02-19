@@ -1,8 +1,8 @@
-Clazz.declarePackage ("JS");
-Clazz.load (["JS.JMenuItem"], "JS.JCheckBoxMenuItem", null, function () {
-c$ = Clazz.declareType (JS, "JCheckBoxMenuItem", JS.JMenuItem);
+Clazz.declarePackage ("J.awtjs.swing");
+Clazz.load (["J.awtjs.swing.JMenuItem"], "J.awtjs.swing.JCheckBoxMenuItem", null, function () {
+c$ = Clazz.declareType (J.awtjs.swing, "JCheckBoxMenuItem", J.awtjs.swing.JMenuItem);
 Clazz.makeConstructor (c$, 
 function () {
-Clazz.superConstructor (this, JS.JCheckBoxMenuItem, ["chk", 2]);
+Clazz.superConstructor (this, J.awtjs.swing.JCheckBoxMenuItem, ["chk", 2]);
 });
 });

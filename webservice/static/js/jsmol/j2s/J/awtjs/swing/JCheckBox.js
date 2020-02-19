@@ -1,9 +1,9 @@
-Clazz.declarePackage ("JS");
-Clazz.load (["JS.AbstractButton"], "JS.JCheckBox", null, function () {
-c$ = Clazz.declareType (JS, "JCheckBox", JS.AbstractButton);
+Clazz.declarePackage ("J.awtjs.swing");
+Clazz.load (["J.awtjs.swing.AbstractButton"], "J.awtjs.swing.JCheckBox", null, function () {
+c$ = Clazz.declareType (J.awtjs.swing, "JCheckBox", J.awtjs.swing.AbstractButton);
 Clazz.makeConstructor (c$, 
 function () {
-Clazz.superConstructor (this, JS.JCheckBox, ["chkJCB"]);
+Clazz.superConstructor (this, J.awtjs.swing.JCheckBox, ["chkJCB"]);
 });
 Clazz.overrideMethod (c$, "toHTML", 
 function () {

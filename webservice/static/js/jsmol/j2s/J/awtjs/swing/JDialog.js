@@ -1,5 +1,5 @@
-Clazz.declarePackage ("JS");
-Clazz.load (["JS.Container"], "JS.JDialog", ["JU.SB", "JS.Color", "$.JContentPane"], function () {
+Clazz.declarePackage ("J.awtjs.swing");
+Clazz.load (["javajs.awt.Container"], "J.awtjs.swing.JDialog", ["javajs.awt.Color", "JU.SB", "J.awtjs.swing.JContentPane"], function () {
 c$ = Clazz.decorateAsClass (function () {
 this.defaultWidth = 600;
 this.defaultHeight = 300;
@@ -9,17 +9,17 @@ this.html = null;
 this.zIndex = 9000;
 this.loc = null;
 Clazz.instantialize (this, arguments);
-}, JS, "JDialog", JS.Container);
+}, J.awtjs.swing, "JDialog", javajs.awt.Container);
 Clazz.defineMethod (c$, "setZIndex", 
 function (zIndex) {
 this.zIndex = zIndex;
 }, "~N");
 Clazz.makeConstructor (c$, 
 function () {
-Clazz.superConstructor (this, JS.JDialog, ["JD"]);
-this.add (this.contentPane =  new JS.JContentPane ());
-this.setBackground (JS.Color.get3 (210, 210, 240));
-this.contentPane.setBackground (JS.Color.get3 (230, 230, 230));
+Clazz.superConstructor (this, J.awtjs.swing.JDialog, ["JD"]);
+this.add (this.contentPane =  new J.awtjs.swing.JContentPane ());
+this.setBackground (javajs.awt.Color.get3 (210, 210, 240));
+this.contentPane.setBackground (javajs.awt.Color.get3 (230, 230, 230));
 });
 Clazz.defineMethod (c$, "setLocation", 
 function (loc) {
@@ -44,7 +44,7 @@ this.html = null;
 Clazz.defineMethod (c$, "setVisible", 
 function (tf) {
 if (tf && this.html == null) this.setDialog ();
-Clazz.superCall (this, JS.JDialog, "setVisible", [tf]);
+Clazz.superCall (this, J.awtjs.swing.JDialog, "setVisible", [tf]);
 if (tf) this.toFront ();
 }, "~B");
 Clazz.defineMethod (c$, "dispose", 

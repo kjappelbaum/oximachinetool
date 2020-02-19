@@ -79,7 +79,7 @@ return s;
 Clazz.defineMethod (c$, "setCallbackFunction", 
 function (callbackType, callbackFunction) {
 var callback = J.c.CBK.getCallback (callbackType);
-System.out.println ("StatusManager callback set for " + callbackType + " f=" + callbackFunction + " cb=" + callback);
+System.out.println ("callback set for " + callbackType + " " + callbackFunction + " " + callback);
 if (callback != null) {
 var pt = (callbackFunction == null ? 0 : callbackFunction.length > 7 && callbackFunction.toLowerCase ().indexOf ("script:") == 0 ? 7 : callbackFunction.length > 11 && callbackFunction.toLowerCase ().indexOf ("jmolscript:") == 0 ? 11 : 0);
 if (pt == 0) this.jmolScriptCallbacks.remove (callback);
@@ -234,7 +234,7 @@ if (this.recordStatus ("script")) {
 var isError = (strErrorMessageUntranslated != null);
 this.setStatusChanged ((isError ? "scriptError" : "scriptStatus"), 0, strStatus, false);
 if (isError || isScriptCompletion) this.setStatusChanged ("scriptTerminated", 1, "Jmol script terminated" + (isError ? " unsuccessfully: " + strStatus : " successfully"), false);
-}if (isScriptCompletion && this.vwr.getBoolean (603979879) && this.vwr.getBoolean (603979825)) strStatus = this.vwr.getChimeMessenger ().scriptCompleted (this, statusMessage, strErrorMessageUntranslated);
+}if (isScriptCompletion && this.vwr.getBoolean (603979880) && this.vwr.getBoolean (603979825)) strStatus = this.vwr.getChimeMessenger ().scriptCompleted (this, statusMessage, strErrorMessageUntranslated);
 var data =  Clazz.newArray (-1, [sJmol, strStatus, statusMessage, Integer.$valueOf (isScriptCompletion ? -1 : msWalltime), strErrorMessageUntranslated]);
 if (this.notifyEnabled (J.c.CBK.SCRIPT)) this.cbl.notifyCallback (J.c.CBK.SCRIPT, data);
 this.processScript (data);
@@ -242,9 +242,18 @@ this.processScript (data);
 Clazz.defineMethod (c$, "processScript", 
 function (data) {
 var msWalltime = (data[3]).intValue ();
-this.vwr.notifyScriptEditor (msWalltime, data);
-if (msWalltime == 0) this.vwr.sendConsoleMessage (data[1] == null ? null : data[1].toString ());
-}, "~A");
+if (this.vwr.scriptEditor != null) {
+if (msWalltime > 0) {
+this.vwr.scriptEditor.notifyScriptTermination ();
+} else if (msWalltime < 0) {
+if (msWalltime == -2) this.vwr.scriptEditor.notifyScriptStart ();
+} else if (this.vwr.scriptEditor.isVisible () && (data[2]).length > 0) {
+this.vwr.scriptEditor.notifyContext (this.vwr.getScriptContext ("SE notify"), data);
+}}if (this.vwr.appConsole != null) {
+if (msWalltime == 0) {
+var strInfo = (data[1] == null ? null : data[1].toString ());
+this.vwr.appConsole.sendConsoleMessage (strInfo);
+}}}, "~A");
 Clazz.defineMethod (c$, "doSync", 
 function () {
 return (this.isSynced && this.drivingSync && !this.syncDisabled);
@@ -323,8 +332,9 @@ if (this.jsl != null) this.jsl.showUrl (urlString);
 }, "~S");
 Clazz.defineMethod (c$, "clearConsole", 
 function () {
-this.vwr.sendConsoleMessage (null);
-if (this.jsl != null) this.cbl.notifyCallback (J.c.CBK.MESSAGE, null);
+if (this.vwr.appConsole != null) {
+this.vwr.appConsole.sendConsoleMessage (null);
+}if (this.jsl != null) this.cbl.notifyCallback (J.c.CBK.MESSAGE, null);
 });
 Clazz.defineMethod (c$, "functionXY", 
 function (functionName, nX, nY) {

@@ -1207,7 +1207,7 @@ case 96:
 case 192:
 case 128:
 case 160:
-case 1275068437:
+case 1140850707:
 return this.addXObj (this.eval.getMathExt ().getMinMax (x2.getList (), op.intValue));
 case 1275334681:
 return this.addX (x2.pushPop (null, null));

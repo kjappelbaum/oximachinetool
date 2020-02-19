@@ -1,5 +1,5 @@
 Clazz.declarePackage ("J.shape");
-Clazz.load (["J.shape.AtomShape", "java.util.Hashtable", "JU.P3"], "J.shape.Labels", ["JU.AU", "$.BS", "$.Lst", "$.PT", "J.c.PAL", "JM.LabelToken", "$.Text", "JS.SV", "JU.BSUtil", "$.C", "$.Font", "JV.JC"], function () {
+Clazz.load (["J.shape.AtomShape", "java.util.Hashtable", "JU.P3"], "J.shape.Labels", ["javajs.awt.Font", "JU.AU", "$.BS", "$.Lst", "$.PT", "J.c.PAL", "JM.LabelToken", "$.Text", "JS.SV", "JU.BSUtil", "$.C", "JV.JC"], function () {
 c$ = Clazz.decorateAsClass (function () {
 this.strings = null;
 this.formats = null;
@@ -265,7 +265,7 @@ if (text == null) {
 if (this.strings == null || i >= this.strings.length || this.strings[i] == null) return;
 var fid = (this.bsFontSet != null && this.bsFontSet.get (i) ? this.fids[i] : -1);
 if (fid < 0) this.setFont (i, fid = this.defaultFontId);
-text = JM.Text.newLabel (this.vwr, JU.Font.getFont3D (fid), this.strings[i], this.getColix2 (i, this.atoms[i], false), this.getColix2 (i, this.atoms[i], true), 0, this.scalePixelsPerMicron);
+text = JM.Text.newLabel (this.vwr, javajs.awt.Font.getFont3D (fid), this.strings[i], this.getColix2 (i, this.atoms[i], false), this.getColix2 (i, this.atoms[i], true), 0, this.scalePixelsPerMicron);
 this.setPymolLabel (i, text, this.formats[i]);
 }text.pymolOffset = value;
 }, "~N,~A");

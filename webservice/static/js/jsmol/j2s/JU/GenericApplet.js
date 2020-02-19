@@ -155,7 +155,7 @@ return this.viewer.processMouseEvent (e.id, e.x, e.y, e.modifiers, e.when);
 }, "java.awt.Event");
 Clazz.overrideMethod (c$, "getAppletInfo", 
 function () {
-return J.i18n.GT.o (J.i18n.GT.$ ("Jmol Applet version {0} {1}.\n\nAn OpenScience project.\n\nSee http://www.jmol.org for more information"),  Clazz.newArray (-1, [JV.JC.version, JV.JC.date])) + "\nhtmlName = " + JU.PT.esc (this.htmlName) + "\nsyncId = " + JU.PT.esc (this.syncId) + "\ndocumentBase = " + JU.PT.esc (this.documentBase) + "\ncodeBase = " + JU.PT.esc (this.codeBase);
+return J.i18n.GT.o (J.i18n.GT._ ("Jmol Applet version {0} {1}.\n\nAn OpenScience project.\n\nSee http://www.jmol.org for more information"),  Clazz.newArray (-1, [JV.JC.version, JV.JC.date])) + "\nhtmlName = " + JU.PT.esc (this.htmlName) + "\nsyncId = " + JU.PT.esc (this.syncId) + "\ndocumentBase = " + JU.PT.esc (this.documentBase) + "\ncodeBase = " + JU.PT.esc (this.codeBase);
 });
 Clazz.overrideMethod (c$, "script", 
 function (script) {
@@ -348,7 +348,7 @@ break;
 case J.c.CBK.LOADSTRUCT:
 var errorMsg = data[4];
 if (errorMsg != null) {
-errorMsg = (errorMsg.indexOf ("NOTE:") >= 0 ? "" : J.i18n.GT.$ ("File Error:")) + errorMsg;
+errorMsg = (errorMsg.indexOf ("NOTE:") >= 0 ? "" : J.i18n.GT._ ("File Error:")) + errorMsg;
 this.doShowStatus (errorMsg);
 this.notifyCallback (J.c.CBK.MESSAGE,  Clazz.newArray (-1, ["", errorMsg]));
 return;

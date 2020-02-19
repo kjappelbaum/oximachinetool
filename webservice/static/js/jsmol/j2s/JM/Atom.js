@@ -577,7 +577,7 @@ return this.getIdentity (true);
 Clazz.defineMethod (c$, "getIdentityXYZ", 
 function (allInfo, pt) {
 pt = (this.group.chain.model.isJmolDataFrame ? this.getFractionalCoordPt (!this.group.chain.model.ms.vwr.g.legacyJavaFloat, false, pt) : this);
-return this.getIdentity (allInfo) + " " + JU.PT.formatF (pt.x, 0, 3, true, true) + " " + JU.PT.formatF (pt.y, 0, 3, true, true) + " " + JU.PT.formatF (pt.z, 0, 3, true, true);
+return this.getIdentity (allInfo) + " " + pt.x + " " + pt.y + " " + pt.z;
 }, "~B,JU.P3");
 Clazz.defineMethod (c$, "getIdentity", 
 function (allInfo) {
@@ -1005,7 +1005,7 @@ Clazz.defineMethod (c$, "getCIPChiralityRule",
 function () {
 var rs = this.getCIPChirality (true);
 var flags = (rs.length == 0 ? -1 : (this.formalChargeAndFlags & 3584) >> 9);
-return JV.JC.getCIPRuleName (flags + 1);
+return (JV.JC.getCIPRuleName (flags + 1));
 });
 Clazz.overrideMethod (c$, "setCIPChirality", 
 function (c) {
@@ -1066,7 +1066,7 @@ return this.group.chain.model.ms.vwr.getAtomBitSet (atomExpression);
 }, "~S");
 Clazz.defineMethod (c$, "getUnitID", 
 function (flags) {
-var m = this.group.chain.model;
+var m = this.group.getModel ();
 return (m.isBioModel ? (m).getUnitID (this, flags) : "");
 }, "~N");
 Clazz.overrideMethod (c$, "getFloatProperty", 
@@ -1084,11 +1084,6 @@ throw e;
 }
 }return f;
 }, "~S");
-Clazz.overrideMethod (c$, "modelIsRawPDB", 
-function () {
-var m = this.group.chain.model;
-return (m.isBioModel && !m.isPdbWithMultipleBonds && m.hydrogenCount == 0);
-});
 Clazz.defineStatics (c$,
 "ATOM_INFRAME", 1,
 "ATOM_VISSET", 2,

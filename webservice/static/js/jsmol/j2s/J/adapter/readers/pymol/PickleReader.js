@@ -122,7 +122,7 @@ a =  Clazz.newByteArray (i, 0);
 this.binaryDoc.readByteArray (a, 0, i);
 this.push (a);
 break;
-case 88:
+case 87:
 i = this.binaryDoc.readIntLE ();
 a =  Clazz.newByteArray (i, 0);
 this.binaryDoc.readByteArray (a, 0, i);
@@ -162,16 +162,13 @@ mark = this.getMark ();
 l = this.getObjects (mark);
 o = this.peek ();
 if (Clazz.instanceOf (o, JU.Lst)) {
-for (i = 0; i < l.size (); i++) {
-var oo = l.get (i);
-(o).addLast (oo);
-}
+for (i = 0; i < l.size (); i++) (o).addLast (l.get (i));
+
 } else {
 map = o;
 for (i = l.size (); --i >= 0; ) {
 o = l.get (i);
-var key = this.bytesToString (l.get (--i));
-map.put (key, o);
+map.put (this.bytesToString (l.get (--i)), o);
 }
 }break;
 case 46:
@@ -179,15 +176,6 @@ going = false;
 break;
 case 116:
 this.push (this.getObjects (this.getMark ()));
-break;
-case 76:
-var val =  String.instantialize (this.readStringAsBytes ());
-if (val != null && val.endsWith ("L")) {
-val = val.substring (0, val.length - 1);
-}this.push (Long.$valueOf (val));
-break;
-case 82:
-this.pop ();
 break;
 case 73:
 s = this.bytesToString (this.readStringAsBytes ());
@@ -201,9 +189,6 @@ this.push (Integer.$valueOf ((ll & 0xFFFFFFFF)));
 throw e;
 }
 }
-break;
-case 41:
-this.push ( new JU.Lst ());
 break;
 default:
 JU.Logger.error ("Pickle reader error: " + b + " " + this.binaryDoc.getPosition ());
@@ -237,6 +222,7 @@ Clazz.defineMethod (c$, "putMemo",
 var o = this.peek ();
 if (JU.AU.isAB (o)) o = this.bytesToString (o);
 if (Clazz.instanceOf (o, String)) {
+if (doCheck && this.markCount >= 6 || this.markCount == 3 && this.inMovie) return;
 this.memo.put (Integer.$valueOf (i), o);
 }}, "~N,~B");
 Clazz.defineMethod (c$, "getMemo", 
@@ -251,10 +237,8 @@ Clazz.defineMethod (c$, "getObjects",
 var n = this.stack.size () - mark;
 var args =  new JU.Lst ();
 args.ensureCapacity (n);
-for (var i = mark; i < this.stack.size (); ++i) {
-var oo = this.stack.get (i);
-args.addLast (oo);
-}
+for (var i = mark; i < this.stack.size (); ++i) args.addLast (this.stack.get (i));
+
 for (var i = this.stack.size (); --i >= mark; ) this.stack.removeItemAt (i);
 
 return args;
@@ -314,7 +298,7 @@ Clazz.defineStatics (c$,
 "BININT2", 77,
 "BINPUT", 113,
 "BINSTRING", 84,
-"BINUNICODE", 88,
+"BINUNICODE", 87,
 "BUILD", 98,
 "EMPTY_DICT", 125,
 "EMPTY_LIST", 93,
@@ -330,8 +314,5 @@ Clazz.defineStatics (c$,
 "BINGET", 104,
 "LONG_BINGET", 106,
 "TUPLE", 116,
-"INT", 73,
-"EMPTY_TUPLE", 41,
-"LONG", 76,
-"REDUCE", 82);
+"INT", 73);
 });

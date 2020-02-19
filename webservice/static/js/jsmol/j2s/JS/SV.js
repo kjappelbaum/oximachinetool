@@ -1,5 +1,5 @@
 Clazz.declarePackage ("JS");
-Clazz.load (["javajs.api.JSONEncodable", "JS.T", "JU.P3"], "JS.SV", ["java.lang.Boolean", "$.Float", "java.util.Arrays", "$.Collections", "$.Hashtable", "$.Map", "JU.AU", "$.BArray", "$.BS", "$.Base64", "$.Lst", "$.M3", "$.M34", "$.M4", "$.Measure", "$.P4", "$.PT", "$.Quat", "$.SB", "$.T3", "$.V3", "JM.BondSet", "JS.ScriptContext", "JU.BSUtil", "$.Escape", "JV.Viewer"], function () {
+Clazz.load (["javajs.api.JSONEncodable", "JS.T", "JU.P3"], "JS.SV", ["java.lang.Boolean", "$.Float", "java.util.Arrays", "$.Collections", "$.Hashtable", "$.Map", "JU.AU", "$.BArray", "$.BS", "$.Base64", "$.Lst", "$.M3", "$.M34", "$.M4", "$.Measure", "$.P4", "$.PT", "$.Quat", "$.SB", "$.T3", "$.V3", "JM.BondSet", "JS.ScriptContext", "JU.BSUtil", "$.Escape"], function () {
 c$ = Clazz.decorateAsClass (function () {
 this.index = 2147483647;
 this.myName = null;
@@ -115,7 +115,7 @@ if (Clazz.instanceOf (x, java.util.Map)) return JS.SV.getVariableMap (x);
 if (Clazz.instanceOf (x, JU.Lst)) return JS.SV.getVariableList (x);
 if (Clazz.instanceOf (x, JU.BArray)) return JS.SV.newV (15, x);
 if (Clazz.instanceOf (x, JS.ScriptContext)) return JS.SV.newV (14, x);
-if (JS.SV.isASV (x)) return JS.SV.getVariableAV (x);
+if (JU.Escape.isAV (x)) return JS.SV.getVariableAV (x);
 if (JU.AU.isAI (x)) return JS.SV.getVariableAI (x);
 if (JU.AU.isAB (x)) return JS.SV.getVariableAB (x);
 if (JU.AU.isAF (x)) return JS.SV.getVariableAF (x);
@@ -129,61 +129,27 @@ if (JU.AU.isADD (x)) return JS.SV.getVariableADD (x);
 if (JU.AU.isAFloat (x)) return JS.SV.newV (13, x);
 return JS.SV.newJSVar (x);
 }, "~O");
-c$.isASV = Clazz.defineMethod (c$, "isASV", 
- function (x) {
-if (!JV.Viewer.isSwingJS) {
-{
-return x && x[0] && x[0].__CLASS_NAME__ == "JS.SV";
-}}return Clazz.instanceOf (x, Array);
-}, "~O");
 c$.newJSVar = Clazz.defineMethod (c$, "newJSVar", 
  function (x) {
-var itype;
-var itest;
-var inum;
-var array;
-var keys;
 {
 switch(x.BYTES_PER_ELEMENT ? Array : x.constructor) {
 case Boolean:
-itype = 0;
-itest = x;
-break;
+return (x ? JS.SV.vT : JS.SV.vF);
 case Number:
-itype = 1;
-inum = x;
-break;
+return (x > Integer.MAX_VALUE || x != Math.floor(x) ? JS.SV.newF(x) : JS.SV.newI(x));
 case Array:
-itype = 2;
-array = x;
-break;
+var v =  new JU.Lst();
+for (var i = 0, n = x.length; i < n; i++)
+v.addLast(JS.SV.newJSVar(x[i]));
+return JS.SV.getVariableList(v);
 case Object:
-itype = 3;
-array = x;
-keys = Object.keys(x);
-break;
+var keys = Object.keys(x);
+var v =  new java.util.Hashtable();
+for (var i = keys.length; --i >= 0;)
+v.put(keys[i],JS.SV.newJSVar(x[keys[i]]));
+return JS.SV.getVariableMap(v);
 }
-}switch (itype) {
-case 0:
-return (itest ? JS.SV.vT : JS.SV.vF);
-case 1:
-return (inum > 2147483647 || inum != Math.floor (inum) ? JS.SV.newF (inum) : JS.SV.newI (Clazz.floatToInt (inum)));
-case 2:
-var v =  new JU.Lst ();
-for (var i = 0, n = array.length; i < n; i++) v.addLast (JS.SV.newJSVar (array[i]));
-
-return JS.SV.getVariableList (v);
-case 3:
-var map =  new java.util.Hashtable ();
-for (var i = keys.length; --i >= 0; ) {
-var o = null;
-{
-o = array[keys[i]];
-}map.put (keys[i], JS.SV.newJSVar (o));
-}
-return JS.SV.getVariableMap (map);
-}
-return JS.SV.newS (x.toString ());
+}return JS.SV.newS (x.toString ());
 }, "~O");
 c$.getVariableMap = Clazz.defineMethod (c$, "getVariableMap", 
 function (x) {
@@ -416,11 +382,6 @@ return x.intValue;
 case 3:
 case 7:
 case 4:
-case 8:
-case 9:
-case 11:
-case 12:
-case 134221850:
 return Clazz.floatToInt (JS.SV.fValue (x));
 case 10:
 return JS.SV.bsSelectToken (x).cardinality ();
@@ -1030,10 +991,6 @@ case 8:
 return ((x1.value).distance (x2.value) < 0.000001);
 case 9:
 return ((x1.value).distance4 (x2.value) < 0.000001);
-case 11:
-return (x1.value).equals (x2.value);
-case 12:
-return (x1.value).equals (x2.value);
 }
 }return (Math.abs (JS.SV.fValue (x1) - JS.SV.fValue (x2)) < 0.000001);
 }, "JS.SV,JS.SV");

@@ -83,7 +83,7 @@ ptCount++;
 if (x >= finalX) {
 break;
 }}
-this.scaleData[i % this.scaleData.length].endDataPointIndex = index;
+this.scaleData[i % this.scaleData.length].endDataPointIndex = index - 1;
 return ptCount;
 }, "~N,~A,~N,~N,~N,~N");
 Clazz.defineMethod (c$, "getStartingPointIndex", 

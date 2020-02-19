@@ -1,5 +1,5 @@
 Clazz.declarePackage ("J.api");
-Clazz.load (null, "J.api.JmolViewer", ["java.lang.Boolean", "java.util.Hashtable"], function () {
+Clazz.load (null, "J.api.JmolViewer", ["java.util.Hashtable"], function () {
 c$ = Clazz.decorateAsClass (function () {
 this.menuStructure = null;
 this.apiPlatform = null;
@@ -16,9 +16,8 @@ if (commandOptions != null) info.put ("options", commandOptions);
 if (fullName != null) info.put ("fullname", fullName);
 if (documentBase != null) info.put ("documentbase", documentBase);
 if (codeBase != null) info.put ("codebase", codeBase);
-info.put ("isApp", Boolean.TRUE);
 return  new JV.Viewer (info);
-}, "~O,J.api.JmolAdapter,~S,java.net.URL,java.net.URL,~S,J.api.JmolStatusListener,J.api.GenericPlatform");
+}, "~O,J.api.JmolAdapter,~S,java.net.URL,java.net.URL,~S,J.api.JmolStatusListener,javajs.awt.GenericPlatform");
 c$.allocateViewer = Clazz.defineMethod (c$, "allocateViewer", 
 function (container, jmolAdapter) {
 return J.api.JmolViewer.allocateViewer (container, jmolAdapter, null, null, null, null, null, null);
@@ -54,6 +53,4 @@ return null;
 Clazz.defineMethod (c$, "dispose", 
 function () {
 });
-{
-}{
-}});
+});

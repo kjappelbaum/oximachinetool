@@ -1,4 +1,4 @@
-Clazz.declarePackage ("JS");
-Clazz.load (["JS.LayoutManager"], "JS.FlowLayout", null, function () {
-c$ = Clazz.declareType (JS, "FlowLayout", JS.LayoutManager);
+Clazz.declarePackage ("J.awtjs.swing");
+Clazz.load (["javajs.awt.LayoutManager"], "J.awtjs.swing.FlowLayout", null, function () {
+c$ = Clazz.declareType (J.awtjs.swing, "FlowLayout", javajs.awt.LayoutManager);
 });

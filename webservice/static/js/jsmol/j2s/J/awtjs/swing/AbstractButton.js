@@ -1,5 +1,5 @@
-Clazz.declarePackage ("JS");
-Clazz.load (["J.api.SC", "JS.JComponent"], "JS.AbstractButton", null, function () {
+Clazz.declarePackage ("J.awtjs.swing");
+Clazz.load (["javajs.awt.SC", "J.awtjs.swing.JComponent"], "J.awtjs.swing.AbstractButton", null, function () {
 c$ = Clazz.decorateAsClass (function () {
 this.itemListener = null;
 this.applet = null;
@@ -8,10 +8,10 @@ this.selected = false;
 this.popupMenu = null;
 this.icon = null;
 Clazz.instantialize (this, arguments);
-}, JS, "AbstractButton", JS.JComponent, J.api.SC);
+}, J.awtjs.swing, "AbstractButton", J.awtjs.swing.JComponent, javajs.awt.SC);
 Clazz.makeConstructor (c$, 
 function (type) {
-Clazz.superConstructor (this, JS.AbstractButton, [type]);
+Clazz.superConstructor (this, J.awtjs.swing.AbstractButton, [type]);
 this.enabled = true;
 }, "~S");
 Clazz.overrideMethod (c$, "setSelected", 
@@ -44,7 +44,7 @@ this.actionCommand = actionCommand;
 this.popupMenu = popupMenu;
 {
 SwingController.initMenuItem(this);
-}}, "~S,~O,~S,J.api.SC");
+}}, "~S,~O,~S,javajs.awt.SC");
 Clazz.defineMethod (c$, "getTopPopupMenu", 
 function () {
 return this.popupMenu;
@@ -52,11 +52,11 @@ return this.popupMenu;
 Clazz.defineMethod (c$, "add", 
 function (item) {
 this.addComponent (item);
-}, "J.api.SC");
+}, "javajs.awt.SC");
 Clazz.overrideMethod (c$, "insert", 
 function (subMenu, index) {
 this.insertComponent (subMenu, index);
-}, "J.api.SC,~N");
+}, "javajs.awt.SC,~N");
 Clazz.overrideMethod (c$, "getPopupMenu", 
 function () {
 return null;

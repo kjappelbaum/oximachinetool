@@ -130,21 +130,14 @@ this.bsEnes.clear (iAtom);
 }, "JU.BS,JU.BS,~N,~N,~N,JU.BS");
 Clazz.defineMethod (c$, "getAzacyclic", 
  function () {
-out : for (var i = this.bsAtoms.nextSetBit (0); i >= 0; i = this.bsAtoms.nextSetBit (i + 1)) {
+for (var i = this.bsAtoms.nextSetBit (0); i >= 0; i = this.bsAtoms.nextSetBit (i + 1)) {
 var atom = this.atoms[i];
 if (atom.getElementNumber () != 7 || atom.getCovalentBondCount () != 3 || this.bsKekuleAmbiguous.get (i)) continue;
-var edges = atom.getEdges ();
-for (var k = edges.length; --k >= 0; ) if (edges[k].getOtherNode (atom).getElementNumber () == 1) continue out;
-
 var nRings =  new JU.Lst ();
 for (var j = this.lstSmallRings.length; --j >= 0; ) {
 var bsRing = this.lstSmallRings[j];
-if (!bsRing.get (i)) continue;
-nRings.addLast (bsRing);
-if (j == 0) {
-this.addAzacyclicN (i);
-continue out;
-}}
+if (bsRing.get (i)) nRings.addLast (bsRing);
+}
 var nr = nRings.size ();
 if (nr < 2) continue;
 var bsSubs =  new JU.BS ();
@@ -153,9 +146,9 @@ for (var b = bonds.length; --b >= 0; ) if (bonds[b].isCovalent ()) bsSubs.set (b
 
 var bsBoth =  new JU.BS ();
 var bsAll =  new JU.BS ();
-for (var j = 0; j < nr - 1; j++) {
+for (var j = 0; j < nr - 1 && bsAll != null; j++) {
 var bs1 = nRings.get (j);
-for (var k = j + 1; k < nr; k++) {
+for (var k = j + 1; k < nr && bsAll != null; k++) {
 var bs2 = nRings.get (k);
 JU.BSUtil.copy2 (bs1, bsBoth);
 bsBoth.and (bs2);
@@ -164,17 +157,13 @@ JU.BSUtil.copy2 (bs1, bsAll);
 bsAll.or (bs2);
 bsAll.and (bsSubs);
 if (bsAll.cardinality () == 3) {
-this.addAzacyclicN (i);
-continue out;
+if (this.bsAzacyclic == null) this.bsAzacyclic =  new JU.BS ();
+this.bsAzacyclic.set (i);
+bsAll = null;
 }}}
 }
 }
 });
-Clazz.defineMethod (c$, "addAzacyclicN", 
- function (i) {
-if (this.bsAzacyclic == null) this.bsAzacyclic =  new JU.BS ();
-this.bsAzacyclic.set (i);
-}, "~N");
 Clazz.defineMethod (c$, "couldBeChiralAtom", 
 function (a) {
 var mustBePlanar = false;

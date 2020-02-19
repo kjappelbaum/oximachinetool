@@ -2,91 +2,88 @@
 <!--[if lte IE 6]><html class="preIE7 preIE8 preIE9"><![endif]-->
 <!--[if IE 7]><html class="preIE8 preIE9"><![endif]-->
 <!--[if IE 8]><html class="preIE9"><![endif]-->
-<!--[if gte IE 9]><!--><html><!--<![endif]-->
+<!--[if gte IE 9]><!-->
+<html>
+<!--<![endif]-->
 
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>oxiMACHINE</title>
-<link rel="stylesheet" type="text/css" href="../static/css/jquery-ui.1.12.1.min.css" />
-<script src="../static/js/jquery-3.1.0.min.js"></script>
-<script src="../static/js/jquery-ui.1.12.1.min.js"></script>
-<link rel="stylesheet" type="text/css" href="../static/css/datatables.min.css" />
-<script type="text/javascript" src="../static/js/datatables.min.js"></script>
-<script src="../static/js/popperjs.min.js"></script>
-<link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>oxiMACHINE</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/jquery-ui.1.12.1.min.css" />
+    <script src="../static/js/jquery-3.1.0.min.js"></script>
+    <script src="../static/js/jquery-ui.1.12.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../static/css/datatables.min.css" />
+    <script type="text/javascript" src="../static/js/datatables.min.js"></script>
+    <script type="text/javascript" src="../static/js/popperjs.min.js"></script>
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
 
-<link rel="stylesheet" type="text/css" href="../static/css/visualizer.min.css" />
-<link rel="stylesheet" type="text/css" href="../static/css/visualizer_base.min.css" />
-<script src="../static/js/three.min.js"></script>
-<script src="../static/js/OrbitControls.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../static/css/visualizer.min.css" />
+    <link rel="stylesheet" type="text/css" href="../static/css/visualizer_base.min.css" />
+    <script type="text/javascript" src="../static/js/three.min.js"></script>
 
-<!-- Next two lines optional, only needed if we want to use the SVG renderer -->
-<script src="../static/js/Projector.min.js"></script>
-<script src="../static/js/SVGRenderer.min.js"></script>
+    <script type="text/javascript" src="../static/js/BZVisualizer.min.js"></script>
+    <script type="text/javascript" src="../static/js/webglcheck.min.js"></script>
+    <script type="text/javascript" src="../static/js/download.min.js"></script>
 
-<script src="../static/js/BZVisualizer.min.js"></script>
-<script src="../static/js/webglcheck.min.js"></script>
-<script src="../static/js/download.min.js"></script>
+    <!-- To visalize the feature importance plots -->
+    <script type="text/javascript" src="../static/js/shap.min.js"></script>
 
-<!-- To visalize the feature importance plots -->
-<script type="text/javascript" src="../static/js/shap.min.js"></script>
-
-<script>
-    $(function () {
-        $("#accordion").accordion({
-            collapsible: true,
-            heightStyle: "content", // Avoid that all have the same height
-            active: false  // Start all closed
-            //active: 0 // Open the first one
+    <script>
+        $(function () {
+            $("#accordion").accordion({
+                collapsible: true,
+                heightStyle: "content", // Avoid that all have the same height
+                active: false  // Start all closed
+                //active: 0 // Open the first one
+            });
+            $("#accordion-initialcoords").accordion({
+                collapsible: true,
+                heightStyle: "content", // Avoid that all have the same height
+                active: false // Start all closed
+                //active: -1  // Open the last one
+            });
         });
-        $("#accordion-initialcoords").accordion({
-            collapsible: true,
-            heightStyle: "content", // Avoid that all have the same height
-            active: false // Start all closed
-            //active: -1  // Open the last one
-        });
-    });
-</script>
-<style>
-    .webgl-hidden {
-        display: none;
-    }
-</style>
-<meta http-equiv="X-UA-Compatible" content="chrome=1">
-<script src="../static/js/jsmol/JSmol.min.nojq.js"></script>
-<script src="../static/js/visualization.js"></script>
-
-<script>
-    var jsondata = {{ jsondata| safe }};
-    var mainBZVisualizer = new BZVisualizer();
-    $(document).ready(function () {
-        mainBZVisualizer.loadBZ(canvasID = 'canvas3d', infoID = 'info', jsondata = jsondata);
-    });
-
-    // global variable
-    var structureviewer = null;
-
-
-    var resize_canvases = function () {
-        mainBZVisualizer.resizeRenderer(); // BZ visualizer
-        // resize structure viewer
-        if (structureviewer) {
-            parentcanvas = document.getElementById('structure');
-            the_width = parentcanvas.offsetWidth;
-            // the_height = parentcanvas.offsetHeight;
-            var jsmolcontent = document.getElementById('jmolApplet_appletinfotablediv');
-            jsmolcontent.style.width = the_width + "px";
-            console.log(jsmolcontent, the_width, the_height);
+    </script>
+    <style>
+        .webgl-hidden {
+            display: none;
         }
-    }
-</script>
+    </style>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <script type="text/javascript" src="../static/js/jsmol/JSmol.min.nojq.js">
+    </script>
+    <script type="text/javascript" src="../static/js/visualization.js"></script>
 
-<script type="text/javascript">
-    startWebGLCheck();
-</script>
+    <script>
+        var jsondata = {{ jsondata| safe }};
+        var mainBZVisualizer = new BZVisualizer();
+        $(document).ready(function () {
+            mainBZVisualizer.loadBZ(canvasID = 'canvas3d', infoID = 'info', jsondata = jsondata);
+        });
 
-<script src="../static/js/iframeResizer.contentWindow.min.js"></script>
+        // global variable
+        var structureviewer = null;
+
+        var resize_canvases = function () {
+            mainBZVisualizer.resizeRenderer(); // BZ visualizer
+            // resize structure viewer
+            if (structureviewer) {
+                parentcanvas = document.getElementById('structure');
+                the_width = parentcanvas.offsetWidth;
+                // the_height = parentcanvas.offsetHeight;
+                var jsmolcontent = document.getElementById('jmolApplet_appletinfotablediv');
+                jsmolcontent.style.width = the_width + "px";
+                console.log(jsmolcontent, the_width, the_height);
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        startWebGLCheck();
+    </script>
+
+    <script  type="text/javascript" src="../static/js/iframeResizer.contentWindow.min.js"></script>
 
 </head>
 
@@ -194,7 +191,7 @@
               </div> -->
                         <div id="logo-container">
                             <!-- Placeholder needed for testing -->
-                            <canvas id="webgl-logo" style="width: 1px; height: 1px;" ></canvas>
+                            <canvas id="webgl-logo" style="width: 1px; height: 1px;"></canvas>
                         </div>
                     </div>
                     <div class="webgl-hidden webgl-div" id="webgl-disabled">

@@ -56,13 +56,14 @@
     <script type="text/javascript" src="../static/js/visualization.js"></script>
 
     <script>
-        var jsondata = {{ jsondata| safe }};
-        var mainBZVisualizer = new BZVisualizer();
-        $(document).ready(function () {
-            mainBZVisualizer.loadBZ(canvasID = 'canvas3d', infoID = 'info', jsondata = jsondata);
-        });
 
-        // global variable
+
+        $(window).on('load', function () {
+            var jsondata = {{ jsondata| safe
+        }};
+        var mainBZVisualizer = new BZVisualizer();
+        mainBZVisualizer.loadBZ(canvasID = 'canvas3d', infoID = 'info', jsondata = jsondata);
+
         var structureviewer = null;
 
         var resize_canvases = function () {
@@ -77,13 +78,17 @@
                 console.log(jsmolcontent, the_width, the_height);
             }
         }
+
+        });
+
+
     </script>
 
     <script type="text/javascript">
         startWebGLCheck();
     </script>
 
-    <script  type="text/javascript" src="../static/js/iframeResizer.contentWindow.min.js"></script>
+    <script type="text/javascript" src="../static/js/iframeResizer.contentWindow.min.js"></script>
 
 </head>
 

@@ -76,8 +76,8 @@ function jsmolCrystal(data, parentHtmlId, appletName, supercellOptions) {
   loadingScript += "; set frank off";
 
   //setup labels
-  //loadingScript+= '; set labeloffset 2 2';
-  loadingScript += "; set fontSize 18";
+  loadingScript += "; set labeloffset 2 2";
+  loadingScript += "; set fontSize 16";
 
   Jmol.script(jsmolStructureviewer, loadingScript);
 
@@ -162,7 +162,7 @@ function showLabels(viewer) {
 }
 
 function labelOxStates(viewer, atom_indices, labeltext) {
-  var jmcellLineolscript = "";
+  var jmolscript = "";
   var counter = 0;
   const elements = labeltext.length;
 

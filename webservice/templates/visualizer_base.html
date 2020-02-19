@@ -4,7 +4,7 @@
 <!--[if IE 8]><html class="preIE9"><![endif]-->
 <!--[if gte IE 9]><!--><html><!--<![endif]-->
 
-
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>oxiMACHINE</title>
@@ -27,7 +27,6 @@
 
 <script src="../static/js/BZVisualizer.min.js"></script>
 <script src="../static/js/webglcheck.min.js"></script>
-<script src="../static/js/clipboard.min.js"></script>
 <script src="../static/js/download.min.js"></script>
 
 <!-- To visalize the feature importance plots -->
@@ -104,7 +103,7 @@
     <div id="above">
 
         <div id="maintitle">
-            <h1><span style="font-weight: bold;">oxiMACHINE: Predicting oxidation states for MOFs.</h1>
+            <h1><span style="font-weight: bold;">oxiMACHINE: Predicting oxidation states for MOFs. </span></h1>
         </div>
 
         <div id="topinfo">
@@ -195,7 +194,7 @@
               </div> -->
                         <div id="logo-container">
                             <!-- Placeholder needed for testing -->
-                            <canvas id="webgl-logo" style="width: 1px; height: 1px;" /></canvas>
+                            <canvas id="webgl-logo" style="width: 1px; height: 1px;" ></canvas>
                         </div>
                     </div>
                     <div class="webgl-hidden webgl-div" id="webgl-disabled">
@@ -237,12 +236,12 @@
 
 
 
-    <div id='above'>
-        <div id='structuretitle'>
+    <div id="above">
+        <div id="structuretitle">
             <h2> Structure</h2>
             <p><em>Drag to rotate, scroll to zoom, double-click to enable/disable interaction</em></p>
         </div>
-        <div id='structure'>
+        <div id="structure">
             <div class="shadow-box">
                 <div class="plot-diagram">
                     <div class="structure-container" id="structure-content">
@@ -270,14 +269,14 @@
                     <div class="row">
                         <div class="checkbox-option" id="bonds">
                             <label>
-                                <input id="bonds-input" style='margin-right:4px' type="checkbox"
+                                <input id="bonds-input" style="margin-right:4px" type="checkbox"
                                     onchange="showBonds(jmolApplet);" checked>bonds
                                 <a href="#" data-toggle="tooltip" title="Show bonds"><sup>[?]</sup></a>
                             </label>
                         </div>
                         <div class="checkbox-option" id="oxlabels">
                             <label>
-                                <input id="labels-input" style='margin-right:4px' type="checkbox"
+                                <input id="labels-input" style="margin-right:4px" type="checkbox"
                                     onchange="labelOxStates(jmolApplet, metal_indices, prediction_labels);"
                                     checked>oxidation state labels
                                 <a href="#" data-toggle="tooltip"
@@ -288,13 +287,13 @@
                     <div class="row">
                         <div class="checkbox-option" id="sphere">
                             <label>
-                                <input id="spheres-input" style='margin-right:4px' type="checkbox"
+                                <input id="spheres-input" style="margin-right:4px" type="checkbox"
                                     onchange="showSpheres(jmolApplet)">space-filling
                                 <a href="#" data-toggle="tooltip" title="Show atoms as spheres"><sup>[?]</sup></a>
                             </label>
                         </div>
                         <div class="checkbox-option" id="spin">
-                            <label><input id="spin-input" style='margin-right:4px' type="checkbox"
+                            <label><input id="spin-input" style="margin-right:4px" type="checkbox"
                                     onchange="toggleRotation(jmolApplet)">rotation</label>
                         </div>
                     </div>
@@ -333,7 +332,7 @@
 
                         <div class="progress">
                             <div class="{{ prediction[5] }}" role="progressbar" style="width: {{ prediction[4] }}%"
-                                aria-valuenow={{ prediction[4] }} aria-valuemin="0" aria-valuemax="100"></div>
+                                aria-valuenow="{{ prediction[4] }}" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
 
                     </td>
@@ -346,13 +345,11 @@
     </div>
 
 
-    <div id='rawcode'>
+    <div id="rawcode">
         <h2><a name="downloadablecoords"></a>Detailed data</h2>
         <p>Click on the header to open a section</p>
 
         <div id="accordion">
-
-
             <h3>Feature importance </h3>
             <div>
                 <p>
@@ -408,12 +405,9 @@
                 {% endfor %}
             </div>
         </div>
-
     </div>
 
     <script>
-        // Activate clipboard buttons
-        var clipboard = new Clipboard('.clipboardbtn');
         structureviewer = jsmolCrystal({{ xsfstructure| tojson | safe }}, "structure-content", "jmolApplet", [1, 1, 1]);
         var metal_indices = {{ metal_indices| tojson | safe }};
         var prediction_labels = {{ prediction_labels| tojson | safe }};
@@ -453,18 +447,16 @@
         });
     </script>
 
-    <div id='finalinfo'>
+    <div id="finalinfo">
         <p><span style="font-weight: bold;">Technical info</span>: Time spent to compute quantities (featurization,
             prediction and interpretation):
             {{ '%.3f' % compute_time }} s. Model version: {{ model_version }}.
         </p>
         <p>
             More information about the features and the model can be found in the <a
-                href='https://chemrxiv.org/articles/Using_Collective_Knowledge_to_Assign_Oxidation_States/11604129/1'>preprint
+                href="https://chemrxiv.org/articles/Using_Collective_Knowledge_to_Assign_Oxidation_States/11604129/1">preprint
                 on Chemrxiv (DOI: 10.26434/chemrxiv.11604129.v1)</a>.
         </p>
-    </div>
-
     </div>
 
     <div style="position: relative" data-iframe-height></div>

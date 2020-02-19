@@ -2,7 +2,9 @@
 <!--[if lte IE 6]><html class="preIE7 preIE8 preIE9"><![endif]-->
 <!--[if IE 7]><html class="preIE8 preIE9"><![endif]-->
 <!--[if IE 8]><html class="preIE9"><![endif]-->
-<!--[if gte IE 9]><!--><html><!--<![endif]-->
+<!--[if gte IE 9]><!-->
+<html>
+<!--<![endif]-->
 
 <head>
     <meta charset="utf-8">
@@ -60,8 +62,8 @@
 
 
 <body>
-    <div id='container'>
-        <div id='maintitle'>
+    <div id="container">
+        <div id="maintitle">
             {% block mofoxpredtitle %}
             <h1 style="text-align: center;"><span style="font-weight: bold;">oxiMACHINE</span>: Predicting oxidation
                 states for MOFs.</h1>
@@ -72,7 +74,7 @@
         {% if messages %}
         <div class="alert alert-danger">
             Warning:
-            <ul class=flashes>
+            <ul class="flashes">
                 {% for message in messages %}
                 <li>{{ message }}</li>
                 {% endfor %}
@@ -106,7 +108,7 @@
                     </ul>
                 </p>
                 <p> More information about this tool can be found in the <a
-                        href='https://chemrxiv.org/articles/Using_Collective_Knowledge_to_Assign_Oxidation_States/11604129/1'>preprint
+                        href="https://chemrxiv.org/articles/Using_Collective_Knowledge_to_Assign_Oxidation_States/11604129/1">preprint
                         on Chemrxiv (DOI: 10.26434/chemrxiv.11604129.v1)</a>. Note that this tool is in development.
                 </p>
             </div>
@@ -117,19 +119,19 @@
                 <p>
                     This work is supported by the European Research Council (ERC) Advanced Grant <a
                         href="https://cordis.europa.eu/project/rcn/197913/factsheet/en">(Agreement No.666983, MaGic)</a>
-                    and the computing facilities of <a href='https://www.epfl.ch/research/facilities/scitas/'>SCITAS,
+                    and the computing facilities of <a href="https://www.epfl.ch/research/facilities/scitas/">SCITAS,
                         EPFL</a>.
                 </p>
 
                 <p>
                     In our program, we use the following libraries, please also consider acknowledging them:
                     <ul>
-                        <li> <a href='https://pymatgen.org/'> pymatgen </a></li>
-                        <li> <a href='https://hackingmaterials.lbl.gov/matminer/'>matminer</a></li>
-                        <li> <a href='https://scikit-learn.org/stable/index.html'> sklearn</a></li>
-                        <li> <a href='https://shap.readthedocs.io/en/latest/'> shap</a></li>
-                        <li> <a href='https://flask.palletsprojects.com/en/1.1.x/'>flask</a></li>
-                        <li> <a href='https://github.com/materialscloud-org/tools-barebone'>tools-barbone</a> template.
+                        <li> <a href="https://pymatgen.org/"> pymatgen </a></li>
+                        <li> <a href="https://hackingmaterials.lbl.gov/matminer/">matminer</a></li>
+                        <li> <a href="https://scikit-learn.org/stable/index.html"> sklearn</a></li>
+                        <li> <a href="https://shap.readthedocs.io/en/latest/"> shap</a></li>
+                        <li> <a href="https://flask.palletsprojects.com/en/1.1.x/">flask</a></li>
+                        <li> <a href="https://github.com/materialscloud-org/tools-barebone">tools-barbone</a> template.
                         </li>
                     </ul>
                 </p>
@@ -138,10 +140,10 @@
                     the following references describe the MOF subset and the CSD in general.
 
                     <ol>
-                        <li><a href='https://doi.org/10.1021/acs.chemmater.7b00441'>Moghadam, P. Z.; Li, A.; Wiggin, S.
+                        <li><a href="https://doi.org/10.1021/acs.chemmater.7b00441">Moghadam, P. Z.; Li, A.; Wiggin, S.
                                 B.; Tao, A.; Maloney, A. G. P.; Wood, P. A.; Ward, S. C.; Fairen-Jimenez, D.
                                 <i> Chem. Mater. </i> <b>2017</b>, 29 (7), 2618–2625.</a></li>
-                        <li> <a href='http://scripts.iucr.org/cgi-bin/paper?S2052520616003954'>C. R.; Bruno, I. J.;
+                        <li> <a href="http://scripts.iucr.org/cgi-bin/paper?S2052520616003954">C. R.; Bruno, I. J.;
                                 Lightfoot, M. P.; Ward, S. C.
                                 <i> Crystallogr B Struct Sci Cryst Eng Mater</i> <b>2016</b>, 72 (2), 171–179.</a></li>
                     </ol>
@@ -153,7 +155,7 @@
             <h2>How to cite</h2>
             <div>
                 <p>If you use this tool, please cite the <a
-                        href='https://chemrxiv.org/articles/Using_Collective_Knowledge_to_Assign_Oxidation_States/11604129/1'>preprint
+                        href="https://chemrxiv.org/articles/Using_Collective_Knowledge_to_Assign_Oxidation_States/11604129/1">preprint
                         on Chemrxiv (DOI: 10.26434/chemrxiv.11604129.v1)</a>.
                 </p>
 
@@ -165,39 +167,40 @@
             <h2><a name="tool"></a>Upload your structure</h2>
             <div style="margin-left: 20px; margin-right: 20px">
                 <form action="../process_structure/" enctype="multipart/form-data" method="post">
-                    <div class='alert alert-info'>
-                        <div class='row'>
-                            <div class='col-xs-12 col-sm-6'>
+                    <div class="alert alert-info">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6">
                                 <label for="file">Upload a crystal structure:</label>
                             </div>
                             <div class="col-xs-12 col-sm-6">
                                 <input type="file" name="structurefile" size="100">
                             </div>
                         </div>
-                        <div class='row'>
-                            <div class='col-sm-6'>
+                        <div class="row">
+                            <div class="col-sm-6">
                                 <label for="fileformat">Select here the file format:</label>
                             </div>
-                            <div class='col-sm-6'>
+                            <div class="col-sm-6">
                                 <select name="fileformat" id="fileformatSelect">
                                     <option value="cif">CIF</option>
                                 </select>
                             </div>
                         </div>
-                        <div class='row' style="text-align:center">
-                            <p class='small'> <br>By continuing, you agree with the <a href="../termsofuse/"
+                        <div class="row" style="text-align:center">
+                            <p class="small"> <br>By continuing, you agree with the <a href="../termsofuse/"
                                     target="_blank">terms of use</a> of this service.</p>
                             <input type="submit" value="Calculate my structure" class="btn btn-default"
                                 onclick="DisplayProgressMessage()">
                         </div>
-             `       </div>
+                        `
+                    </div>
                 </form>
             </div>
         </div>
         <h2>Otherwise, pick an example</h2>
         <form action="../process_example_structure/" method="post">
             <div style="margin-left: 20px; margin-right: 20px">
-                <div class='alert alert-info'>
+                <div class="alert alert-info">
                     <div class="row">
                         <div class="col-xs-12 col-sm-6">
                             <label for="examplestructure">Select here an example structure:</label>
@@ -205,15 +208,15 @@
                         <div class="col-xs-12 col-sm-6">
                             <select name="examplestructure">
                                 <option value="fe_btc">Fe(BPZ)</option>
-                                <option value='cui_ii_btc'>Cu(I/II)-BTC</option>
-                                <option value='sno'>SnO</option>
-                                <option value='sno2'>SnO<sub>2</sub></option>
-                                <option value='bao'>BaO</option>
-                                <option value='bao2'>BaO<sub>2</sub></option>
+                                <option value="cui_ii_btc">Cu(I/II)-BTC</option>
+                                <option value="sno">SnO</option>
+                                <option value="sno2">SnO<sub>2</sub></option>
+                                <option value="bao">BaO</option>
+                                <option value="bao2">BaO<sub>2</sub></option>
                             </select>
                         </div>
                     </div>
-                    <div class='row' style="text-align: center">
+                    <div class="row" style="text-align: center">
                         <input type="submit" value="Calculate this example" class="btn btn-default"
                             onclick="DisplayProgressMessage()">
                     </div>
@@ -230,17 +233,17 @@
                 </a>
             </p>
             <form action="../set_feature_importance_level/" method="post">
-                <div class='alert alert-info'>
+                <div class="alert alert-info">
                     <div class="row">
                         <div class="col-xs-12 col-sm-6">
                             <label for="samples">Select here a fidelity level for the feature importance:</label>
                         </div>
                         <div class="col-xs-12 col-sm-6">
-                            <select name="samples" onchange="this.form.submit()" default='low'>
-                                <option value='very_low'>very low</option>
-                                <option value='low'>low</option>
+                            <select name="samples" onchange="this.form.submit()" default="low">
+                                <option value="very_low">very low</option>
+                                <option value="low">low</option>
                                 <option value="medium">medium</option>
-                                <option value='high'>high</option>
+                                <option value="high">high</option>
                             </select>
                         </div>
                     </div>
@@ -248,7 +251,7 @@
             </form>
         </div>
 
-        <div id='citation'>
+        <div id="citation">
             <p> Note: if you want to use the code on your computer, you can download the
                 Python code from <a href="https://github.com/kjappelbaum/oximachinetool" target="_blank">our Github
                     repo</a>. Also note that this tool is in development, if you experience a bug, try clearing the

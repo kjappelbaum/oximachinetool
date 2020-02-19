@@ -1,11 +1,11 @@
-Clazz.declarePackage ("J.awtjs.swing");
-Clazz.load (["J.awtjs.swing.JMenuItem"], "J.awtjs.swing.JRadioButtonMenuItem", null, function () {
+Clazz.declarePackage ("JS");
+Clazz.load (["JS.JMenuItem"], "JS.JRadioButtonMenuItem", null, function () {
 c$ = Clazz.decorateAsClass (function () {
 this.isRadio = true;
 Clazz.instantialize (this, arguments);
-}, J.awtjs.swing, "JRadioButtonMenuItem", J.awtjs.swing.JMenuItem);
+}, JS, "JRadioButtonMenuItem", JS.JMenuItem);
 Clazz.makeConstructor (c$, 
 function () {
-Clazz.superConstructor (this, J.awtjs.swing.JRadioButtonMenuItem, ["rad", 3]);
+Clazz.superConstructor (this, JS.JRadioButtonMenuItem, ["rad", 3]);
 });
 });

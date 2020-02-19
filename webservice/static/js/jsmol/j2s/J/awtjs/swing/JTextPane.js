@@ -1,9 +1,9 @@
-Clazz.declarePackage ("J.awtjs.swing");
-Clazz.load (["J.awtjs.swing.Document", "$.JComponent"], "J.awtjs.swing.JTextPane", ["JU.SB"], function () {
-c$ = Clazz.declareType (J.awtjs.swing, "JTextPane", J.awtjs.swing.JComponent, J.awtjs.swing.Document);
+Clazz.declarePackage ("JS");
+Clazz.load (["JS.Document", "$.JComponent"], "JS.JTextPane", ["JU.SB"], function () {
+c$ = Clazz.declareType (JS, "JTextPane", JS.JComponent, JS.Document);
 Clazz.makeConstructor (c$, 
 function () {
-Clazz.superConstructor (this, J.awtjs.swing.JTextPane, ["txtJTP"]);
+Clazz.superConstructor (this, JS.JTextPane, ["txtJTP"]);
 this.text = "";
 });
 Clazz.defineMethod (c$, "getDocument", 

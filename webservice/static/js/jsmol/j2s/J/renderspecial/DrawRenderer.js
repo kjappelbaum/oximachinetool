@@ -34,7 +34,10 @@ this.imageFontScaling = this.vwr.imageFontScaling;
 var draw = this.shape;
 for (var i = draw.meshCount; --i >= 0; ) {
 var mesh = this.dmesh = draw.meshes[i];
-if (mesh.connectedAtoms != null) {
+if (mesh == null) {
+System.out.println ("DrawRenderer mesh is null?");
+return false;
+}if (mesh.connectedAtoms != null) {
 if (mesh.connectedAtoms[0] < 0) continue;
 mesh.vs =  new Array (4);
 mesh.vc = 4;
@@ -133,7 +136,7 @@ break;
 }
 if (this.diameter == 0) this.diameter = 3;
 if (isCurved) {
-this.g3d.addRenderer (553648146);
+this.g3d.addRenderer (553648145);
 for (var i = 0, i0 = 0; i < nPoints - 1; i++) {
 this.g3d.fillHermite (tension, this.diameter, this.diameter, this.diameter, this.p3Screens[i0], this.p3Screens[i], this.p3Screens[i + 1], this.p3Screens[i + (i == nPoints - 2 ? 1 : 2)]);
 i0 = i;

@@ -1,9 +1,9 @@
-Clazz.declarePackage ("J.awtjs.swing");
-Clazz.load (["J.awtjs.swing.JComponent"], "J.awtjs.swing.JTextField", ["JU.SB"], function () {
-c$ = Clazz.declareType (J.awtjs.swing, "JTextField", J.awtjs.swing.JComponent);
+Clazz.declarePackage ("JS");
+Clazz.load (["JS.JComponent"], "JS.JTextField", ["JU.SB"], function () {
+c$ = Clazz.declareType (JS, "JTextField", JS.JComponent);
 Clazz.makeConstructor (c$, 
 function (value) {
-Clazz.superConstructor (this, J.awtjs.swing.JTextField, ["txtJT"]);
+Clazz.superConstructor (this, JS.JTextField, ["txtJT"]);
 this.text = value;
 }, "~S");
 Clazz.overrideMethod (c$, "toHTML", 

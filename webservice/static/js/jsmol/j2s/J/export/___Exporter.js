@@ -327,7 +327,7 @@ function (x, y, z, colix, text, font3d) {
 this.outputComment ("start text " + (++this.nText) + ": " + text);
 this.gdata.plotText (x, y, z, this.gdata.getColorArgbOrGray (colix), 0, text, font3d, this.export3D);
 this.outputComment ("end text " + this.nText + ": " + text);
-}, "~N,~N,~N,~N,~S,javajs.awt.Font");
+}, "~N,~N,~N,~N,~S,JU.Font");
 Clazz.defineStatics (c$,
 "degreesPerRadian", (57.29577951308232));
 });

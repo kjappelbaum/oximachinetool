@@ -146,6 +146,7 @@ this.showTiming = false;
 this.pointSize = 0;
 this.isModelConnected = false;
 this.surfaceAtoms = null;
+this.filesData = null;
 Clazz.instantialize (this, arguments);
 }, J.jvxl.readers, "Parameters");
 Clazz.prepareFields (c$, function () {
@@ -189,6 +190,7 @@ this.extendGrid = 0;
 this.fileIndex = 1;
 this.readAllData = true;
 this.fileName = "";
+this.filesData = null;
 this.fullyLit = false;
 this.functionInfo = null;
 this.iAddGridPoints = false;
@@ -362,13 +364,13 @@ Clazz.defineMethod (c$, "setSolvent",
 function (propertyName, radius) {
 this.isEccentric = this.isAnisotropic = false;
 this.solventRadius = Math.abs (radius);
-this.dataType = (this.intersection != null ? 1333 : "nomap" === propertyName ? 1205 : "molecular" === propertyName ? 1203 : "sasurface" === propertyName || this.solventRadius == 0 ? 1196 : 1195);
+this.dataType = (this.intersection != null ? 1333 : "nomap" === propertyName ? 1207 : "molecular" === propertyName ? 1203 : "sasurface" === propertyName || this.solventRadius == 0 ? 1196 : 1195);
 if (this.state < 2 && (this.cutoffAutomatic || !this.colorDensity) && (this.intersection == null || this.cutoff == 3.4028235E38)) this.cutoff = 0.0;
 switch (this.dataType) {
 case 1333:
 this.calculationType = "VDW intersection";
 break;
-case 1205:
+case 1207:
 this.calculationType = "unmapped plane";
 break;
 case 1203:
@@ -382,7 +384,7 @@ this.calculationType = "solvent-accessible surface with radius " + this.solventR
 break;
 }
 switch (this.dataType) {
-case 1205:
+case 1207:
 this.solventExtendedAtomRadius = this.solventRadius;
 this.solventRadius = 0;
 this.isContoured = false;
@@ -488,13 +490,12 @@ this.calculationType = this.moData.get ("calculationType");
 this.calculationType = "Molecular orbital #" + this.qm_moNumber + "/" + this.qmOrbitalCount + " " + (this.calculationType == null ? "" : this.calculationType);
 if (!isElectronDensity) {
 if (this.title == null) {
-this.title =  new Array (6);
+this.title =  new Array (5);
 this.title[0] = "%F";
 this.title[1] = "Model %M  MO %I/%N %T";
 this.title[2] = "?Energy = %E %U";
 this.title[3] = "?Symmetry = %S";
 this.title[4] = "?Occupancy = %O";
-this.title[5] = "?%L";
 }}}this.dataType = 1837;
 if (this.cutoff == 3.4028235E38) {
 this.cutoff = (isElectronDensity ? 0.01 : 0.05);
@@ -566,9 +567,10 @@ Clazz.defineStatics (c$,
 "SURFACE_MLP", 1329,
 "SURFACE_MOLECULAR", 1203,
 "SURFACE_NCI", 1844,
-"SURFACE_INTERSECT", 1333,
-"SURFACE_NOMAP", 1205,
-"SURFACE_PROPERTY", 1206,
+"SURFACE_INTERSECT_ATOM", 1333,
+"SURFACE_INTERSECT_FILE", 1334,
+"SURFACE_NOMAP", 1207,
+"SURFACE_PROPERTY", 1208,
 "ANGSTROMS_PER_BOHR", 0.5291772,
 "defaultEdgeFractionBase", 35,
 "defaultEdgeFractionRange", 90,

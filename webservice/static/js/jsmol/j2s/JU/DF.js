@@ -62,7 +62,9 @@ pt = s1.indexOf (".");
 var pt2 = decimalDigits + pt + 1;
 if (pt2 < len && s1.charAt (pt2) >= '5') {
 return JU.DF.formatDecimal (value + (isNeg ? -1 : 1) * JU.DF.formatAdds[decimalDigits], decimalDigits);
-}var sb = JU.SB.newS (s1.substring (0, (decimalDigits == 0 ? pt : ++pt)));
+}var s0 = s1.substring (0, (decimalDigits == 0 ? pt : ++pt));
+var sb = JU.SB.newS (s0);
+if (isNeg && s0.equals ("0.") && decimalDigits + 2 <= len && s1.substring (2, 2 + decimalDigits).equals ("0000000000000000000000000000000000000000".substring (0, decimalDigits))) isNeg = false;
 for (var i = 0; i < decimalDigits; i++, pt++) {
 if (pt < len) sb.appendC (s1.charAt (pt));
  else sb.appendC ('0');

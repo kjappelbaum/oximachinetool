@@ -400,7 +400,7 @@ this.allStates = true;
 this.pymolScene.setFrameObject (4115, Integer.$valueOf (-1));
 }}var objectHeader = J.adapter.readers.pymol.PyMOLReader.listAt (pymolObject, 0);
 var parentGroupName = (execObject.size () < 8 ? null : J.adapter.readers.pymol.PyMOLReader.stringAt (execObject, 6));
-if (" ".equals (parentGroupName)) parentGroupName = null;
+if ("".equals (parentGroupName.trim ())) parentGroupName = null;
 this.pymolScene.setReaderObjectInfo (this.objectName, type, parentGroupName, this.isHidden, J.adapter.readers.pymol.PyMOLReader.listAt (objectHeader, 8), stateSettings, (moleculeOnly ? "_" + (iState + 1) : ""));
 var bsAtoms = null;
 var doExclude = (this.bsBytesExcluded != null);
@@ -737,13 +737,16 @@ isHetero = this.atomBool (atomArray, pt, vArray[21], vArray[46]);
 var a = J.adapter.readers.pymol.PyMOLReader.listAt (pymolAtoms, apt);
 seqNo = J.adapter.readers.pymol.PyMOLReader.intAt (a, 0);
 chainID = J.adapter.readers.pymol.PyMOLReader.stringAt (a, 1);
+if (chainID.length == 0) chainID = " ";
 altLoc = J.adapter.readers.pymol.PyMOLReader.stringAt (a, 2);
 resi = J.adapter.readers.pymol.PyMOLReader.stringAt (a, 3);
 group3 = J.adapter.readers.pymol.PyMOLReader.stringAt (a, 5);
 name = J.adapter.readers.pymol.PyMOLReader.stringAt (a, 6);
 sym = J.adapter.readers.pymol.PyMOLReader.stringAt (a, 7);
 label = J.adapter.readers.pymol.PyMOLReader.stringAt (a, 9);
-ssType = J.adapter.readers.pymol.PyMOLReader.stringAt (a, 10).substring (0, 1);
+ssType = J.adapter.readers.pymol.PyMOLReader.stringAt (a, 10);
+if (ssType.length == 0) ssType = " ";
+ssType = ssType.substring (0, 1);
 bfactor = J.adapter.readers.pymol.PyMOLReader.floatAt (a, 14);
 occupancy = J.adapter.readers.pymol.PyMOLReader.floatAt (a, 15);
 radius = J.adapter.readers.pymol.PyMOLReader.floatAt (a, 16);
@@ -767,7 +770,7 @@ insCode = (JU.PT.isDigit (ch) ? " " : "" + ch);
 if (group3.equals (" ")) group3 = "UNK";
 if (sym.equals ("A")) sym = "C";
 var ichain = this.vwr.getChainID (chainID, true);
-var atom = this.processAtom ( new J.adapter.smarter.Atom (), name, altLoc.charAt (0), group3, ichain, seqNo, insCode.charAt (0), isHetero, sym);
+var atom = this.processAtom ( new J.adapter.smarter.Atom (), name, (altLoc.length == 0 ? ' ' : altLoc.charAt (0)), group3, ichain, seqNo, insCode.charAt (0), isHetero, sym);
 if (!this.filterPDBAtom (atom, this.fileAtomIndex++)) return null;
 var x;
 var y;
@@ -1037,11 +1040,13 @@ return map;
 }, "JU.Lst");
 c$.stringAt = Clazz.defineMethod (c$, "stringAt", 
 function (list, i) {
+var o = list.get (i);
+if (Clazz.instanceOf (o, String)) return o;
 var a = list.get (i);
 return (a.length == 0 ? " " : J.adapter.readers.pymol.PyMOLReader.bytesToString (a));
 }, "JU.Lst,~N");
 c$.bytesToString = Clazz.defineMethod (c$, "bytesToString", 
-function (object) {
+ function (object) {
 try {
 return  String.instantialize (object, "UTF-8");
 } catch (e) {

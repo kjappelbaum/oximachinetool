@@ -252,7 +252,7 @@ if (JU.AU.isAS (info)) {
 sb.append ("[");
 var imax = (info).length;
 for (var i = 0; i < imax; i++) {
-sb.append (sep).append (JU.PT.esc ((info)[i]));
+sb.append (sep).append (JU.Escape.toReadable (null, (info)[i]));
 sep = ",";
 }
 sb.append ("]");

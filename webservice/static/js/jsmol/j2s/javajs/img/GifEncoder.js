@@ -82,9 +82,14 @@ break;
 case 1:
 this.addHeader = false;
 this.addTrailer = false;
+var msDelay = params.get ("captureDelayMS");
+if (msDelay == null) {
 var fps = Math.abs ((params.get ("captureFps")).intValue ());
 this.delayTime100ths = (fps == 0 ? 0 : Clazz.doubleToInt (100 / fps));
-this.looping = (Boolean.FALSE !== params.get ("captureLooping"));
+} else {
+this.delayTime100ths = Clazz.doubleToInt (msDelay.intValue () / 10);
+params.remove ("captureDelayMS");
+}this.looping = (Boolean.FALSE !== params.get ("captureLooping"));
 break;
 case 2:
 this.addHeader = false;

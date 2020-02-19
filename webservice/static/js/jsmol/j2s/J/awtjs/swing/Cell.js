@@ -1,4 +1,4 @@
-Clazz.declarePackage ("J.awtjs.swing");
+Clazz.declarePackage ("JS");
 c$ = Clazz.decorateAsClass (function () {
 this.component = null;
 this.colspan = 0;
@@ -6,14 +6,14 @@ this.rowspan = 0;
 this.textAlign = 0;
 this.c = null;
 Clazz.instantialize (this, arguments);
-}, J.awtjs.swing, "Cell");
+}, JS, "Cell");
 Clazz.makeConstructor (c$, 
 function (btn, c) {
 this.component = btn;
 this.colspan = c.gridwidth;
 this.rowspan = c.gridheight;
 this.c = c;
-}, "J.awtjs.swing.JComponent,J.awtjs.swing.GridBagConstraints");
+}, "JS.JComponent,JS.GridBagConstraints");
 Clazz.defineMethod (c$, "toHTML", 
 function (id) {
 var style = this.c.getStyle (false);

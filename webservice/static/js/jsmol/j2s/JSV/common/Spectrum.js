@@ -15,7 +15,6 @@ this.convertedSpectrum = null;
 this.userYFactor = 1;
 this.exportXAxisLeftToRight = false;
 this.fillColor = null;
-this.imageView = null;
 Clazz.instantialize (this, arguments);
 }, JSV.common, "Spectrum", JSV.source.JDXDataObject);
 Clazz.prepareFields (c$, function () {

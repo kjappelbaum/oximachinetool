@@ -18,7 +18,7 @@ function (canvas) {
 c$.renderScreenImage = Clazz.defineMethod (c$, "renderScreenImage", 
 function (vwr, g, size) {
 {
-}}, "javajs.awt.PlatformViewer,~O,~O");
+}}, "J.api.PlatformViewer,~O,~O");
 c$.prompt = Clazz.defineMethod (c$, "prompt", 
 function (label, data, list, asButtons) {
 {

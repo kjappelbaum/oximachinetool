@@ -3,6 +3,7 @@
 // jsmol.php
 // Bob Hanson hansonr@stolaf.edu 1/11/2013
 //
+// 10 NOV 2018 -- print($output) should be echo($output) to prevent trailing \r\n
 // 27 MAR 2018 -- security upgrade
 // 31 MAR 2016 -- https://cactus -> https://cactus
 // 09 Nov 2015 -- bug fix for www.pdb --> www.rcsb
@@ -200,7 +201,7 @@ ob_start();
  header('Last-Modified: '.date('r'));
  header('Accept-Ranges: bytes');
  header('Content-Length: '.strlen($output));
- print($output);
+ echo($output);
 ob_end_flush();
 ?>
 

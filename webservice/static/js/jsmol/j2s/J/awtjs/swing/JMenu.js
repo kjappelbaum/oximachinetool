@@ -1,9 +1,9 @@
-Clazz.declarePackage ("J.awtjs.swing");
-Clazz.load (["J.awtjs.swing.JMenuItem"], "J.awtjs.swing.JMenu", null, function () {
-c$ = Clazz.declareType (J.awtjs.swing, "JMenu", J.awtjs.swing.JMenuItem);
+Clazz.declarePackage ("JS");
+Clazz.load (["JS.JMenuItem"], "JS.JMenu", null, function () {
+c$ = Clazz.declareType (JS, "JMenu", JS.JMenuItem);
 Clazz.makeConstructor (c$, 
 function () {
-Clazz.superConstructor (this, J.awtjs.swing.JMenu, ["mnu", 4]);
+Clazz.superConstructor (this, JS.JMenu, ["mnu", 4]);
 });
 Clazz.defineMethod (c$, "getItemCount", 
 function () {

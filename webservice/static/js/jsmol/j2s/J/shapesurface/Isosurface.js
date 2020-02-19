@@ -273,18 +273,16 @@ this.currentMesh = this.thisMesh = null;
 return;
 }if ("mapColor" === propertyName || "readFile" === propertyName) {
 if (value == null) {
-value = this.vwr.fm.getBufferedReaderOrErrorMessageFromName (this.sg.params.fileName, null, true, true);
-if (Clazz.instanceOf (value, String)) {
-JU.Logger.error ("Isosurface: could not open file " + this.sg.params.fileName + " -- " + value);
-return;
-}if (!(Clazz.instanceOf (value, java.io.BufferedReader))) try {
-value = JU.Rdr.getBufferedReader (value, "ISO-8859-1");
-} catch (e) {
-if (Clazz.exceptionOf (e, java.io.IOException)) {
+if (this.sg.params.filesData == null) {
+value = this.getFileReader (this.sg.params.fileName);
 } else {
-throw e;
-}
-}
+value = this.sg.params.filesData;
+var a = this.sg.params.filesData[0];
+var b =  new Array (a.length);
+for (var i = b.length; --i >= 0 && value != null; ) if ((b[i] = this.getFileReader (a[i])) == null) value = null;
+
+if (value != null) this.sg.params.filesData[0] = b;
+}if (value == null) return;
 }} else if ("atomIndex" === propertyName) {
 this.atomIndex = (value).intValue ();
 if (this.thisMesh != null) this.thisMesh.atomIndex = this.atomIndex;
@@ -396,6 +394,22 @@ if (m.atomIndex >= firstAtomDeleted) m.atomIndex -= nAtomsDeleted;
 return;
 }this.setPropertySuper (propertyName, value, bs);
 }, "~S,~O,JU.BS");
+Clazz.defineMethod (c$, "getFileReader", 
+ function (fileName) {
+var value = this.vwr.fm.getBufferedReaderOrErrorMessageFromName (fileName, null, true, true);
+if (Clazz.instanceOf (value, String)) {
+JU.Logger.error ("Isosurface: could not open file " + fileName + " -- " + value);
+return null;
+}if (!(Clazz.instanceOf (value, java.io.BufferedReader))) try {
+value = JU.Rdr.getBufferedReader (value, "ISO-8859-1");
+} catch (e) {
+if (Clazz.exceptionOf (e, java.io.IOException)) {
+} else {
+throw e;
+}
+}
+return value;
+}, "~S");
 Clazz.defineMethod (c$, "setIsoMeshColor", 
  function (m, color) {
 m.jvxlData.baseColor = color;
@@ -554,7 +568,7 @@ this.jvxlData.slabInfo = thisMesh.slabOptions.toString ();
 }var sb =  new JU.SB ();
 this.getMeshCommand (sb, thisMesh.index);
 thisMesh.setJvxlColorMap (true);
-return J.jvxl.data.JvxlCoder.jvxlGetFileVwr (this.vwr, this.jvxlData, meshData, this.title, "", true, 1, sb.toString (), null);
+return J.jvxl.data.JvxlCoder.jvxlGetFile (this.jvxlData, meshData, this.title, "", true, 1, sb.toString (), null);
 }if (property === "jvxlFileInfo") {
 return J.jvxl.data.JvxlCoder.jvxlGetInfo (this.jvxlData);
 }if (property === "command") {

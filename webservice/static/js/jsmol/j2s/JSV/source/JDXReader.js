@@ -1,5 +1,5 @@
 Clazz.declarePackage ("JSV.source");
-Clazz.load (["J.api.JmolJDXMOLReader"], "JSV.source.JDXReader", ["java.io.BufferedReader", "$.StringReader", "java.lang.Double", "$.Float", "java.util.Hashtable", "$.StringTokenizer", "JU.Lst", "$.PT", "$.SB", "JSV.api.JSVZipReader", "JSV.common.Coordinate", "$.JSVFileManager", "$.JSViewer", "$.PeakInfo", "$.Spectrum", "JSV.exception.JSVException", "JSV.source.JDXDecompressor", "$.JDXSource", "$.JDXSourceStreamTokenizer", "JU.Logger"], function () {
+Clazz.load (["J.api.JmolJDXMOLReader"], "JSV.source.JDXReader", ["java.io.BufferedReader", "$.InputStream", "$.StringReader", "java.lang.Double", "$.Float", "java.util.Hashtable", "$.StringTokenizer", "JU.AU", "$.Lst", "$.PT", "$.SB", "JSV.api.JSVZipReader", "JSV.common.Coordinate", "$.JSVFileManager", "$.JSViewer", "$.PeakInfo", "$.Spectrum", "JSV.exception.JSVException", "JSV.source.JDXDecompressor", "$.JDXSource", "$.JDXSourceStreamTokenizer", "JU.Logger"], function () {
 c$ = Clazz.decorateAsClass (function () {
 this.nmrMaxY = NaN;
 this.source = null;
@@ -43,11 +43,20 @@ this.loadImaginary = loadImaginary;
 }, "~S,~B,~B,~N,~N,~N");
 c$.createJDXSourceFromStream = Clazz.defineMethod (c$, "createJDXSourceFromStream", 
 function ($in, obscure, loadImaginary, nmrMaxY) {
-return JSV.source.JDXReader.createJDXSource (JSV.common.JSVFileManager.getBufferedReaderForInputStream ($in), "stream", obscure, loadImaginary, -1, -1, nmrMaxY);
+return JSV.source.JDXReader.createJDXSource ($in, "stream", obscure, loadImaginary, -1, -1, nmrMaxY);
 }, "java.io.InputStream,~B,~B,~N");
 c$.createJDXSource = Clazz.defineMethod (c$, "createJDXSource", 
-function (br, filePath, obscure, loadImaginary, iSpecFirst, iSpecLast, nmrMaxY) {
-var header = null;
+function ($in, filePath, obscure, loadImaginary, iSpecFirst, iSpecLast, nmrMaxY) {
+var data = null;
+var br;
+if (Clazz.instanceOf ($in, String) || JU.AU.isAB ($in)) {
+if (Clazz.instanceOf ($in, String)) data = $in;
+br = JSV.common.JSVFileManager.getBufferedReaderForStringOrBytes ($in);
+} else if (Clazz.instanceOf ($in, java.io.InputStream)) {
+br = JSV.common.JSVFileManager.getBufferedReaderForInputStream ($in);
+} else {
+br = $in;
+}var header = null;
 try {
 if (br == null) br = JSV.common.JSVFileManager.getBufferedReaderFromName (filePath, "##TITLE");
 br.mark (400);
@@ -55,31 +64,34 @@ var chs =  Clazz.newCharArray (400, '\0');
 br.read (chs, 0, 400);
 br.reset ();
 header =  String.instantialize (chs);
+var source = null;
 var pt1 = header.indexOf ('#');
 var pt2 = header.indexOf ('<');
 if (pt1 < 0 || pt2 >= 0 && pt2 < pt1) {
 var xmlType = header.toLowerCase ();
 xmlType = (xmlType.contains ("<animl") || xmlType.contains ("<!doctype technique") ? "AnIML" : xmlType.contains ("xml-cml") ? "CML" : null);
-var xmlSource = null;
-if (xmlType != null) xmlSource = (JSV.common.JSViewer.getInterface ("JSV.source." + xmlType + "Reader")).getSource (filePath, br);
+if (xmlType != null) source = (JSV.common.JSViewer.getInterface ("JSV.source." + xmlType + "Reader")).getSource (filePath, br);
 br.close ();
-if (xmlSource == null) {
+if (source == null) {
 JU.Logger.error (header + "...");
 throw  new JSV.exception.JSVException ("File type not recognized");
-}return xmlSource;
-}return ( new JSV.source.JDXReader (filePath, obscure, loadImaginary, iSpecFirst, iSpecLast, nmrMaxY)).getJDXSource (br);
+}} else {
+source = ( new JSV.source.JDXReader (filePath, obscure, loadImaginary, iSpecFirst, iSpecLast, nmrMaxY)).getJDXSource (br);
+}if (data != null) source.setInlineData (data);
+return source;
 } catch (e) {
 if (Clazz.exceptionOf (e, Exception)) {
 if (br != null) br.close ();
 if (header != null) JU.Logger.error (header + "...");
 var s = e.getMessage ();
 {
-}throw  new JSV.exception.JSVException ("Error reading data: " + s);
+}e.printStackTrace ();
+throw  new JSV.exception.JSVException ("Error reading data: " + s);
 } else {
 throw e;
 }
 }
-}, "java.io.BufferedReader,~S,~B,~B,~N,~N,~N");
+}, "~O,~S,~B,~B,~N,~N,~N");
 Clazz.defineMethod (c$, "getJDXSource", 
  function (reader) {
 this.source =  new JSV.source.JDXSource (0, this.filePath);

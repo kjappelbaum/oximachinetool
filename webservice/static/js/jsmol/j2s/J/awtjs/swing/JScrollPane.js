@@ -1,11 +1,11 @@
-Clazz.declarePackage ("J.awtjs.swing");
-Clazz.load (["J.awtjs.swing.JComponent"], "J.awtjs.swing.JScrollPane", ["JU.SB"], function () {
-c$ = Clazz.declareType (J.awtjs.swing, "JScrollPane", J.awtjs.swing.JComponent);
+Clazz.declarePackage ("JS");
+Clazz.load (["JS.JComponent"], "JS.JScrollPane", ["JU.SB"], function () {
+c$ = Clazz.declareType (JS, "JScrollPane", JS.JComponent);
 Clazz.makeConstructor (c$, 
 function (component) {
-Clazz.superConstructor (this, J.awtjs.swing.JScrollPane, ["JScP"]);
+Clazz.superConstructor (this, JS.JScrollPane, ["JScP"]);
 this.add (component);
-}, "J.awtjs.swing.JComponent");
+}, "JS.JComponent");
 Clazz.defineMethod (c$, "toHTML", 
 function () {
 var sb =  new JU.SB ();
@@ -18,5 +18,5 @@ return sb.toString ();
 });
 Clazz.overrideMethod (c$, "setMinimumSize", 
 function (dimension) {
-}, "javajs.awt.Dimension");
+}, "JS.Dimension");
 });

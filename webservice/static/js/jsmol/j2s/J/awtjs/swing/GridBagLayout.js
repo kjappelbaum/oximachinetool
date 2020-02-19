@@ -1,4 +1,4 @@
-Clazz.declarePackage ("J.awtjs.swing");
-Clazz.load (["javajs.awt.LayoutManager"], "J.awtjs.swing.GridBagLayout", null, function () {
-c$ = Clazz.declareType (J.awtjs.swing, "GridBagLayout", javajs.awt.LayoutManager);
+Clazz.declarePackage ("JS");
+Clazz.load (["JS.LayoutManager"], "JS.GridBagLayout", null, function () {
+c$ = Clazz.declareType (JS, "GridBagLayout", JS.LayoutManager);
 });

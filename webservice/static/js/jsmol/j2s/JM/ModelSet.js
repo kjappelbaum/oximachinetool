@@ -841,8 +841,7 @@ return ptCenter;
 }, "JU.BS");
 Clazz.defineMethod (c$, "getAverageAtomPoint", 
 function () {
-if (this.averageAtomPoint == null) this.averageAtomPoint = this.getAtomSetCenter (this.vwr.getAllAtoms ());
-return this.averageAtomPoint;
+return (this.getAtomSetCenter (this.vwr.bsA ()));
 });
 Clazz.defineMethod (c$, "setAPm", 
 function (bs, tok, iValue, fValue, sValue, values, list) {
@@ -1597,7 +1596,7 @@ var autoAromatize = false;
 switch (connectOperation) {
 case 12291:
 return this.deleteConnections (minD, maxD, order, bsA, bsB, isBonds, matchNull);
-case 603979873:
+case 603979872:
 case 1073741852:
 if (order != 515) {
 if (isBonds) {
@@ -1608,7 +1607,7 @@ for (var i = bs.nextSetBit (0); i >= 0; i = bs.nextSetBit (i + 1)) {
 bsA.set (this.bo[i].atom1.i);
 bsB.set (this.bo[i].atom2.i);
 }
-}return  Clazz.newIntArray (-1, [matchHbond ? this.autoHbond (bsA, bsB, false) : this.autoBondBs4 (bsA, bsB, null, bsBonds, this.vwr.getMadBond (), connectOperation == 603979873), 0]);
+}return  Clazz.newIntArray (-1, [matchHbond ? this.autoHbond (bsA, bsB, false) : this.autoBondBs4 (bsA, bsB, null, bsBonds, this.vwr.getMadBond (), connectOperation == 603979872), 0]);
 }idOrModifyOnly = autoAromatize = true;
 break;
 case 1086324745:
@@ -1845,13 +1844,15 @@ bsCO.set (i);
 break;
 }
 }
-}var maxXYDistance = this.vwr.getFloat (570425361);
+}var dmax = this.vwr.getFloat (570425361);
+var min2;
+if (haveHAtoms) {
+if (dmax > JM.ModelSet.hbondMaxReal) dmax = JM.ModelSet.hbondMaxReal;
+min2 = 1;
+} else {
+min2 = JM.ModelSet.hbondMinRasmol * JM.ModelSet.hbondMinRasmol;
+}var max2 = dmax * dmax;
 var minAttachedAngle = (this.vwr.getFloat (570425360) * 3.141592653589793 / 180);
-var hbondMax2 = maxXYDistance * maxXYDistance;
-var hbondMin2 = JM.ModelSet.hbondMinRasmol * JM.ModelSet.hbondMinRasmol;
-var hxbondMin2 = 1;
-var hxbondMax2 = (maxXYDistance > JM.ModelSet.hbondMaxReal ? JM.ModelSet.hbondMaxReal * JM.ModelSet.hbondMaxReal : hbondMax2);
-var hxbondMax = (maxXYDistance > JM.ModelSet.hbondMaxReal ? JM.ModelSet.hbondMaxReal : maxXYDistance);
 var nNew = 0;
 var d2 = 0;
 var v1 =  new JU.V3 ();
@@ -1864,35 +1865,26 @@ for (var i = bsA.nextSetBit (0); i >= 0; i = bsA.nextSetBit (i + 1)) {
 var atom = this.at[i];
 var elementNumber = atom.getElementNumber ();
 var isH = (elementNumber == 1);
-if (!isH && (haveHAtoms || elementNumber != 7 && elementNumber != 8) || isH && !haveHAtoms) continue;
-var min2;
-var max2;
-var dmax;
+if (isH ? !haveHAtoms : haveHAtoms || elementNumber != 7 && elementNumber != 8) continue;
 var firstIsCO;
 if (isH) {
+firstIsCO = false;
 var b = atom.bonds;
 if (b == null) continue;
 var isOK = false;
-for (var j = 0; j < b.length && !isOK; j++) {
+for (var j = 0; !isOK && j < b.length; j++) {
 var a2 = b[j].getOtherAtom (atom);
 var element = a2.getElementNumber ();
 isOK = (element == 7 || element == 8);
 }
 if (!isOK) continue;
-dmax = hxbondMax;
-min2 = hxbondMin2;
-max2 = hxbondMax2;
-firstIsCO = false;
 } else {
-dmax = maxXYDistance;
-min2 = hbondMin2;
-max2 = hbondMax2;
 firstIsCO = bsCO.get (i);
 }this.setIteratorForAtom (iter, -1, atom.i, dmax, null);
 while (iter.hasNext ()) {
 var atomNear = this.at[iter.next ()];
 var elementNumberNear = atomNear.getElementNumber ();
-if (atomNear === atom || !isH && elementNumberNear != 7 && elementNumberNear != 8 || isH && elementNumberNear == 1 || (d2 = iter.foundDistance2 ()) < min2 || d2 > max2 || firstIsCO && bsCO.get (atomNear.i) || atom.isBonded (atomNear)) {
+if (atomNear === atom || (isH ? elementNumberNear == 1 : elementNumberNear != 7 && elementNumberNear != 8) || (d2 = iter.foundDistance2 ()) < min2 || d2 > max2 || firstIsCO && bsCO.get (atomNear.i) || atom.isBonded (atomNear)) {
 continue;
 }if (minAttachedAngle > 0) {
 v1.sub2 (atom, atomNear);
@@ -2015,7 +2007,7 @@ this.am = newModels;
 this.mc = newModelCount;
 }, "~N");
 Clazz.defineMethod (c$, "assignAtom", 
-function (atomIndex, type, autoBond) {
+function (atomIndex, type, autoBond, addHsAndBond) {
 this.clearDB (atomIndex);
 if (type == null) type = "C";
 var atom = this.at[atomIndex];
@@ -2024,10 +2016,10 @@ var wasH = (atom.getElementNumber () == 1);
 var atomicNumber = JU.Elements.elementNumberFromSymbol (type, true);
 var isDelete = false;
 if (atomicNumber > 0) {
-this.setElement (atom, atomicNumber, false);
+this.setElement (atom, atomicNumber, !addHsAndBond);
 this.vwr.shm.setShapeSizeBs (0, 0, this.vwr.rd, JU.BSUtil.newAndSetBit (atomIndex));
-this.setAtomName (atomIndex, type + atom.getAtomNumber (), false);
-if (this.vwr.getBoolean (603979883)) this.am[atom.mi].isModelKit = true;
+this.setAtomName (atomIndex, type + atom.getAtomNumber (), !addHsAndBond);
+if (this.vwr.getBoolean (603983903)) this.am[atom.mi].isModelKit = true;
 if (!this.am[atom.mi].isModelKit) this.taintAtom (atomIndex, 0);
 } else if (type.equals ("Pl")) {
 atom.setFormalCharge (atom.getFormalCharge () + 1);
@@ -2037,7 +2029,8 @@ atom.setFormalCharge (atom.getFormalCharge () - 1);
 isDelete = true;
 } else if (!type.equals (".")) {
 return;
-}this.removeUnnecessaryBonds (atom, isDelete);
+}if (!addHsAndBond) return;
+this.removeUnnecessaryBonds (atom, isDelete);
 var dx = 0;
 if (atom.getCovalentBondCount () == 1) if (wasH) {
 dx = 1.50;
@@ -2058,11 +2051,10 @@ if (bs.nextSetBit (0) >= 0) this.vwr.deleteAtoms (bs, false);
 bs = this.vwr.getModelUndeletedAtomsBitSet (atom.mi);
 bs.andNot (this.getAtomBitsMDa (1612709900, null,  new JU.BS ()));
 this.makeConnections2 (0.1, 1.8, 1, 1073741904, bsA, bs, null, false, false, 0);
-}this.vwr.addHydrogens (bsA, false, true);
-}, "~N,~S,~B");
+}if (true) this.vwr.addHydrogens (bsA, false, true);
+}, "~N,~S,~B,~B");
 Clazz.defineMethod (c$, "deleteAtoms", 
 function (bs) {
-this.averageAtomPoint = null;
 if (bs == null) return;
 var bsBonds =  new JU.BS ();
 for (var i = bs.nextSetBit (0); i >= 0 && i < this.ac; i = bs.nextSetBit (i + 1)) this.at[i].$delete (bsBonds);
@@ -2182,7 +2174,7 @@ Clazz.defineMethod (c$, "isAtomPDB",
 function (i) {
 return i >= 0 && this.am[this.at[i].mi].isBioModel;
 }, "~N");
-Clazz.defineMethod (c$, "isAtomAssignable", 
+Clazz.defineMethod (c$, "isAtomInLastModel", 
 function (i) {
 return i >= 0 && this.at[i].mi == this.mc - 1;
 }, "~N");
@@ -2509,7 +2501,6 @@ if (m.isContainedIn (bs)) {
 if (m.mat4 == null) m.mat4 = JU.M4.newM4 (null);
 m.mat4.mul2 (mat, m.mat4);
 }}}
-this.averageAtomPoint = null;
 }, "JU.BS,JU.M4");
 Clazz.defineMethod (c$, "moveAtoms", 
 function (m4, mNew, rotation, translation, bs, center, isInternal, translationOnly) {
@@ -2843,5 +2834,6 @@ return s;
 }, "JU.BS,~B");
 Clazz.defineStatics (c$,
 "hbondMinRasmol", 2.5,
-"hbondMaxReal", 3.5);
+"hbondMaxReal", 3.5,
+"hbondHCMaxReal", 3.2);
 });

@@ -118,6 +118,10 @@ Clazz.overrideMethod (c$, "toggleCoordinate",
 function () {
 this.app.toggleCoordinate ();
 });
+Clazz.overrideMethod (c$, "togglePointsOnly", 
+function () {
+this.app.togglePointsOnly ();
+});
 Clazz.overrideMethod (c$, "toggleIntegration", 
 function () {
 this.app.toggleIntegration ();

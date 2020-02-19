@@ -82,7 +82,7 @@ for (var i = i0; i >= 0; i = (isAll ? i - 1 : bsPolygons.nextSetBit (i + 1))) th
 Clazz.overrideMethod (c$, "plotText", 
 function (x, y, z, colix, text, font3d) {
 this.gdata.plotText (x, y, z, this.gdata.getColorArgbOrGray (colix), 0, text, font3d, this.export3D);
-}, "~N,~N,~N,~N,~S,javajs.awt.Font");
+}, "~N,~N,~N,~N,~S,JU.Font");
 Clazz.overrideMethod (c$, "plotImage", 
 function (x, y, z, image, bgcolix, width, height) {
 }, "~N,~N,~N,~O,~N,~N,~N");

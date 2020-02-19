@@ -1,2 +1,2 @@
-Clazz.declarePackage ("J.awtjs.swing");
-Clazz.declareInterface (J.awtjs.swing, "ListSelectionModel");
+Clazz.declarePackage ("JS");
+Clazz.declareInterface (JS, "ListSelectionModel");

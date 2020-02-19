@@ -19,7 +19,6 @@ this.haveBSClickable = false;
 this.bsSurface = null;
 this.nSurfaceAtoms = 0;
 this.surfaceDistanceMax = 0;
-this.averageAtomPoint = null;
 this.haveChirality = false;
 this.bspf = null;
 this.preserveState = true;
@@ -53,6 +52,10 @@ JM.AtomCollection.$AtomCollection$AtomSorter$ ();
 this.atomCapacity = 0;
 Clazz.instantialize (this, arguments);
 }, JM, "AtomCollection");
+Clazz.defineMethod (c$, "getAtom", 
+function (iatom) {
+return (iatom >= 0 && iatom < this.at.length ? this.at[iatom] : null);
+}, "~N");
 Clazz.defineMethod (c$, "setupAC", 
 function () {
 this.bsHidden =  new JU.BS ();
@@ -779,8 +782,8 @@ var nData = JU.PT.parseInt (data.substring (0, lines[0] - 1));
 for (var i = 1; i <= nData; i++) {
 var tokens = JU.PT.getTokens (JU.PT.parseTrimmed (data.substring (lines[i], lines[i + 1])));
 var atomIndex = JU.PT.parseInt (tokens[0]) - 1;
-var x = JU.PT.parseFloat (tokens[3]);
-var y = JU.PT.parseFloat (tokens[4]);
+var x = (tokens[3].equalsIgnoreCase ("1.4E-45") ? 1.4e-45 : JU.PT.parseFloat (tokens[3]));
+var y = (tokens[4].equalsIgnoreCase ("1.4E-45") ? 1.4e-45 : JU.PT.parseFloat (tokens[4]));
 var z = JU.PT.parseFloat (tokens[5]);
 if (isVibrationVectors) {
 v.set (x, y, z);
@@ -800,7 +803,6 @@ throw e;
 Clazz.defineMethod (c$, "validateBspf", 
 function (isValid) {
 if (this.bspf != null) this.bspf.isValid = isValid;
-this.averageAtomPoint = null;
 }, "~B");
 Clazz.defineMethod (c$, "validateBspfForModel", 
 function (modelIndex, isValid) {

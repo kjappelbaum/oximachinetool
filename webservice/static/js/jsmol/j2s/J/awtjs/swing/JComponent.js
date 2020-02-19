@@ -1,11 +1,11 @@
-Clazz.declarePackage ("J.awtjs.swing");
-Clazz.load (["javajs.awt.Container"], "J.awtjs.swing.JComponent", null, function () {
+Clazz.declarePackage ("JS");
+Clazz.load (["JS.Container"], "JS.JComponent", null, function () {
 c$ = Clazz.decorateAsClass (function () {
 this.autoScrolls = false;
 this.actionCommand = null;
 this.actionListener = null;
 Clazz.instantialize (this, arguments);
-}, J.awtjs.swing, "JComponent", javajs.awt.Container);
+}, JS, "JComponent", JS.Container);
 Clazz.defineMethod (c$, "setAutoscrolls", 
 function (b) {
 this.autoScrolls = b;

@@ -1,11 +1,11 @@
-Clazz.declarePackage ("J.awtjs.swing");
+Clazz.declarePackage ("JS");
 c$ = Clazz.decorateAsClass (function () {
 this.top = 0;
 this.left = 0;
 this.bottom = 0;
 this.right = 0;
 Clazz.instantialize (this, arguments);
-}, J.awtjs.swing, "Insets");
+}, JS, "Insets");
 Clazz.makeConstructor (c$, 
 function (top, left, bottom, right) {
 this.top = top;

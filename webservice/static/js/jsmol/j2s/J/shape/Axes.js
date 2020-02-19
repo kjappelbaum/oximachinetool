@@ -59,7 +59,7 @@ Clazz.overrideMethod (c$, "initShape",
 function () {
 this.translucentAllowed = false;
 this.myType = "axes";
-this.font3d = this.vwr.gdata.getFont3D (14);
+this.font3d = this.vwr.gdata.getFont3D (16);
 var axesMode = this.vwr.g.axesMode;
 if (axesMode == 603979808 && this.ms.unitCells != null) {
 var unitcell = this.vwr.getCurrentUnitCell ();

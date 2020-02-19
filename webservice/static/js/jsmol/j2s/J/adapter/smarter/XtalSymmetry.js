@@ -160,30 +160,32 @@ var kcode = this.latticeCells[3];
 var dim = Clazz.floatToInt (this.symmetry.getUnitCellInfoType (6));
 this.firstAtom = this.asc.getLastAtomSetAtomIndex ();
 var bsAtoms = this.asc.bsAtoms;
-if (bsAtoms != null) this.firstAtom = bsAtoms.nextSetBit (this.firstAtom);
-this.rminx = this.rminy = this.rminz = 3.4028235E38;
+if (bsAtoms != null) {
+this.updateBSAtoms ();
+this.firstAtom = bsAtoms.nextSetBit (this.firstAtom);
+}this.rminx = this.rminy = this.rminz = 3.4028235E38;
 this.rmaxx = this.rmaxy = this.rmaxz = -3.4028235E38;
 var pt0 = null;
 if (this.acr.latticeType == null) this.acr.latticeType = this.symmetry.getLatticeType ();
 if (this.acr.isPrimitive) {
 this.asc.setCurrentModelInfo ("isprimitive", Boolean.TRUE);
-if (!"P".equals (this.acr.latticeType)) {
-this.asc.setCurrentModelInfo ("unitcell_conventional", this.symmetry.getConventionalUnitCell (this.acr.latticeType));
-}}if (this.acr.latticeType != null) this.asc.setCurrentModelInfo ("latticeType", this.acr.latticeType);
-if (Clazz.instanceOf (this.acr.fillRange, String) && this.acr.latticeType != null) {
+if (!"P".equals (this.acr.latticeType) || this.acr.primitiveToCrystal != null) {
+this.asc.setCurrentModelInfo ("unitcell_conventional", this.symmetry.getConventionalUnitCell (this.acr.latticeType, this.acr.primitiveToCrystal));
+}}if (this.acr.latticeType != null) {
+this.asc.setCurrentModelInfo ("latticeType", this.acr.latticeType);
+if (Clazz.instanceOf (this.acr.fillRange, String)) {
 var type = this.acr.fillRange;
 if (type.equals ("conventional")) {
-this.acr.fillRange = this.symmetry.getConventionalUnitCell (this.acr.latticeType);
+this.acr.fillRange = this.symmetry.getConventionalUnitCell (this.acr.latticeType, this.acr.primitiveToCrystal);
 } else if (type.equals ("primitive")) {
 this.acr.fillRange = this.symmetry.getUnitCellVectors ();
-this.symmetry.toFromPrimitive (true, this.acr.latticeType.charAt (0), this.acr.fillRange);
+this.symmetry.toFromPrimitive (true, this.acr.latticeType.charAt (0), this.acr.fillRange, this.acr.primitiveToCrystal);
 } else {
 this.acr.fillRange = null;
 }if (this.acr.fillRange != null) this.acr.addJmolScript ("unitcell " + type);
-}if (this.acr.fillRange != null) {
-if (bsAtoms == null) this.asc.bsAtoms = bsAtoms =  new JU.BS ();
+}}if (this.acr.fillRange != null) {
+bsAtoms = this.updateBSAtoms ();
 this.acr.forcePacked = true;
-bsAtoms.setBits (this.firstAtom, this.asc.ac);
 this.doPackUnitCell = false;
 this.minXYZ =  new JU.P3i ();
 this.maxXYZ = JU.P3i.new3 (1, 1, 1);
@@ -233,8 +235,7 @@ oabc = null;
 } else {
 var doPack0 = this.doPackUnitCell;
 this.doPackUnitCell = doPack0;
-if (this.asc.bsAtoms == null) this.asc.bsAtoms = JU.BSUtil.newBitSet2 (0, this.asc.ac);
-bsAtoms = this.asc.bsAtoms;
+bsAtoms = this.updateBSAtoms ();
 this.applyAllSymmetry (this.acr.ms, null);
 this.doPackUnitCell = doPack0;
 var atoms = this.asc.atoms;
@@ -263,13 +264,19 @@ if (oabc == null) {
 this.applyAllSymmetry (this.acr.ms, bsAtoms);
 return;
 }if (this.acr.forcePacked || this.doPackUnitCell) {
-var bs = this.asc.bsAtoms;
 var atoms = this.asc.atoms;
-if (bs == null) bs = this.asc.bsAtoms = JU.BSUtil.newBitSet2 (0, this.asc.ac);
+var bs = this.updateBSAtoms ();
 for (var i = bs.nextSetBit (iAtomFirst); i >= 0; i = bs.nextSetBit (i + 1)) {
 if (!this.isWithinCell (this.dtype, atoms[i], this.minXYZ.x, this.maxXYZ.x, this.minXYZ.y, this.maxXYZ.y, this.minXYZ.z, this.maxXYZ.z, this.packingError)) bs.clear (i);
 }
 }});
+Clazz.defineMethod (c$, "updateBSAtoms", 
+ function () {
+var bs = this.asc.bsAtoms;
+if (bs == null) bs = this.asc.bsAtoms = JU.BSUtil.newBitSet2 (0, this.asc.ac);
+if (bs.nextSetBit (this.firstAtom) < 0) bs.setBits (this.firstAtom, this.asc.ac);
+return bs;
+});
 Clazz.defineMethod (c$, "adjustRangeMinMax", 
  function (oabc) {
 var pa =  new JU.P3 ();

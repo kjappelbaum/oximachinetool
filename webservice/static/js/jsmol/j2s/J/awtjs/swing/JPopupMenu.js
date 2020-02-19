@@ -1,12 +1,12 @@
-Clazz.declarePackage ("J.awtjs.swing");
-Clazz.load (["J.awtjs.swing.AbstractButton"], "J.awtjs.swing.JPopupMenu", null, function () {
+Clazz.declarePackage ("JS");
+Clazz.load (["JS.AbstractButton"], "JS.JPopupMenu", null, function () {
 c$ = Clazz.decorateAsClass (function () {
 this.tainted = true;
 Clazz.instantialize (this, arguments);
-}, J.awtjs.swing, "JPopupMenu", J.awtjs.swing.AbstractButton);
+}, JS, "JPopupMenu", JS.AbstractButton);
 Clazz.makeConstructor (c$, 
 function (name) {
-Clazz.superConstructor (this, J.awtjs.swing.JPopupMenu, ["mnu"]);
+Clazz.superConstructor (this, JS.JPopupMenu, ["mnu"]);
 this.name = name;
 }, "~S");
 Clazz.defineMethod (c$, "setInvoker", 
@@ -17,11 +17,10 @@ SwingController.setMenu(this);
 }}, "~O");
 Clazz.defineMethod (c$, "show", 
 function (applet, x, y) {
+if (applet != null) this.tainted = true;
 {
-if (applet != null)
-this.tainted = true;
 SwingController.showMenu(this, x, y);
-}}, "javajs.awt.Component,~N,~N");
+}}, "JS.Component,~N,~N");
 Clazz.defineMethod (c$, "disposeMenu", 
 function () {
 {
@@ -33,5 +32,5 @@ return this.getMenuHTML ();
 });
 {
 {
-SwingController.setDraggable(J.awtjs.swing.JPopupMenu);
+SwingController.setDraggable(JS.JPopupMenu);
 }}});

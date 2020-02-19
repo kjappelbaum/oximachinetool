@@ -70,7 +70,7 @@ Clazz.defineMethod (c$, "setGlobals",
  function () {
 this.invalidateMesh = false;
 this.needTranslucent = false;
-this.g3d.addRenderer (553648146);
+this.g3d.addRenderer (553648145);
 var TF = (!this.isExport && !this.vwr.checkMotionRendering (1112152066));
 if (TF != this.wireframeOnly) this.invalidateMesh = true;
 this.wireframeOnly = TF;

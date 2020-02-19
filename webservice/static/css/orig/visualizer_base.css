@@ -1,48 +1,47 @@
 body {
-    margin: 0;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 14px;
-    font-style: normal;
-    font-variant: normal;
-    font-weight: 400;
-    line-height: 20px;
-
+  margin: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  line-height: 20px;
 }
 
 html {
-    background-color: #fff;
+  background-color: #fff;
 }
 
 h1 {
-    font-size: 24px;
-    font-style: normal;
-    font-variant: normal;
-    font-weight: 200;
-    line-height: 26px;
+  font-size: 24px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 200;
+  line-height: 26px;
 }
 
 h2 {
-    font-size: 18px;
-    font-style: normal;
-    font-variant: normal;
-    font-weight: 500;
-    line-height: 15px;
+  font-size: 18px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 500;
+  line-height: 15px;
 }
 
 h3 {
-    font-size: 14px;
-    font-style: normal;
-    font-variant: normal;
-    font-weight: 500;
-    line-height: 15px;
+  font-size: 14px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 500;
+  line-height: 15px;
 }
 
 h4 {
-    font-size: 12px;
-    font-style: normal;
-    font-variant: normal;
-    font-weight: 500;
-    line-height: 12px;
+  font-size: 12px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 500;
+  line-height: 12px;
 }
 
 p,
@@ -50,95 +49,94 @@ li,
 label,
 input,
 select {
-    font-size: 14px;
-    font-style: normal;
-    font-variant: normal;
-    font-weight: 300;
-    line-height: 20px;
+  font-size: 14px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 300;
+  line-height: 20px;
 }
 
 blockquote {
-    /*    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; */
-    font-size: 21px;
-    font-style: normal;
-    font-variant: normal;
-    font-weight: 400;
-    line-height: 30px;
+  /*    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; */
+  font-size: 21px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  line-height: 30px;
 }
 
 pre {
-    /*    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;  */
-    font-size: 13px;
-    font-style: normal;
-    font-variant: normal;
-    font-weight: 400;
-    line-height: 18px;
+  /*    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;  */
+  font-size: 13px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  line-height: 18px;
 }
 
 table.center {
-    margin-left: auto;
-    margin-right: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #accordion .ui-state-default {
-    border: #003eff;
-    background: #007fff;
-    color: white;
+  border: #003eff;
+  background: #007fff;
+  color: white;
 }
 
 #accordion .ui-state-hover {
-    border: #003eff;
-    background: #449fff;
-    color: white;
+  border: #003eff;
+  background: #449fff;
+  color: white;
 }
 
 #accordion .ui-state-active {
-    background: #ccc;
-    color: #000;
+  background: #ccc;
+  color: #000;
 }
 
-
 .submit-progress {
-    position: fixed;
-    top: 10%;
-    left: 50%;
-    height: 8em;
-    padding-top: 1em;
-    width: 20em;
-    margin-left: -11.5em;
-    padding-left: 15px;
-    background-color: black;
-    color: white;
-    -webkit-border-radius: 0.4em;
-    -moz-border-radius: 0.4em;
-    border-radius: 0.4em;
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  height: 8em;
+  padding-top: 1em;
+  width: 20em;
+  margin-left: -11.5em;
+  padding-left: 15px;
+  background-color: black;
+  color: white;
+  -webkit-border-radius: 0.4em;
+  -moz-border-radius: 0.4em;
+  border-radius: 0.4em;
 }
 
 .submit-progress-bg {
-    background-color: lightgray;
-    opacity: .6;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 10
+  background-color: lightgray;
+  opacity: 0.6;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 10;
 }
 
 .submit-progress i {
-    margin-left: 98px;
-    margin-bottom: 8px;
+  margin-left: 110px;
+  margin-bottom: 8px;
 }
 
 .spinner {
-    position: fixed;
-    z-index: 1031;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  position: fixed;
+  z-index: 1031;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 #HASH {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }

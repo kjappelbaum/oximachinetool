@@ -94,7 +94,7 @@
 
 <body onresize>
     <script>
-        $(document).ready(function () {
+        $(window).on('load', function () {
             $('table.featuretable').DataTable({
                 "order": [[2, "desc"]]
             });
@@ -414,7 +414,7 @@
         var metal_indices = {{ metal_indices| tojson | safe }};
         var prediction_labels = {{ prediction_labels| tojson | safe }};
 
-        $(document).ready(function () {
+        $(window).on('load', function () {
             var divjsmol = document.getElementById('crystal');
             var jsmolcontent = document.getElementById('jmolApplet_appletinfotablediv');
             divjsmol.appendChild(jsmolcontent);

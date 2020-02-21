@@ -13,4 +13,4 @@ RUN pip3  install -r /home/app/code/webservice/requirements.txt
 
 COPY ./oximachine/compute /home/app/code/webservice/compute/
 
-RUN chown -R app:app $HOME
+RUN chown -R app:app $HOME 

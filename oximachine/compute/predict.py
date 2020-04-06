@@ -47,8 +47,8 @@ FEATURES = CHEMISTRY_FEATURES + METAL_CENTER_FEATURES + ["crystal_nn_no_steinhar
 MODEL = joblib.load(os.path.join(THIS_DIR, "votingclassifier.joblib"))
 SCALER = joblib.load(os.path.join(THIS_DIR, "scaler_0.joblib"))
 EXPLAINER = joblib.load(os.path.join(THIS_DIR, "explainer.joblib"))
-KDTREE = joblib.load(os.path.join(THIS_DIR, "kdtree.joblib"))
-NEAREST_NEIGHBORS = 3 
+KDTREE = joblib.load(os.path.join(THIS_DIR, "kd_tree.joblib"))
+NEAREST_NEIGHBORS = 4
 NAMES = np.array(read_pickle(os.path.join(THIS_DIR, "names.pkl")))
 
 def get_nearest_neighbors(X: np.array)-> list:
@@ -71,8 +71,8 @@ def get_nearest_neighbors(X: np.array)-> list:
     link_list = []
     X = SCALER.transform(X)
 
-    for metal_centre in X: 
-        _, ids = KDTREE.query(metal_center, k=NEAREST_NEIGHBORS)
+    for metal_center in X: 
+        _, ids = KDTREE.query(metal_center.reshape(1, -1), k=NEAREST_NEIGHBORS)
         links = ", ".join([generate_csd_link(NAMES[i]) for i in ids[0]])
         link_list.append(links)
     
@@ -142,7 +142,7 @@ def predictions(X, site_names):
                 ", ".join([int2roman(MODEL.classes[j]) for j in base_predictions[i]]),
                 agreement,
                 bartype,
-                links[i]
+                nearest_neighbors[i]
             ],
         )
 

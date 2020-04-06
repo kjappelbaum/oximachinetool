@@ -15,8 +15,9 @@ import joblib
 
 from pymatgen import Structure
 from mine_mof_oxstate.featurize import GetFeatures, FeatureCollector
+from mine_mof_oxstate.utils import read_pickle
 from joblib import load
-from .utils import string_to_pymatgen
+from .utils import string_to_pymatgen, generate_csd_link
 import shap
 import logging
 
@@ -46,7 +47,36 @@ FEATURES = CHEMISTRY_FEATURES + METAL_CENTER_FEATURES + ["crystal_nn_no_steinhar
 MODEL = joblib.load(os.path.join(THIS_DIR, "votingclassifier.joblib"))
 SCALER = joblib.load(os.path.join(THIS_DIR, "scaler_0.joblib"))
 EXPLAINER = joblib.load(os.path.join(THIS_DIR, "explainer.joblib"))
+KDTREE = joblib.load(os.path.join(THIS_DIR, "kdtree.joblib"))
+NEAREST_NEIGHBORS = 3 
+NAMES = np.array(read_pickle(os.path.join(THIS_DIR, "names.pkl")))
 
+def get_nearest_neighbors(X: np.array)-> list:
+    """Get list of links to closest structures in the training set. 
+    For this we query a KD-Tree that is built using the scaled training data 
+    with a Euclidean distance metric and return the NEAREST_NEIGHBORS closest 
+    structures from the training set. This is an additional way to understand
+    if the predictions can be trusted. Note that Euclidean distance between 
+    structures in feature space does not necessarily mean that the resulting 
+    nearest neighbors are the nearest neighbors a chemists would have intuitively 
+    chosen. 
+    
+    Args:
+        X (np.array): unscaled feature array
+    
+    Returns:
+        list: list of links to the CSD, each element of the list will be a string with NEAREST_NEIGBORS 
+            html links to the WEBCSD.
+    """
+    link_list = []
+    X = SCALER.transform(X)
+
+    for metal_centre in X: 
+        _, ids = KDTREE.query(metal_center, k=NEAREST_NEIGHBORS)
+        links = ", ".join([generate_csd_link(NAMES[i]) for i in ids[0]])
+        link_list.append(links)
+    
+    return link_list
 
 def get_explanations(
     X: np.array, prediction_labels: list, feature_names: list, nsamples: int = 50
@@ -88,6 +118,7 @@ def predictions(X, site_names):
 
     max_probas = np.max(MODEL.predict_proba(X_scaled), axis=1)
     base_predictions = MODEL._predict(X_scaled)
+    nearest_neighbors = get_nearest_neighbors(X)
 
     print(prediction, site_names, max_probas, base_predictions)
     prediction_output = []
@@ -111,6 +142,7 @@ def predictions(X, site_names):
                 ", ".join([int2roman(MODEL.classes[j]) for j in base_predictions[i]]),
                 agreement,
                 bartype,
+                links[i]
             ],
         )
 

@@ -319,6 +319,9 @@
                     <th>Predictions of Base Models <a href="#" data-toggle="tooltip"
                             title="The base estimators are knn, gradient boosting, logistic regression, and SVM."><sup>[?]</sup></a>
                     </th>
+                    <th>Closest structures in the training set <a href="#" data-toggle="tooltip"
+                        title="The distances are measured using a Euclidean distance metric in feature space."><sup>[?]</sup></a>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -340,6 +343,7 @@
                     </td>
                     <td style="text-align: left">{{ "%.3f" % prediction[2]|float }}</td>
                     <td> {{ prediction[3] }} </td>
+                    <td> {{ prediction[4]|safe }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -78,3 +78,6 @@ class LargeStructureError(Exception):
 
     pass
 
+
+def generate_csd_link(refcode: str) -> str:
+    return '<a href="https://www.ccdc.cam.ac.uk/structures/Search?Ccdcid={}&DatabaseToSearch=Published">{}</a>'.format(refcode, refcode)

@@ -1,4 +1,3 @@
 {
-    "python.pythonPath": "/Users/kevinmaikjablonka/anaconda3/envs/ml/bin/python",
     "python.formatting.provider": "black"
 }

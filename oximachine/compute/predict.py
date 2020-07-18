@@ -14,8 +14,8 @@ from numeral import int2roman
 import joblib
 
 from pymatgen import Structure
-from mine_mof_oxstate.featurize import GetFeatures, FeatureCollector
-from mine_mof_oxstate.utils import read_pickle
+from oximachinerunner.featurize import GetFeatures, FeatureCollector
+from oximachinerunner.utils import read_pickle
 from joblib import load
 from .utils import string_to_pymatgen, generate_csd_link
 import shap
@@ -24,10 +24,10 @@ import logging
 log = logging.getLogger("shap")
 log.setLevel(logging.ERROR)
 
-from learnmofox import utils
+import oximachinerunner.learnmofox as learnmofox
 import sys
 
-sys.modules["utils"] = utils
+sys.modules["learnmofox"] = learnmofox
 
 # adjust these features according to model
 METAL_CENTER_FEATURES = [

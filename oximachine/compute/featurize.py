@@ -11,7 +11,7 @@ from numeral import int2roman
 import numpy as np
 from scipy import stats
 from joblib import load
-from mine_mof_oxstate.featurize import GetFeatures, FeatureCollector
+from oximachinerunner.featurize import GetFeatures, FeatureCollector
 from pymatgen import Structure
 import matplotlib.pyplot as plt
 import matplotlib.colors

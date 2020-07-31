@@ -1,6 +1,6 @@
 #AtSym ElemNo mmType HType formalCharge*12 val Desc Smiles
 
-#BH 5/17/2016 -- for OpenSMARTS convention requiring $(...) in [...] 
+#BH 5/17/2016 -- for OpenSMARTS convention requiring $(...) in [...]
 
 
 
@@ -209,52 +209,3 @@ Zn 30 95  0  24  0 DIPOSITIVE ZINC CATION    [ZnD0+2]
 Br 35 13  0   0  1 BROMINE                   [BrD1]
 Br 35 91  0 -12  0 BROMIDE ANION             [BrD0]
 I  53 14  0   0  1 IODINE                    [ID1]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

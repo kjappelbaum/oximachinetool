@@ -10,12 +10,12 @@ Clazz.instantialize (this, arguments);
 Clazz.prepareFields (c$, function () {
 this.minList =  Clazz.newIntArray (4, 0);
 });
-Clazz.makeConstructor (c$, 
+Clazz.makeConstructor (c$,
 function (indexes, value) {
 this.value = value;
 this.indexes = indexes;
 }, "~A,~N");
-Clazz.defineMethod (c$, "set", 
+Clazz.defineMethod (c$, "set",
 function (steps, bsAtoms, atomMap) {
 this.nAtoms = Math.abs (this.indexes[0]);
 this.type = this.nAtoms - 2;

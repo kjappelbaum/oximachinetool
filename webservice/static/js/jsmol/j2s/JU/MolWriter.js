@@ -8,15 +8,15 @@ this.vTemp = null;
 this.connections = null;
 Clazz.instantialize (this, arguments);
 }, JU, "MolWriter");
-Clazz.makeConstructor (c$, 
+Clazz.makeConstructor (c$,
 function () {
 });
-Clazz.defineMethod (c$, "setViewer", 
+Clazz.defineMethod (c$, "setViewer",
 function (vwr) {
 this.vwr = vwr;
 return this;
 }, "JV.Viewer");
-Clazz.defineMethod (c$, "addMolFile", 
+Clazz.defineMethod (c$, "addMolFile",
 function (iModel, mol, bsAtoms, bsBonds, asV3000, asJSON, noAromatic, q) {
 var nAtoms = bsAtoms.cardinality ();
 var nBonds = bsBonds.cardinality ();
@@ -92,7 +92,7 @@ mol.append ("\n\n");
 mol.append ("$$$$\n");
 }return true;
 }, "~N,JU.SB,JU.BS,JU.BS,~B,~B,~B,JU.Quat");
-Clazz.defineMethod (c$, "getAtomRecordMOL", 
+Clazz.defineMethod (c$, "getAtomRecordMOL",
  function (iModel, ms, mol, n, a, q, pTemp, asV3000, asJSON, atomValues, tokValue, asSDF) {
 JV.PropertyManager.getPointTransf (iModel, ms, a, q, pTemp);
 var elemNo = a.getElementNumber ();
@@ -131,7 +131,7 @@ var sn = "   " + n + " ";
 atomValues.append ("V  ").append (sn.substring (sn.length - 4));
 this.output80CharWrap (atomValues, label, 73);
 }}}, "~N,JM.ModelSet,JU.SB,~N,JM.Atom,JU.Quat,JU.P3,~B,~B,JU.SB,~N,~B");
-Clazz.defineMethod (c$, "getAtomParity", 
+Clazz.defineMethod (c$, "getAtomParity",
  function (a) {
 if (a.getCovalentBondCount () == 4) {
 if (this.connections == null) {
@@ -154,7 +154,7 @@ this.vTemp.sub2 (atoms[this.connections[3]], atoms[this.connections[0]]);
 return (this.vTemp.dot (this.vNorm) > 0 ? "1" : "2");
 }}return "0";
 }, "JM.Atom");
-Clazz.defineMethod (c$, "getAtomPropertyAsString", 
+Clazz.defineMethod (c$, "getAtomPropertyAsString",
  function (a, tok) {
 switch (tok & 1136656384) {
 case 1094713344:
@@ -171,7 +171,7 @@ a.atomPropertyTuple (this.vwr, tok, this.ptTemp);
 return (this.ptTemp == null ? null : this.ptTemp.toString ());
 }
 }, "JM.Atom,~N");
-Clazz.defineMethod (c$, "getBondRecordMOL", 
+Clazz.defineMethod (c$, "getBondRecordMOL",
  function (mol, n, b, atomMap, asV3000, asJSON, noAromatic) {
 var a1 = atomMap[b.atom1.i];
 var a2 = atomMap[b.atom2.i];
@@ -211,14 +211,14 @@ JU.PT.rightJustify (mol, "   ", "" + a1);
 JU.PT.rightJustify (mol, "   ", "" + a2);
 mol.append ("  ").appendI (order).append ("  0  0  0\n");
 }}, "JU.SB,~N,JM.Bond,~A,~B,~B,~B");
-Clazz.defineMethod (c$, "output80CharWrap", 
+Clazz.defineMethod (c$, "output80CharWrap",
  function (mol, data, maxN) {
 if (maxN < 80) data = JU.PT.rep (data, "\n", "|");
 var lines = JU.PT.split (JU.PT.trim (JU.PT.rep (data, "\n\n", "\n"), "\n"), "\n");
 for (var i = 0; i < lines.length; i++) this.outputLines (mol, lines[i], maxN);
 
 }, "JU.SB,~S,~N");
-Clazz.defineMethod (c$, "outputLines", 
+Clazz.defineMethod (c$, "outputLines",
  function (mol, data, maxN) {
 var done = false;
 for (var i = 0, n = data.length; i < n && !done; i += 80) {

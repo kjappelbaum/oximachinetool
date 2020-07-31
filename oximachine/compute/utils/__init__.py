@@ -1,12 +1,14 @@
+# -*- coding: utf-8 -*-
 import pickle
 
 MAX_NUMBER_OF_ATOMS = 500
 
 
-def load_pickle(f): 
-    with open(f, 'rb') as fh: 
+def load_pickle(f):
+    with open(f, 'rb') as fh:
         res = pickle.load(fh)
     return res
+
 
 def string_to_pymatgen(s):
     from pymatgen.io.cif import CifParser
@@ -16,9 +18,11 @@ def string_to_pymatgen(s):
         s = cp.get_structures()[0]
         coord_matrix = s.cart_coords
         if len(s) > MAX_NUMBER_OF_ATOMS:
-            raise LargeStructureError("Structure too large")
+            raise LargeStructureError('Structure too large')
     except Exception as e:
-        raise ValueError("Pymatgen could not parse CIF, you might try rewriting the CIF in P1 symmetry (and also remove clashing atoms/disorder).")
+        raise ValueError(
+            'Pymatgen could not parse CIF, you might try rewriting the CIF in P1 symmetry (and also remove clashing atoms/disorder).'
+        )
     return s
 
 
@@ -32,7 +36,7 @@ def get_structure_tuple(fileobject, fileformat, extra_data=None):
     :return: a structure tuple (cell, positions, numbers) as accepted
         by seekpath.
     """
-    if fileformat == "cif":
+    if fileformat == 'cif':
         structure = string_to_pymatgen(fileobject)
         structure_tuple = tuple_from_pymatgen(structure)
         return structure_tuple, structure
@@ -43,7 +47,7 @@ def tuple_from_pymatgen(pmgstructure):
     """
     Given a pymatgen structure, return a structure tuple as expected from seekpath
     :param pmgstructure: a pymatgen Structure object
-    
+
     :return: a structure tuple (cell, positions, numbers) as accepted
         by seekpath.
     """
@@ -77,4 +81,5 @@ class LargeStructureError(Exception):
 
 
 def generate_csd_link(refcode: str) -> str:
-    return '<a href="https://www.ccdc.cam.ac.uk/structures/Search?Ccdcid={}&DatabaseToSearch=Published">{}</a>'.format(refcode, refcode)
+    return '<a href="https://www.ccdc.cam.ac.uk/structures/Search?Ccdcid={}&DatabaseToSearch=Published">{}</a>'.format(
+        refcode, refcode)

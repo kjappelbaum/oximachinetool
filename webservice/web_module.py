@@ -1,28 +1,20 @@
+# -*- coding: utf-8 -*-
 """
-Most of the functions needed by the web service are here. 
+Most of the functions needed by the web service are here.
 In run_app.py we just keep the main web logic.
 """
-from __future__ import unicode_literals
-from future import standard_library
-
-standard_library.install_aliases()
-from builtins import str
-
 import datetime
 import json
 import os
-from functools import wraps, update_wrapper
+from builtins import str
+from functools import update_wrapper, wraps
 
-import yaml
 import flask
+import yaml
 
-from conf import (
-    directory,
-    static_folder,
-    user_static_folder,
-    config_file_path,
-    ConfigurationError,
-)
+from conf import ConfigurationError, config_file_path, directory, user_static_folder
+
+standard_library.install_aliases()
 
 
 def get_secret_key():
@@ -143,7 +135,7 @@ def nocache(view):
 
 def logme(logger, *args, **kwargs):
     """
-    Log information on the passed logger. 
+    Log information on the passed logger.
 
     See docstring of generate_log for more info on the
     accepted kwargs.
@@ -156,8 +148,8 @@ def logme(logger, *args, **kwargs):
 
 def generate_log(filecontent, fileformat, request, call_source, reason, extra={}):
     """
-    Given a string with the file content, a file format, a Flask request and 
-    a string identifying the reason for logging, stores the 
+    Given a string with the file content, a file format, a Flask request and
+    a string identifying the reason for logging, stores the
     correct logs.
 
     :param filecontent: a string with the file content
@@ -165,7 +157,7 @@ def generate_log(filecontent, fileformat, request, call_source, reason, extra={}
     :param request: a Flask request
     :param call_source: a string identifying who called the function
     :param reason: a string identifying the reason for this log
-    :param extra: additional data to add to the logged dictionary. 
+    :param extra: additional data to add to the logged dictionary.
         NOTE! it must be JSON-serializable
     """
     # I don't know the fileformat
@@ -183,10 +175,10 @@ def generate_log(filecontent, fileformat, request, call_source, reason, extra={}
     return json.dumps(logdict)
 
 
-class ReverseProxied(object):
-    """Wrap the application in this middleware and configure the 
-    front-end server to add these headers, to let you quietly bind 
-    this to a URL other than / and to an HTTP scheme that is 
+class ReverseProxied:
+    """Wrap the application in this middleware and configure the
+    front-end server to add these headers, to let you quietly bind
+    this to a URL other than / and to an HTTP scheme that is
     different than what is used locally.
 
     Inspired by  http://flask.pocoo.org/snippets/35/
@@ -220,4 +212,3 @@ class ReverseProxied(object):
         if server:
             environ["HTTP_HOST"] = server
         return self.app(environ, start_response)
-

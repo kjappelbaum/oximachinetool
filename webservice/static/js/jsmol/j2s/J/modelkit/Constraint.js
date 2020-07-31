@@ -8,7 +8,7 @@ this.offset = null;
 this.value = 0;
 Clazz.instantialize (this, arguments);
 }, J.modelkit, "Constraint");
-Clazz.makeConstructor (c$, 
+Clazz.makeConstructor (c$,
 function (type, params) {
 this.type = type;
 switch (type) {

@@ -215,6 +215,7 @@ def _featurize_single(structure, feature_dir: str = ""):
         metal_indices {list}
         names {list} -- list of feature names
     """
+    structure = structure.get_primitive_structure()
     gf = GetFeatures(structure, feature_dir)
     features = gf.return_features()
     metal_indices = gf.metal_indices
@@ -225,7 +226,7 @@ def _featurize_single(structure, feature_dir: str = ""):
     X = np.vstack(X)
     X, names = FeatureCollector._select_features_return_names(FEATURES, X)
     metals = [site.species_string for site in gf.metal_sites]
-    names_ = [n.replace('mimum', 'minimum') for n in names] # ToDo: Cleanup name
+    names_ = [n.replace("mimum", "minimum") for n in names]  # ToDo: Cleanup name
     feature_value_dict = {}
     for i, site in enumerate(X):
         feature_stats = _return_feature_statistics_array(site, names)

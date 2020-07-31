@@ -1,4 +1,3 @@
-from cifcheck.checks import check_clashing
 import pickle
 
 MAX_NUMBER_OF_ATOMS = 500
@@ -16,8 +15,6 @@ def string_to_pymatgen(s):
         cp = CifParser.from_string(s)
         s = cp.get_structures()[0]
         coord_matrix = s.cart_coords
-        if check_clashing(coord_matrix, method="kdtree"):
-            raise OverlapError("Overlapping atoms")
         if len(s) > MAX_NUMBER_OF_ATOMS:
             raise LargeStructureError("Structure too large")
     except Exception as e:

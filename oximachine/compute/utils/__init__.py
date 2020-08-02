@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 import pickle
+from ase.io import read
+from io import StringIO
+from ase.build import niggli_reduce
+from pymatgen.io.ase import AseAtomsAdaptor
 
 MAX_NUMBER_OF_ATOMS = 500
 
@@ -11,17 +15,18 @@ def load_pickle(f):
 
 
 def string_to_pymatgen(s):
-    from pymatgen.io.cif import CifParser
-
     try:
-        cp = CifParser.from_string(s)
-        s = cp.get_structures()[0]
-        coord_matrix = s.cart_coords
+        fileobj = StringIO(s)
+        atoms = read(fileobj, format='cif')
+        s = AseAtomsAdaptor().get_structure(atoms)
+        s = s.get_primitive_structure()
         if len(s) > MAX_NUMBER_OF_ATOMS:
             raise LargeStructureError('Structure too large')
     except Exception as e:
         raise ValueError(
-            'Pymatgen could not parse CIF, you might try rewriting the CIF in P1 symmetry (and also remove clashing atoms/disorder).'
+            'We could not parse the CIF, you might try rewriting the CIF in P1 symmetry (and also remove any clashing atoms/disorder). The exception was {}'.format(
+                e
+            )
         )
     return s
 
@@ -82,4 +87,5 @@ class LargeStructureError(Exception):
 
 def generate_csd_link(refcode: str) -> str:
     return '<a href="https://www.ccdc.cam.ac.uk/structures/Search?Ccdcid={}&DatabaseToSearch=Published">{}</a>'.format(
-        refcode, refcode)
+        refcode, refcode
+    )

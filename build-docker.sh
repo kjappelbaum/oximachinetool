@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build --no-cache -t oximachine_new .
+docker build  -t oximachine_new .

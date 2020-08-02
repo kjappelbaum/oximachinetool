@@ -17,7 +17,7 @@ from numeral import int2roman
 from pymatgen import Structure
 
 import oximachinerunner.learnmofox as learnmofox
-from oximachinerunner.featurize import FeatureCollector, GetFeatures
+from oximachine_featurizer.featurize import FeatureCollector, GetFeatures
 from oximachinerunner.utils import read_pickle
 
 from .utils import generate_csd_link, string_to_pymatgen
@@ -72,16 +72,18 @@ def get_nearest_neighbors(X: np.array) -> list:
     """
     link_list = []
     X = SCALER.transform(X)
-
     for metal_center in X:
         _, ids = KDTREE.query(metal_center.reshape(1, -1), k=NEAREST_NEIGHBORS)
-        links = ', '.join([generate_csd_link(NAMES[i]) for i in ids[0]])
+        names = set([NAMES[i] for i in ids[0]])
+        links = ', '.join([generate_csd_link(name) for name in names])
         link_list.append(links)
 
     return link_list
 
 
-def get_explanations(X: np.array, prediction_labels: list, feature_names: list, nsamples: int = 50) -> dict:
+def get_explanations(
+    X: np.array, prediction_labels: list, feature_names: list, nsamples: int = 50
+) -> dict:
     """[summary]
 
     Arguments:
@@ -124,18 +126,28 @@ def predictions(X, site_names):
     print(prediction, site_names, max_probas, base_predictions)
     prediction_output = []
     for i, pred in enumerate(prediction):
-        agreement = ([MODEL.classes[j] for j in base_predictions[i]].count(pred) / len(base_predictions[i]) * 100)
+        agreement = (
+            [MODEL.classes[j] for j in base_predictions[i]].count(pred)
+            / len(base_predictions[i])
+            * 100
+        )
         if agreement > 80:
             bartype = 'progress-bar bg-success'
         elif agreement < 60:
             bartype = 'progress-bar bg-danger'
         else:
             bartype = 'progress-bar bg-warning'
-        prediction_output.append([
-            site_names[i],
-            int2roman(pred), max_probas[i], ', '.join([int2roman(MODEL.classes[j]) for j in base_predictions[i]]),
-            agreement, bartype, nearest_neighbors[i]
-        ],)
+        prediction_output.append(
+            [
+                site_names[i],
+                int2roman(pred),
+                max_probas[i],
+                ', '.join([int2roman(MODEL.classes[j]) for j in base_predictions[i]]),
+                agreement,
+                bartype,
+                nearest_neighbors[i],
+            ],
+        )
 
     prediction_labels = []
     for i, pred in enumerate(prediction):

@@ -1,22 +1,14 @@
 # -*- coding: utf-8 -*-
-import concurrent.futures
 import os
 import warnings
-from collections import defaultdict
-from functools import partial
-from glob import glob
-from pathlib import Path
 
 import matplotlib.cm as cm
 import matplotlib.colors
 import matplotlib.pyplot as plt
 import numpy as np
-from joblib import load
-from numeral import int2roman
-from pymatgen import Structure
 from scipy import stats
 
-from oximachinerunner.featurize import FeatureCollector, GetFeatures
+from oximachine_featurizer.featurize import FeatureCollector, GetFeatures
 
 from .predict import FEATURES
 
@@ -217,7 +209,6 @@ def _featurize_single(structure, feature_dir: str = ''):
         metal_indices {list}
         names {list} -- list of feature names
     """
-    structure = structure.get_primitive_structure()
     gf = GetFeatures(structure, feature_dir)
     features = gf.return_features()
     metal_indices = gf.metal_indices

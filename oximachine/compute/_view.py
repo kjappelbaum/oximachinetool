@@ -9,14 +9,14 @@ def return_viewer(s: Structure, labels: list = None):
     coords = s.cart_coords  # - atoms.get_center_of_mass()
     v = nv.show_pymatgen(s, center=False, dis=False)
     v.clear_representations()
-    v.add_ball_and_stick(radius=0.2)
-    v.add_unitcell()
+    v.component_1.add_ball_and_stick(radius=0.2)
+    v.component_1.add_unitcell()
     v.layout.width = '500px'
     v.parameters = dict(clipDist=-100, sampleLevel=10)
     if labels is not None:
         # For some reason labelType must be "format"
         for i, label in enumerate(labels[0]):
-            v.add_label(
+            v.shape.add_label(
                 [label],
                 labelType='format',
                 labelFormat=labels[1][i],

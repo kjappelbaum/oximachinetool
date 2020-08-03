@@ -31,6 +31,7 @@ EXAMPLEMAPPING = {
     'bao': 'BaO_mp-1342_computed.cif',
     'bao2': 'BaO2_mp-1105_computed.cif',
     'fe_btc': 'ACODAA.cif',
+    'uio_66': 'UiO66_GC1.cif',
 }
 
 MODEL_VERSION = '2019-12-7-voting_knn_gb_et_sgd_chem_metal_geo_tight'

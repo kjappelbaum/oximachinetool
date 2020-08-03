@@ -7,11 +7,8 @@ If you just want to try it out, just run this file and connect to
 http://localhost:5000 from a browser. Otherwise, read the instructions
 in README_DEPLOY.md to deploy on a Apache server.
 """
-from __future__ import unicode_literals
 
 import copy
-import datetime
-import io
 import json
 import logging
 import logging.handlers
@@ -22,30 +19,27 @@ import flask
 import jinja2
 import numpy as np
 from ase.data import chemical_symbols
-from future import standard_library
 from pymatgen.io.cif import CifParser
 
 from compute.featurize import _featurize_single
 from compute.predict import get_explanations, predictions
 from compute.utils import (MAX_NUMBER_OF_ATOMS, LargeStructureError, OverlapError, UnknownFormatError,
                            get_structure_tuple, load_pickle, tuple_from_pymatgen)
-from conf import (ConfigurationError, FlaskRedirectException, static_folder, view_folder)
-from web_module import ReverseProxied, get_config, get_secret_key, logme
+from conf import FlaskRedirectException
+from webmodule import get_config, logme, static_folder, view_folder
 
-standard_library.install_aliases()
+from . import app
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 
-sampling_mapping = {
-    'very_low': 3,
-    'low': 50,
-    'medium': 160,
-    'high': 250,
+APPROXIMATE_MAPPING = {
+    'True': True,
+    'False': False,
 }
 
-DEFAULT_SAMPLES = sampling_mapping['very_low']
+DEFAULT_APPROXIMATE = APPROXIMATE_MAPPING['True']
 
-examplemapping = {
+EXAMPLEMAPPING = {
     'cui_ii_btc': 'KAJZIH_freeONLY.cif',
     'sno': 'SnO_mp-2097_computed.cif',
     'sno2': 'SnO2_mp-856_computed.cif',
@@ -69,7 +63,7 @@ def get_style_version(request):
     return request.environ.get('HTTP_X_APP_STYLE', '')
 
 
-logger = logging.getLogger('tools-app')
+logger = logging.getLogger('tools-app')  # pylint:disable=invalid-name
 
 logHandler = logging.handlers.TimedRotatingFileHandler(
     os.path.join(os.path.split(os.path.realpath(__file__))[0], 'logs', 'requests.log'),
@@ -81,10 +75,6 @@ logger.addHandler(logHandler)
 logger.setLevel(logging.DEBUG)
 
 ## Create the app
-app = flask.Flask(__name__, static_folder=static_folder)
-app.use_x_sendfile = True
-app.wsgi_app = ReverseProxied(app.wsgi_app)
-app.secret_key = get_secret_key()
 
 
 def get_visualizer_template(request):
@@ -362,18 +352,18 @@ def process_structure_core(
         raise FlaskRedirectException("I tried my best, but I wasn't able to load your "
                                      "file in format '{}'... because of {}".format(fileformat, e))
 
-    logme(
-        logger,
-        filecontent,
-        fileformat,
-        flask_request,
-        call_source,
-        reason='OK',
-        extra={
-            'number_of_atoms': len(structure_tuple[1]),
-            'form_data': form_data
-        },
-    )
+    # logme(
+    #     logger,
+    #     filecontent,
+    #     fileformat,
+    #     flask_request,
+    #     call_source,
+    #     reason='OK',
+    #     extra={
+    #         'number_of_atoms': len(structure_tuple[1]),
+    #         'form_data': form_data
+    #     },
+    # )
 
     # Now, featurize
     try:
@@ -393,26 +383,32 @@ def process_structure_core(
             reason='featurizationexception',
             extra={'exception': str(e)},
         )
-    else:
-        logme(
-            logger,
-            filecontent,
-            fileformat,
-            flask_request,
-            call_source,
-            reason='Featurize-OK',
-            extra={
-                'feature_val_dict': feature_value_dict,
-                'feature_array_shape': feature_array.shape,
-            },
-        )
+    # else:
+    #     logme(
+    #         logger,
+    #         filecontent,
+    #         fileformat,
+    #         flask_request,
+    #         call_source,
+    #         reason='Featurize-OK',
+    #         extra={
+    #             'feature_val_dict': feature_value_dict,
+    #             'feature_array_shape': feature_array.shape,
+    #         },
+    #     )
 
     # Now, predict
     try:
         metal_sites = list(feature_value_dict.keys())
-        predictions_output, prediction_labels = predictions(feature_array, metal_sites)
+        predictions_output, prediction_labels, class_idx = predictions(feature_array, metal_sites)
 
-        featurization_output = get_explanations(feature_array, prediction_labels, feature_names, DEFAULT_SAMPLES)
+        featurization_output = get_explanations(
+            feature_array,
+            prediction_labels,
+            class_idx,
+            feature_names,
+            DEFAULT_APPROXIMATE,
+        )
 
     except Exception as e:
         print(e)
@@ -570,10 +566,10 @@ def feature_importance_val():
     """
     if flask.request.method == 'POST':
         samples = flask.request.form.get('samples', '<none>')
-        global DEFAULT_SAMPLES
+        global DEFAULT_APPROXIMATE
         try:
-            DEFAULT_SAMPLES = sampling_mapping[samples]
-            logger.debug('Changed sampling level for feature importance to {}'.format(DEFAULT_SAMPLES))
+            DEFAULT_APPROXIMATE = APPROXIMATE_MAPPING[samples]
+            logger.debug('Changed sampling level for feature importance to {}'.format(DEFAULT_APPROXIMATE))
             return ('', 204)
         except Exception as e:
             logger.error('Could not change sampling level due to exeception {}'.format(e))
@@ -628,7 +624,7 @@ def process_example_structure():
     """
     if flask.request.method == 'POST':
         examplestructure = flask.request.form.get('examplestructure', '<none>')
-        structurefilepath = os.path.join(THIS_DIR, 'compute', 'examples', examplemapping[examplestructure])
+        structurefilepath = os.path.join(THIS_DIR, 'compute', 'examples', EXAMPLEMAPPING[examplestructure])
         fileformat = 'cif'
         with open(structurefilepath, 'r') as structurefile:
             filecontent = structurefile.read()
@@ -727,5 +723,7 @@ if __name__ == '__main__':
     # Don't use x-sendfile when testing it, because this is only good
     # if deployed with Apache
     # Use the local version of app, not the installed one
+
     app.use_x_sendfile = False
-    app.run(debug=True)
+    app.jinja_env.cache = {}
+    app.run(threaded=True)

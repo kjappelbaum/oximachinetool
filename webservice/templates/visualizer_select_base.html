@@ -95,7 +95,7 @@
                         <li>We automatically attempt to calculate the primitive structure and will show the primitive
                             structure in the visualizer</li>
                         <li>Limit calculations in this web app to structures with less than 500 atoms</li>
-                        <li>We attempt to detect atomic overlaps and will return an error if we find overlaps</li>
+                        <!-- <li>We attempt to detect atomic overlaps and will return an error if we find overlaps</li> -->
                         <li>We trained the model on oxidation states of MOFs deposited in the MOF subset of the
                             Cambridge Structure Database</li>
                     </ul>
@@ -227,23 +227,21 @@
         <div style="margin-left: 20px; margin-right: 20px">
             <p>
                 By default we use a crude approximation of the feature importance to give you fast results.
-                If you care more about feature importance, you can choose here a higher level of fidelity.<a href="#"
+                If you care more about feature importance, you can choose to not approximate the SHAP value.<a href="#"
                     data-toggle="tooltip"
-                    title="Note though that even at the highest fidelity level the results are still biased due to the background data which we use for feature importance calculation, which is a weighted k-mean summarized subset of our training set. "><sup>[?]</sup>
+                    title="Note though that even if you choose to not approximate the SHAP value, the results are still biased due to the background data which we use for feature importance calculation, which is a weighted k-mean summarized subset of our training set. Also, we only consider the extra trees model for efficiency reasons. "><sup>[?]</sup>
                 </a>
             </p>
             <form action="../set_feature_importance_level/" method="post">
                 <div class="alert alert-info">
                     <div class="row">
                         <div class="col-xs-12 col-sm-6">
-                            <label for="samples">Select here a fidelity level for the feature importance:</label>
+                            <label for="samples">Select if you want to approximate the SHAP value (the approximation considers only one feature ordering):</label>
                         </div>
                         <div class="col-xs-12 col-sm-6">
-                            <select name="samples" onchange="this.form.submit()" default="low">
-                                <option value="very_low">very low</option>
-                                <option value="low">low</option>
-                                <option value="medium">medium</option>
-                                <option value="high">high</option>
+                            <select name="approximate" onchange="this.form.submit()" default="True">
+                                <option value="True">True</option>
+                                <option value="False">False</option>
                             </select>
                         </div>
                     </div>

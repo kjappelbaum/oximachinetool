@@ -369,8 +369,11 @@ def process_structure_core(
             reason='featurizationexception',
             extra={'exception': str(e)},
         )
+        raise FlaskRedirectException(
+            'Sorry, the featurization failed. Make sure that your structure is not pathological (e.g. containing overlapping atoms).'
+        )
 
-    logger.debug('Featurization completed in {}'.format(feat_start - time.time()))
+    logger.debug('Featurization completed in {}'.format(time.time() - feat_start))
     # else:
     #     logme(
     #         logger,
@@ -398,7 +401,19 @@ def process_structure_core(
             feature_names,
             DEFAULT_APPROXIMATE,
         )
-
+    except UnboundLocalError as e:
+        logme(
+            logger,
+            filecontent,
+            fileformat,
+            flask_request,
+            call_source,
+            reason='predictionexception',
+            extra={'exception': str(e)},
+        )
+        raise FlaskRedirectException(
+            'Sorry, the featurization failed. Make sure that your structure is not pathological (e.g., containing overlapping atoms).'
+        )
     except Exception as e:  # pylint:disable=broad-except, invalid-name
         print(e)
         logme(

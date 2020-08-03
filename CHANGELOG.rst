@@ -2,8 +2,8 @@ Changelog
 =========
 
 
-(unreleased)
-------------
+v0.6.0 (2020-08-03)
+-------------------
 
 New
 ~~~
@@ -12,6 +12,7 @@ New
 
 Changes
 ~~~~~~~
+- Chore: added changelog. [Kevin]
 - Chore: added uio-66 from tricket angew. chem. as example. [Kevin]
 - Chore: dirty trick to unload module. [Kevin]
 - Chore: profiling and updated cif parser to use c2x. [Kevin]

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Functions to run the prediciton and format the output"""
 import logging
 import os
 import sys
@@ -11,8 +12,8 @@ from numeral import int2roman
 
 import oximachinerunner.learnmofox as learnmofox
 
-from .utils import generate_csd_link
-from .utils import load_pickle as read_pickle
+from utils import generate_csd_link
+from utils import load_pickle as read_pickle
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -24,7 +25,7 @@ NAMES = np.array(read_pickle(os.path.join(THIS_DIR, "names.pkl")))
 
 warnings.simplefilter("ignore")
 
-log = logging.getLogger("shap")
+log = logging.getLogger("shap")  # pylint:disable=invalid-name
 log.setLevel(logging.ERROR)
 
 sys.modules["learnmofox"] = learnmofox
@@ -46,7 +47,7 @@ FEATURES = CHEMISTRY_FEATURES + METAL_CENTER_FEATURES + ["crystal_nn_no_steinhar
 NEAREST_NEIGHBORS = 4
 
 
-def get_nearest_neighbors(X: np.array) -> list:
+def get_nearest_neighbors(X: np.array) -> list:  # pylint:disable=invalid-name
     """Get list of links to closest structures in the training set.
     For this we query a KD-Tree that is built using the scaled training data
     with a Euclidean distance metric and return the NEAREST_NEIGHBORS closest
@@ -75,7 +76,7 @@ def get_nearest_neighbors(X: np.array) -> list:
 
 
 def get_explanations(
-    X: np.array,
+    X: np.array,  # pylint:disable=invalid-name
     prediction_labels: list,
     class_idx: list,
     feature_names: list,
@@ -112,12 +113,13 @@ def get_explanations(
     return result_dict
 
 
-def predictions(X, site_names):
-    X_scaled = SCALER.transform(X)
+def predictions(X, site_names):  # pylint:disable=invalid-name
+    """Format the predictions"""
+    X_scaled = SCALER.transform(X)  # pylint:disable=invalid-name
     prediction = MODEL.predict(X_scaled)
 
     max_probas = np.max(MODEL.predict_proba(X_scaled), axis=1)
-    base_predictions = MODEL._predict(X_scaled)
+    base_predictions = MODEL._predict(X_scaled)  # pylint:disable = protected-access
     nearest_neighbors = get_nearest_neighbors(X)
 
     print(prediction, site_names, max_probas, base_predictions)

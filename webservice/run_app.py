@@ -26,9 +26,12 @@ from compute.utils import (MAX_NUMBER_OF_ATOMS, LargeStructureError, OverlapErro
                            get_structure_tuple, load_pickle, tuple_from_pymatgen)
 from conf import (APPROXIMATE_MAPPING, DEFAULT_APPROXIMATE, EXAMPLEMAPPING, MODEL_VERSION, FlaskRedirectException,
                   static_folder, view_folder)
-from web_module import get_config, logme
+from web_module import ReverseProxied, get_config, get_secret_key, logme
 
-from . import app
+app = flask.Flask(__name__, static_folder=static_folder)
+app.use_x_sendfile = True
+app.wsgi_app = ReverseProxied(app.wsgi_app)
+app.secret_key = get_secret_key()
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 

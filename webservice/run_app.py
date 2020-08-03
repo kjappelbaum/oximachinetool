@@ -4,8 +4,7 @@
 Main Flask python function that manages the server backend
 
 If you just want to try it out, just run this file and connect to
-http://localhost:5000 from a browser. Otherwise, read the instructions
-in README_DEPLOY.md to deploy on a Apache server.
+http://localhost:5000 from a browser.
 """
 
 import copy
@@ -25,28 +24,13 @@ from compute.featurize import _featurize_single
 from compute.predict import get_explanations, predictions
 from compute.utils import (MAX_NUMBER_OF_ATOMS, LargeStructureError, OverlapError, UnknownFormatError,
                            get_structure_tuple, load_pickle, tuple_from_pymatgen)
-from conf import FlaskRedirectException
-from webmodule import get_config, logme, static_folder, view_folder
+from conf import (APPROXIMATE_MAPPING, DEFAULT_APPROXIMATE, EXAMPLEMAPPING, MODEL_VERSION, FlaskRedirectException,
+                  static_folder, view_folder)
+from web_module import get_config, logme
 
 from . import app
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
-
-APPROXIMATE_MAPPING = {
-    'True': True,
-    'False': False,
-}
-
-DEFAULT_APPROXIMATE = APPROXIMATE_MAPPING['True']
-
-EXAMPLEMAPPING = {
-    'cui_ii_btc': 'KAJZIH_freeONLY.cif',
-    'sno': 'SnO_mp-2097_computed.cif',
-    'sno2': 'SnO2_mp-856_computed.cif',
-    'bao': 'BaO_mp-1342_computed.cif',
-    'bao2': 'BaO2_mp-1105_computed.cif',
-    'fe_btc': 'ACODAA.cif',
-}
 
 
 # This (undocumented) flag changes the style of the webpage (CSS, etc.)
@@ -74,8 +58,6 @@ logHandler.setFormatter(formatter)
 logger.addHandler(logHandler)
 logger.setLevel(logging.DEBUG)
 
-## Create the app
-
 
 def get_visualizer_template(request):
     if get_style_version(request) == 'lite':
@@ -89,11 +71,6 @@ def get_visualizer_select_template(request):
         return 'visualizer_select_lite.html'
     else:
         return 'visualizer_select.html'
-
-
-MODEL_VERSION = '2019-12-7-voting_knn_gb_et_sgd_chem_metal_geo_tight'
-
-logger = logging.getLogger('tools-app')
 
 
 def get_json_for_visualizer(s):
@@ -726,4 +703,4 @@ if __name__ == '__main__':
 
     app.use_x_sendfile = False
     app.jinja_env.cache = {}
-    app.run(threaded=True)
+    app.run(threaded=False)

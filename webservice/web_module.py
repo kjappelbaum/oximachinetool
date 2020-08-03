@@ -6,16 +6,10 @@ In run_app.py we just keep the main web logic.
 import datetime
 import json
 import os
-from builtins import str
-from functools import update_wrapper, wraps
 
-import flask
 import yaml
-from future import standard_library
 
 from conf import ConfigurationError, config_file_path, directory
-
-standard_library.install_aliases()
 
 
 def get_secret_key():
@@ -31,8 +25,6 @@ def get_secret_key():
 
 
 def parse_config(config):
-    default_templates_folder = 'default_templates'
-    user_templates_folder = 'user_templates'
     retdict = {}
 
     templates = config.get('templates', {})
@@ -45,24 +37,14 @@ def parse_config(config):
     ]
 
     for template_name in known_templates:
-        # Note that this still allows to set it to None explicitly to skip this section
-        try:
-            retdict[template_name] = templates[template_name]
-            if retdict[template_name] is not None:
-                retdict[template_name] = os.path.join(user_templates_folder, retdict[template_name])
-        except KeyError:
-            retdict[template_name] = os.path.join(default_templates_folder, '{}.html'.format(template_name))
-
-    for template_name in templates:
-        if (template_name not in known_templates and templates[template_name] is not None):
-            retdict[template_name] = os.path.join(user_templates_folder, templates[template_name])
+        retdict[template_name] = templates[template_name]
 
     additional_accordion_entries = config.get('additional_accordion_entries', [])
     retdict['additional_accordion_entries'] = []
     for accordian_entry in additional_accordion_entries:
         retdict['additional_accordion_entries'].append({
             'header': accordian_entry['header'],
-            'template_page': os.path.join(user_templates_folder, accordian_entry['template_page']),
+            'template_page': os.path.join(accordian_entry['template_page']),
         })
 
     return retdict
@@ -99,22 +81,6 @@ def get_config():
     config = set_config_defaults(config)
 
     return {'config': config, 'include_pages': parse_config(config)}
-
-
-def nocache(view):
-    """Add @nocache right between @app.route and the 'def' line.
-    From http://arusahni.net/blog/2014/03/flask-nocache.html"""
-
-    @wraps(view)
-    def no_cache(*args, **kwargs):
-        response = flask.make_response(view(*args, **kwargs))
-        response.headers['Last-Modified'] = datetime.datetime.now()
-        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
-        response.headers['Pragma'] = 'no-cache'
-        response.headers['Expires'] = '-1'
-        return response
-
-    return update_wrapper(no_cache, view)
 
 
 def logme(logger, *args, **kwargs):

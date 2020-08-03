@@ -9,11 +9,12 @@ import numpy as np
 from scipy import stats
 
 from oximachine_featurizer.featurize import FeatureCollector, GetFeatures
-from webservice import TRAIN_DATA
 
 from .predict import FEATURES
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
+
+TRAIN_DATA = np.load(os.path.join(THIS_DIR, 'features.npy'))
 
 warnings.simplefilter('ignore')
 alph = 'abcdefghijlmnopqrstuvwxyzABZDEFGHIJKLMNOPQRSTUVQXYZ0123456789'

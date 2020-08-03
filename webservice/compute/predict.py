@@ -8,16 +8,19 @@ import joblib
 import numpy as np
 import shap
 from numeral import int2roman
-from pymatgen import Structure
 
 import oximachinerunner.learnmofox as learnmofox
-from oximachine_featurizer.featurize import FeatureCollector, GetFeatures
-from oximachinerunner.utils import read_pickle
-from webservice import EXPLAINER, KDTREE, MODEL, NAMES, SCALER
 
-from .utils import generate_csd_link, string_to_pymatgen
+from .utils import generate_csd_link
+from .utils import load_pickle as read_pickle
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
+
+MODEL = joblib.load(os.path.join(THIS_DIR, 'compute', 'votingclassifier.joblib'))
+SCALER = joblib.load(os.path.join(THIS_DIR, 'compute', 'scaler_0.joblib'))
+EXPLAINER = joblib.load(os.path.join(THIS_DIR, 'compute', 'explainer.joblib'))
+KDTREE = joblib.load(os.path.join(THIS_DIR, 'compute', 'kd_tree.joblib'))
+NAMES = np.array(read_pickle(os.path.join(THIS_DIR, 'compute', 'names.pkl')))
 
 warnings.simplefilter('ignore')
 
@@ -64,7 +67,7 @@ def get_nearest_neighbors(X: np.array) -> list:
     X = SCALER.transform(X)
     for metal_center in X:
         _, ids = KDTREE.query(metal_center.reshape(1, -1), k=NEAREST_NEIGHBORS)
-        names = set([NAMES[i] for i in ids[0]])
+        names = {NAMES[i] for i in ids[0]}
         links = ', '.join([generate_csd_link(name) for name in names])
         link_list.append(links)
 

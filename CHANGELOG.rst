@@ -12,6 +12,13 @@ New
 
 Changes
 ~~~~~~~
+- Chore: added uio-66 from tricket angew. chem. as example. [Kevin]
+- Chore: dirty trick to unload module. [Kevin]
+- Chore: profiling and updated cif parser to use c2x. [Kevin]
+- Chore: cleaning up. [Kevin]
+- Chore: cleaning up. [Kevin]
+- Chore: cleaning up. [Kevin]
+- Chore: adding changelog. [Kevin]
 - Chore: simplified structure, use tree explainer. [Kevin]
 - Chore: updated parser. [Kevin]
 - Chore: simplifying dependencies. [Kevin]

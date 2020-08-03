@@ -1,36 +1,39 @@
 # -*- coding: utf-8 -*-
+"""Some utility functions"""
+import os
 import pickle
-from io import StringIO
+import subprocess
 
-from ase.build import niggli_reduce
-from ase.io import read
+from ase import Atoms
 from pymatgen.io.ase import AseAtomsAdaptor
 
 MAX_NUMBER_OF_ATOMS = 500
+THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 
 
-def load_pickle(f):
-    with open(f, 'rb') as fh:
-        res = pickle.load(fh)
+def load_pickle(file):
+    with open(file, "rb") as fhandle:
+        res = pickle.load(fhandle)
     return res
 
 
-def string_to_pymatgen(s):
+def string_to_pymatgen(structurestring):
+    """Convert a string parsed by flask to a pymatgen structure object. We asume that structurestring is a CIF"""
     try:
-        fileobj = StringIO(s)
-        atoms = read(fileobj, format='cif')
+        atoms = run_c2x(structurestring)
         s = AseAtomsAdaptor().get_structure(atoms)
-        s = s.get_primitive_structure()
         if len(s) > MAX_NUMBER_OF_ATOMS:
-            raise LargeStructureError('Structure too large')
-    except Exception as e:
+            raise LargeStructureError("Structure too large")
+    except Exception as e:  # pylint:disable=invalid-name, broad-except
         raise ValueError(
-            'We could not parse the CIF, you might try rewriting the CIF in P1 symmetry (and also remove any clashing atoms/disorder). The exception was {}'
-            .format(e))
+            "We could not parse the CIF, you might try rewriting the CIF in P1 symmetry (and also remove any clashing atoms/disorder). The exception was {}".format(
+                e
+            )
+        )
     return s
 
 
-def get_structure_tuple(fileobject, fileformat, extra_data=None):
+def get_structure_tuple(fileobject, fileformat):
     """
     Given a file-like object (using StringIO or open()), and a string
     identifying the file format, return a structure tuple as accepted
@@ -40,7 +43,7 @@ def get_structure_tuple(fileobject, fileformat, extra_data=None):
     :return: a structure tuple (cell, positions, numbers) as accepted
         by seekpath.
     """
-    if fileformat == 'cif':
+    if fileformat == "cif":
         structure = string_to_pymatgen(fileobject)
         structure_tuple = tuple_from_pymatgen(structure)
         return structure_tuple, structure
@@ -65,7 +68,7 @@ def tuple_from_pymatgen(pmgstructure):
 
 
 class UnknownFormatError(ValueError):
-    pass
+    pass  # pylint:disable=unnecessary-pass
 
 
 class OverlapError(Exception):
@@ -73,7 +76,7 @@ class OverlapError(Exception):
     Error raised if overlaps of atoms are detected in the structure.
     """
 
-    pass
+    pass  # pylint:disable=unnecessary-pass
 
 
 class LargeStructureError(Exception):
@@ -81,9 +84,38 @@ class LargeStructureError(Exception):
     Error raised if structure is too large
     """
 
-    pass
+    pass  # pylint:disable=unnecessary-pass
 
 
 def generate_csd_link(refcode: str) -> str:
+    """Take a refocde string and make a link to WebCSD"""
     return '<a href="https://www.ccdc.cam.ac.uk/structures/Search?Ccdcid={}&DatabaseToSearch=Published">{}</a>'.format(
-        refcode, refcode)
+        refcode, refcode
+    )
+
+
+# Todo: make this a bit cleaner
+def run_c2x(string):
+    """write string to cile, run c2x to parse to .py file and convert to primitive, then read this file and make Atoms"""
+    try:
+        with open(os.path.join(THIS_DIR, "file.cif"), "w") as tmp:
+            tmp.write(string)
+            tmp.close()
+
+            subprocess.call(
+                ["./c2x_linux"]  # hardcoded path for container!
+                + "{} -P --pya ciffile2x2020.py".format("file.cif").split(),
+                stderr=subprocess.STDOUT,
+                cwd=THIS_DIR,
+            )
+
+        from . import ciffile2x2020  # pylint:disable=import-error, import-outside-toplevel
+
+        atoms = Atoms(ciffile2x2020.structure)
+
+        os.remove(os.path.join(THIS_DIR, 'ciffile2x2020.py'))
+        os.remove(os.path.join(THIS_DIR, 'file.cif'))
+    except Exception as e:  # pylint:disable=invalid-name, broad-except
+        raise IOError("could not read cif {}".format(e))
+
+    return atoms

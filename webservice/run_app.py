@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# pylint:disable=logging-format-interpolations
 """
 Main Flask python function that manages the server backend
 
@@ -28,7 +29,7 @@ from conf import (APPROXIMATE_MAPPING, DEFAULT_APPROXIMATE, EXAMPLEMAPPING, MODE
                   static_folder, view_folder)
 from web_module import ReverseProxied, get_config, get_secret_key, logme
 
-app = flask.Flask(__name__, static_folder=static_folder)
+app = flask.Flask(__name__, static_folder=static_folder)  # pylint:disable=invalid-name
 app.use_x_sendfile = True
 app.wsgi_app = ReverseProxied(app.wsgi_app)
 app.secret_key = get_secret_key()
@@ -52,11 +53,11 @@ def get_style_version(request):
 
 logger = logging.getLogger('tools-app')  # pylint:disable=invalid-name
 
-logHandler = logging.handlers.TimedRotatingFileHandler(
+logHandler = logging.handlers.TimedRotatingFileHandler(  # pylint:disable=invalid-name
     os.path.join(os.path.split(os.path.realpath(__file__))[0], 'logs', 'requests.log'),
     when='midnight',
 )
-formatter = logging.Formatter('[%(asctime)s]%(levelname)s-%(funcName)s ^ %(message)s')
+formatter = logging.Formatter('[%(asctime)s]%(levelname)s-%(funcName)s ^ %(message)s')  # pylint:disable=invalid-name
 logHandler.setFormatter(formatter)
 logger.addHandler(logHandler)
 logger.setLevel(logging.DEBUG)
@@ -76,7 +77,7 @@ def get_visualizer_select_template(request):
         return 'visualizer_select.html'
 
 
-def get_json_for_visualizer(s):
+def get_json_for_visualizer(s):  # pylint:disable=invalid-name
     s = s.get_primitive_structure()
     cell, frac_coord, atomic_numbers = tuple_from_pymatgen(s)
     res = {
@@ -124,13 +125,14 @@ def process_precomputed_core(
         structure_tuple = tuple_from_pymatgen(s)
         logger.debug('generated structure tuple')
 
-    except Exception as e:
+    except Exception as e:  # pylint:disable=broad-except, invalid-name
         # There was an exception...
         logger.debug('Exception {} when parsing the input'.format(e))
         raise FlaskRedirectException("I tried my best, but I wasn't able to load your "
                                      "file in format '{}'... because of {}".format(fileformat, e))
 
-    logger.debug('Successfully read structure')
+    parsing_time = start_time - time.time()
+    logger.debug('Successfully read structure in {}'.format(parsing_time))
 
     # Now, read the precomputed results
     try:
@@ -147,7 +149,7 @@ def process_precomputed_core(
         prediction_labels = precomputed_dict['prediction_labels']
         featurization_output = precomputed_dict['featurization_output']
 
-    except Exception as e:
+    except Exception as e:  # pylint:disable=broad-except, invalid-name
         logger.debug('Exception {} when parsing the input'.format(e))
         raise FlaskRedirectException("I tried my best, but I wasn't able to load your "
                                      "result for '{}'... because of {}".format(name, e))
@@ -220,7 +222,7 @@ def process_precomputed_core(
 
         compute_time = time.time() - start_time
 
-    except Exception as e:
+    except Exception as e:  # pylint:disable=broad-except, invalid-name
         logger.debug('Exception {} when parsing the input'.format(e))
 
     return dict(
@@ -272,7 +274,7 @@ def process_structure_core(
     start_time = time.time()
     form_data = dict(flask_request.form)
     try:
-        structure_tuple, s = get_structure_tuple(filecontent, fileformat, extra_data=form_data)
+        structure_tuple, s = get_structure_tuple(filecontent, fileformat)
     except UnknownFormatError:
         ## Can only read cif at the moment
         logme(
@@ -315,7 +317,7 @@ def process_structure_core(
         raise FlaskRedirectException('Sorry, this online visualizer is limited to {} atoms '
                                      'in the input cell, while your structure has {} atoms.'
                                      ''.format(MAX_NUMBER_OF_ATOMS, len(structure_tuple[1])))
-    except Exception as e:
+    except Exception as e:  # pylint:disable=broad-except, invalid-name
         # There was an exception...
         logme(
             logger,
@@ -332,6 +334,9 @@ def process_structure_core(
         raise FlaskRedirectException("I tried my best, but I wasn't able to load your "
                                      "file in format '{}'... because of {}".format(fileformat, e))
 
+    parsing_time = time.time() - start_time
+    logger.debug('Successfully read structure in {}'.format(parsing_time))
+
     # logme(
     #     logger,
     #     filecontent,
@@ -346,6 +351,7 @@ def process_structure_core(
     # )
 
     # Now, featurize
+    feat_start = time.time()
     try:
         (
             feature_array,
@@ -353,7 +359,7 @@ def process_structure_core(
             metal_indices,
             feature_names,
         ) = _featurize_single(s)
-    except Exception as e:
+    except Exception as e:  # pylint:disable=broad-except, invalid-name
         logme(
             logger,
             filecontent,
@@ -363,6 +369,8 @@ def process_structure_core(
             reason='featurizationexception',
             extra={'exception': str(e)},
         )
+
+    logger.debug('Featurization completed in {}'.format(feat_start - time.time()))
     # else:
     #     logme(
     #         logger,
@@ -378,6 +386,7 @@ def process_structure_core(
     #     )
 
     # Now, predict
+    prediction_start = time.time()
     try:
         metal_sites = list(feature_value_dict.keys())
         predictions_output, prediction_labels, class_idx = predictions(feature_array, metal_sites)
@@ -390,7 +399,7 @@ def process_structure_core(
             DEFAULT_APPROXIMATE,
         )
 
-    except Exception as e:
+    except Exception as e:  # pylint:disable=broad-except, invalid-name
         print(e)
         logme(
             logger,
@@ -404,6 +413,8 @@ def process_structure_core(
                 'shape_array': feature_array.shape
             },
         )
+
+    logger.debug('Prediction done in {}'.format(prediction_start - time.time()))
 
     try:
         in_json_data = {
@@ -471,7 +482,7 @@ def process_structure_core(
 
         compute_time = time.time() - start_time
 
-    except Exception as e:
+    except Exception as e:  # pylint:disable=broad-except, invalid-name
 
         logme(
             logger,
@@ -551,7 +562,7 @@ def feature_importance_val():
             DEFAULT_APPROXIMATE = APPROXIMATE_MAPPING[samples]
             logger.debug('Changed sampling level for feature importance to {}'.format(DEFAULT_APPROXIMATE))
             return ('', 204)
-        except Exception as e:
+        except Exception as e:  # pylint:disable=broad-except, invalid-name
             logger.error('Could not change sampling level due to exeception {}'.format(e))
             return flask.redirect(flask.url_for('input_structure'))
     else:  # GET Request
@@ -568,7 +579,7 @@ def process_structure():
         if 'structurefile' not in flask.request.files:
             return flask.redirect(flask.url_for('input_structure'))
         structurefile = flask.request.files['structurefile']
-        fileformat = flask.request.form.get('fileformat', 'unknown')
+        fileformat = 'cif'
         filecontent = structurefile.read().decode('utf-8')
 
         try:
@@ -627,7 +638,7 @@ def process_example_structure():
         except LargeStructureError:
             flask.flash('You seem to have too many atoms in your structure to run on the web')
             return flask.redirect(flask.url_for('input_structure'))
-        except Exception as e:
+        except Exception as e:  # pylint:disable=broad-except, invalid-name
             flask.flash('Unable to process the structure, sorry... {}'.format(e))
             return flask.redirect(flask.url_for('input_structure'))
 
@@ -652,7 +663,7 @@ def process_precomputed(name):
         except FlaskRedirectException as e:
             flask.flash(str(e))
             return flask.redirect(flask.url_for('input_structure'))
-        except Exception as e:
+        except Exception as e:  # pylint:disable=broad-except, invalid-name
             flask.flash('Unable to process the structure, sorry... {}'.format(e))
             return flask.redirect(flask.url_for('input_structure'))
     else:  # GET Request
@@ -700,10 +711,5 @@ def send_fonts(path):
 
 
 if __name__ == '__main__':
-    # Don't use x-sendfile when testing it, because this is only good
-    # if deployed with Apache
-    # Use the local version of app, not the installed one
-
-    app.use_x_sendfile = False
-    app.jinja_env.cache = {}
-    app.run(threaded=False)
+    app.use_x_sendfile = True
+    app.run(debug=False)

@@ -22,7 +22,7 @@ from ase.data import chemical_symbols
 from pymatgen.io.cif import CifParser
 
 from compute.featurize import _featurize_single
-from compute.predict import get_explanations, predictions
+from compute.predict import generate_warning, get_explanations, predictions
 from compute.utils import (MAX_NUMBER_OF_ATOMS, LargeStructureError, OverlapError, UnknownFormatError,
                            get_structure_tuple, load_pickle, tuple_from_pymatgen)
 from conf import (APPROXIMATE_MAPPING, DEFAULT_APPROXIMATE, EXAMPLEMAPPING, MODEL_VERSION, FlaskRedirectException,
@@ -242,6 +242,7 @@ def process_precomputed_core(
         model_version=MODEL_VERSION,
         xsfstructure=xsfstructure,
         feature_values=feature_value_dict,
+        warning='',
     )
 
 
@@ -392,6 +393,7 @@ def process_structure_core(
     prediction_start = time.time()
     try:
         metal_sites = list(feature_value_dict.keys())
+        warning = generate_warning(metal_sites)
         predictions_output, prediction_labels, class_idx = predictions(feature_array, metal_sites)
 
         featurization_output = get_explanations(
@@ -530,6 +532,7 @@ def process_structure_core(
         model_version=MODEL_VERSION,
         xsfstructure=xsfstructure,
         feature_values=feature_value_dict,
+        warning=warning,
     )
 
 

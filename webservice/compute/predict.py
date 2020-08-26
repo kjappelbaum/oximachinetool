@@ -150,3 +150,24 @@ def predictions(X, site_names):  # pylint:disable=invalid-name
     for pred in prediction:
         class_idx.append(np.argwhere(MODEL.classes == pred)[0][0])
     return prediction_output, prediction_labels, class_idx
+
+
+def generate_warning(site_names):
+    dangerous_metals_in_structure = [
+        'Ag',
+        'Ce',
+        'Er',
+        'Hg',
+        'Nb',
+        'Os',
+        'Pt',
+        'Sn',
+        'Yb',
+        'Pu',
+    ]
+
+    for site_name in site_names:
+        if site_name.split()[0] in dangerous_metals_in_structure:
+            return 'Your structure contains an element that is rare in MOFs. The prediction might be wrong.'
+
+    return ''

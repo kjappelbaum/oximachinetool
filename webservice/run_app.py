@@ -41,6 +41,21 @@ from conf import (
     view_folder,
 )
 
+
+class NpEncoder(json.JSONEncoder):
+    """https://stackoverflow.com/questions/50916422/python-typeerror-object-of-type-int64-is-not-json-serializable"""
+
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        else:
+            return super(NpEncoder, self).default(obj)
+
+
 MODEL_VERSION = str(RUNNER)
 from web_module import ReverseProxied, get_config, get_secret_key, logme
 
@@ -419,6 +434,7 @@ def process_structure_core(
             feature_array, metal_sites
         )
 
+        logger.debug("prediction completeted, getting explanaitions")
         featurization_output = get_explanations(
             feature_array,
             prediction_labels,
@@ -787,6 +803,21 @@ def send_fonts(path):
     Serve static font files
     """
     return flask.send_from_directory(os.path.join(static_folder, "fonts"), path)
+
+
+@app.route("/api/v1/oximachine", methods=["POST"])
+def oximachine_api():
+    """
+    API endpoint for the oximachine
+    """
+    request_content = flask.request.form.to_dict()
+    logger.debug(request_content)
+    cif_content = request_content["cifFile"]
+    _, s = get_structure_tuple(cif_content, "cif")
+    result = RUNNER.run_oximachine(s)
+    result["version"] = str(RUNNER)
+
+    return json.dumps(result, cls=NpEncoder)
 
 
 if __name__ == "__main__":

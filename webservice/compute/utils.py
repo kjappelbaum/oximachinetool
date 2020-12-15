@@ -11,6 +11,7 @@ MAX_NUMBER_OF_ATOMS = 500
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 
 
+
 def load_pickle(file):
     with open(file, "rb") as fhandle:
         res = pickle.load(fhandle)

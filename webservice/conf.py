@@ -34,4 +34,3 @@ EXAMPLEMAPPING = {
     'uio_66': 'UiO66_GC1.cif',
 }
 
-MODEL_VERSION = '2019-12-7-voting_knn_gb_et_sgd_chem_metal_geo_tight'

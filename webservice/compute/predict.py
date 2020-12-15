@@ -11,39 +11,40 @@ import shap
 from numeral import int2roman
 
 import oximachinerunner.learnmofox as learnmofox
+from oximachinerunner import OximachineRunner
 
-from .utils import \
-    generate_csd_link  # pylint:disable=relative-beyond-top-level
-from .utils import load_pickle as read_pickle  # pylint:disable=relative-beyond-top-level
+from .utils import generate_csd_link  # pylint:disable=relative-beyond-top-level
+from .utils import (
+    load_pickle as read_pickle,
+)  # pylint:disable=relative-beyond-top-level
 
+RUNNER = OximachineRunner("mof")
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 
-MODEL = joblib.load(os.path.join(THIS_DIR, 'votingclassifier.joblib'))
-SCALER = joblib.load(os.path.join(THIS_DIR, 'scaler_0.joblib'))
-EXPLAINER = joblib.load(os.path.join(THIS_DIR, 'explainer.joblib'))
-KDTREE = joblib.load(os.path.join(THIS_DIR, 'kd_tree.joblib'))
-NAMES = np.array(read_pickle(os.path.join(THIS_DIR, 'names.pkl')))
+EXPLAINER = joblib.load(os.path.join(THIS_DIR, "explainer.joblib"))
+KDTREE = joblib.load(os.path.join(THIS_DIR, "kd_tree.joblib"))
+NAMES = np.array(read_pickle(os.path.join(THIS_DIR, "names.pkl")))
 
-warnings.simplefilter('ignore')
+warnings.simplefilter("ignore")
 
-log = logging.getLogger('shap')  # pylint:disable=invalid-name
+log = logging.getLogger("shap")  # pylint:disable=invalid-name
 log.setLevel(logging.ERROR)
 
-sys.modules['learnmofox'] = learnmofox
+sys.modules["learnmofox"] = learnmofox
 
 # adjust these features according to model
 METAL_CENTER_FEATURES = [
-    'column',
-    'row',
-    'valenceelectrons',
-    'diffto18electrons',
-    'sunfilled',
-    'punfilled',
-    'dunfilled',
+    "column",
+    "row",
+    "valenceelectrons",
+    "diffto18electrons",
+    "sunfilled",
+    "punfilled",
+    "dunfilled",
 ]
-GEOMETRY_FEATURES = ['crystal_nn_fingerprint', 'behler_parinello']
-CHEMISTRY_FEATURES = ['local_property_stats']
-FEATURES = CHEMISTRY_FEATURES + METAL_CENTER_FEATURES + ['crystal_nn_no_steinhardt']
+GEOMETRY_FEATURES = ["crystal_nn_fingerprint", "behler_parinello"]
+CHEMISTRY_FEATURES = ["local_property_stats"]
+FEATURES = CHEMISTRY_FEATURES + METAL_CENTER_FEATURES + ["crystal_nn_no_steinhardt"]
 
 NEAREST_NEIGHBORS = 4
 
@@ -66,29 +67,29 @@ def get_nearest_neighbors(X: np.array) -> list:  # pylint:disable=invalid-name
             html links to the WEBCSD.
     """
     link_list = []
-    X = SCALER.transform(X)
+    X = RUNNER.scaler.transform(X)
     for metal_center in X:
         _, ids = KDTREE.query(metal_center.reshape(1, -1), k=NEAREST_NEIGHBORS)
         names = {NAMES[i] for i in ids[0]}
-        links = ', '.join([generate_csd_link(name) for name in names])
+        links = ", ".join([generate_csd_link(name) for name in names])
         link_list.append(links)
 
     return link_list
 
 
 def get_explanations(
-        X: np.array,  # pylint:disable=invalid-name
-        prediction_labels: list,
-        class_idx: list,
-        feature_names: list,
-        approximate: bool = True,
+    X: np.array,  # pylint:disable=invalid-name
+    prediction_labels: list,
+    class_idx: list,
+    feature_names: list,
+    approximate: bool = True,
 ) -> dict:
     """[summary]
 
     Arguments:
-        X {np.array} -- feature matrix, already unscaled (!, to be easier compatible with the current API)
-        prediction_labels {list} -- list of keys that will be used for the dictionary
-        feature_names {list} -- list of strings containing the feature names
+        X (np.array) -- feature matrix, already unscaled (!, to be easier compatible with the current API)
+        prediction_labels (list) -- list of keys that will be used for the dictionary
+        feature_names (list) -- list of strings containing the feature names
 
     Keyword Arguments:
 
@@ -96,8 +97,10 @@ def get_explanations(
         dict -- [description]
     """
     result_dict = {}
-    X = SCALER.transform(X)
-    shap_values = EXPLAINER.shap_values(X, approximate=approximate, check_additivity=False)
+    X = RUNNER.scaler.transform(X)
+    shap_values = EXPLAINER.shap_values(
+        X, approximate=approximate, check_additivity=False
+    )
     for i, row in enumerate(X):
         html = shap.force_plot(
             EXPLAINER.expected_value[class_idx[i]],
@@ -114,60 +117,60 @@ def get_explanations(
 
 def predictions(X, site_names):  # pylint:disable=invalid-name
     """Format the predictions"""
-    X_scaled = SCALER.transform(X)  # pylint:disable=invalid-name
-    prediction = MODEL.predict(X_scaled)
 
-    max_probas = np.max(MODEL.predict_proba(X_scaled), axis=1)
-    base_predictions = MODEL._predict(X_scaled)  # pylint:disable = protected-access
+    prediction, max_probas, base_predictions = RUNNER._make_predictions(X)
+
     nearest_neighbors = get_nearest_neighbors(X)
 
     print(prediction, site_names, max_probas, base_predictions)
     prediction_output = []
     for i, pred in enumerate(prediction):
-        agreement = ([MODEL.classes[j] for j in base_predictions[i]].count(pred) / len(base_predictions[i]) * 100)
+        agreement = base_predictions[i].count(pred) / len(base_predictions[i]) * 100
         if agreement > 80:
-            bartype = 'progress-bar bg-success'
+            bartype = "progress-bar bg-success"
         elif agreement < 60:
-            bartype = 'progress-bar bg-danger'
+            bartype = "progress-bar bg-danger"
         else:
-            bartype = 'progress-bar bg-warning'
-        prediction_output.append([
-            site_names[i],
-            int2roman(pred),
-            max_probas[i],
-            ', '.join([int2roman(MODEL.classes[j]) for j in base_predictions[i]]),
-            agreement,
-            bartype,
-            nearest_neighbors[i],
-        ],)
+            bartype = "progress-bar bg-warning"
+        prediction_output.append(
+            [
+                site_names[i],
+                int2roman(pred),
+                max_probas[i],
+                ", ".join([int2roman(j) for j in base_predictions[i]]),
+                agreement,
+                bartype,
+                nearest_neighbors[i],
+            ],
+        )
 
     prediction_labels = []
     for i, pred in enumerate(prediction):
-        prediction_labels.append('{} ({})'.format(site_names[i], int2roman(pred)))
+        prediction_labels.append("{} ({})".format(site_names[i], int2roman(pred)))
 
     class_idx = []
 
     for pred in prediction:
-        class_idx.append(np.argwhere(MODEL.classes == pred)[0][0])
+        class_idx.append(np.argwhere(RUNNER.model.classes == pred)[0][0])
     return prediction_output, prediction_labels, class_idx
 
 
 def generate_warning(site_names):
     dangerous_metals_in_structure = [
-        'Ag',
-        'Ce',
-        'Er',
-        'Hg',
-        'Nb',
-        'Os',
-        'Pt',
-        'Sn',
-        'Yb',
-        'Pu',
+        "Ag",
+        "Ce",
+        "Er",
+        "Hg",
+        "Nb",
+        "Os",
+        "Pt",
+        "Sn",
+        "Yb",
+        "Pu",
     ]
 
     for site_name in site_names:
         if site_name.split()[0] in dangerous_metals_in_structure:
-            return 'Your structure contains an element that is rare in MOFs. The prediction might be wrong.'
+            return "Your structure contains an element that is rare in MOFs. The prediction might be wrong."
 
-    return ''
+    return ""

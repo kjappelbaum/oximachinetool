@@ -12,7 +12,7 @@ THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 
 
 def load_pickle(file):
-    with open(file, 'rb') as fhandle:
+    with open(file, "rb") as fhandle:
         res = pickle.load(fhandle)
     return res
 
@@ -23,11 +23,13 @@ def string_to_pymatgen(structurestring):
         atoms = run_c2x(structurestring)
         structure = AseAtomsAdaptor().get_structure(atoms)
         if len(structure) > MAX_NUMBER_OF_ATOMS:
-            raise LargeStructureError('Structure too large')
-    except Exception as e:  # pylint:disable=invalid-name, broad-except
+            raise LargeStructureError("Structure too large")
+    except Exception as excep:  # pylint:broad-except
         raise ValueError(
-            'We could not parse the CIF, you might try rewriting the CIF in P1 symmetry (and also remove any clashing atoms/disorder). The exception was {}'
-            .format(e))
+            "We could not parse the CIF, you might try rewriting the CIF in P1 symmetry (and also remove any clashing atoms/disorder). The exception was {}".format(
+                excep
+            )
+        ) from excep
     return structure
 
 
@@ -41,7 +43,7 @@ def get_structure_tuple(fileobject, fileformat):
     :return: a structure tuple (cell, positions, numbers) as accepted
         by seekpath.
     """
-    if fileformat == 'cif':
+    if fileformat == "cif":
         structure = string_to_pymatgen(fileobject)
         structure_tuple = tuple_from_pymatgen(structure)
         return structure_tuple, structure
@@ -88,38 +90,39 @@ class LargeStructureError(Exception):
 def generate_csd_link(refcode: str) -> str:
     """Take a refocde string and make a link to WebCSD"""
     return '<a href="https://www.ccdc.cam.ac.uk/structures/Search?Ccdcid={}&DatabaseToSearch=Published">{}</a>'.format(
-        refcode, refcode)
+        refcode, refcode
+    )
 
 
 # Todo: make this a bit cleaner
 def run_c2x(string):
     """write string to cile, run c2x to parse to .py file and convert to primitive, then read this file and make Atoms"""
     try:
-        tmp = NamedTemporaryFile(delete=False, suffix='.cif')
+        tmp = NamedTemporaryFile(delete=False, suffix=".cif")
         tempfile_code = NamedTemporaryFile(delete=False)
 
-        with open(tmp.name, 'w') as fh:
+        with open(tmp.name, "w") as fh:
             fh.write(string)
 
         subprocess.call(
-            ['./c2x_linux']  # hardcoded path for container!
-            + '{} -P --pya {}'.format(tmp.name, tempfile_code.name).split(),
+            ["./c2x_linux"]  # hardcoded path for container!
+            + "{} -P --pya {}".format(tmp.name, tempfile_code.name).split(),
             stderr=subprocess.STDOUT,
             cwd=THIS_DIR,
         )
 
-        with open(tempfile_code.name, 'r') as fh:
+        with open(tempfile_code.name, "r") as fh:
             code_to_execute = fh.read()
 
-        my_context = {'structure': None}
+        my_context = {"structure": None}
         exec(code_to_execute, globals(), my_context)
 
-        atoms = my_context['structure']
+        atoms = my_context["structure"]
 
         tempfile_code.close()
         os.remove(tempfile_code.name)
         os.remove(tmp.name)
     except Exception as e:  # pylint:disable=invalid-name, broad-except
-        raise IOError('could not read cif {}'.format(e))
+        raise IOError("could not read cif {}".format(e))
 
     return atoms

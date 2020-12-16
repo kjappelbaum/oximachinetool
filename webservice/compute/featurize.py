@@ -208,6 +208,7 @@ def _featurize_single(structure: Structure):
         metal_indices (list)
         names (list) -- list of feature names
     """
+
     (
         X,  # pylint:disable=invalid-name
         metal_indices,
@@ -215,12 +216,15 @@ def _featurize_single(structure: Structure):
     ) = RUNNER._featurize_single(  # pylint:disable=protected-access
         structure
     )
+
     names = RUNNER.feature_names
     names_ = [n.replace("mimum", "minimum") for n in names]  # ToDo: Cleanup name
     feature_value_dict = {}
+
     for i, site in enumerate(X):
         feature_stats = _return_feature_statistics_array(site, names)
         feature_value_dict[metals[i] + " " + ALPH[i]] = dict(zip(names_, feature_stats))
+
     return X, feature_value_dict, metal_indices, names
 
 

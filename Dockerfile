@@ -1,4 +1,4 @@
-FROM materialscloud/tools-barebone
+FROM materialscloud/tools-barebone:1.1.0
 
 LABEL maintainer="Kevin Maik Jablonka <kevin.jablonka@epfl.ch>"
 

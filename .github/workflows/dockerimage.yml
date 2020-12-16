@@ -9,4 +9,4 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Build the Docker image
-        run: ./dev_scripts/build-docker.sh && ./dev_scripts/run_docker.sh &&  ./.docker_files/wait-for-it.sh localhost:8091 -t 120 && sleep 15 && curl -X POST --data 'examplestructure=sno' http://localhost:8091/process_example_structure/ > example.html && grep -F "Sn" example.html || exit 1
+        run: cd dev_scripts && ./build-docker.sh && ./run_docker.sh && cd .. && ./.docker_files/wait-for-it.sh localhost:8091 -t 120 && sleep 15 && curl -X POST --data 'examplestructure=sno' http://localhost:8091/process_example_structure/ > example.html && grep -F "Sn" example.html || exit 1

@@ -7,8 +7,6 @@
 
 <img src='oximachine_logo.png' width=200px, text-align=center> </img>
 
-> ⚠️ **Warning**: Alpha version
-
 Flask app that uses `jsmol` to visualize the structure (and predictions). The code builds heavily on top of the implementation of the [seekpath web app](https://github.com/giovannipizzi/seekpath).
 
 ## How to run the code
@@ -18,6 +16,7 @@ You have to options to run the code: You can either clone the repository and dir
 ### Run docker image
 
 ```
+cd dev_scripts
 ./build-docker.sh # to build the oximachine
 ./run_docker.sh # to run the docker image
 ```

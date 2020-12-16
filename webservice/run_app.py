@@ -37,6 +37,7 @@ from conf import (
     FlaskRedirectException,
     static_folder,
     view_folder,
+    __version__,
 )
 from pymatgen.io.cif import CifParser
 from web_module import ReverseProxied, get_config, get_secret_key, logme
@@ -121,8 +122,7 @@ def get_json_for_visualizer(s):  # pylint:disable=invalid-name
 
 
 def process_precomputed_core(
-    name,
-    loggerobject=None,
+    name, loggerobject=None,
 ):
     """
     The main function that generates the data to be sent back to the view.
@@ -307,11 +307,7 @@ def process_precomputed_core(
 
 
 def process_structure_core(
-    filecontent,
-    fileformat,
-    call_source="",
-    loggerobject=None,
-    flask_request=None,
+    filecontent, fileformat, call_source="", loggerobject=None, flask_request=None,
 ):
     """
     The main function that generates the data to be sent back to the view.
@@ -599,7 +595,7 @@ def index():
     """
     Main view, redirect to input_structure
     """
-    return flask.redirect(flask.url_for("input_structure"))
+    return flask.redirect(flask.url_for("input_structure"), version=__version__)
 
 
 @app.route("/")
@@ -607,6 +603,7 @@ def input_data():
     """
     Main view, input data selection and upload
     """
+    print(**get_config())
     return flask.render_template(
         get_visualizer_select_template(flask.request), **get_config()
     )
@@ -625,7 +622,9 @@ def input_structure():
     """
     Input structure selection
     """
-    return flask.render_template(get_visualizer_select_template(flask.request))
+    return flask.render_template(
+        get_visualizer_select_template(flask.request), version=__version__
+    )
 
 
 @app.route("/set_feature_importance_level/", methods=["GET", "POST"])
@@ -748,8 +747,7 @@ def process_precomputed(name):
     if flask.request.method == "GET":
         try:
             data_for_template = process_precomputed_core(
-                name=name,
-                loggerobject=logger,
+                name=name, loggerobject=logger,
             )
             return flask.render_template(
                 get_visualizer_template(flask.request), **data_for_template

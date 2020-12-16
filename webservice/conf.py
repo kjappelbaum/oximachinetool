@@ -3,6 +3,8 @@
 """Configuration variables for the app"""
 import os
 
+__version__ = "v0.7.1"
+
 
 class ConfigurationError(Exception):
     """Raised for example if SECRET_KEY file is missing"""

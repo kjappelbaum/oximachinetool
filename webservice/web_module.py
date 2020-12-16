@@ -8,7 +8,7 @@ import json
 import os
 
 import yaml
-from conf import ConfigurationError, config_file_path, directory
+from conf import ConfigurationError, config_file_path, directory, __version__
 
 
 def get_secret_key():
@@ -76,11 +76,12 @@ def get_config():
     try:
         with open(config_file_path) as config_file:
             config = yaml.safe_load(config_file)
-    except IOError as exc:
-        if exc.errno == 2:  # No such file or directory
-            config = {}
-        else:
-            raise
+            config["version"] = __version__
+    except Exception as exc:
+        
+        config = {}
+        config["version"] = __version__
+
 
     # set defaults
     config = set_config_defaults(config)

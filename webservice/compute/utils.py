@@ -18,6 +18,15 @@ def load_pickle(file):
     return res
 
 
+def get_metals_idx_in_structure(structure):
+    metal_idxs = []
+
+    for index, site in enumerate(structure):
+        if site.specie.is_metal:
+            metal_idxs.append(index)
+    return metal_idxs
+
+
 def string_to_pymatgen(structurestring):
     """Convert a string parsed by flask to a pymatgen structure object.
     We asume that structurestring is a CIF"""

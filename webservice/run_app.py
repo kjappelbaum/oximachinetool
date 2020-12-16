@@ -26,6 +26,7 @@ from compute.utils import (
     LargeStructureError,
     OverlapError,
     UnknownFormatError,
+    get_metals_idx_in_structure,
     get_structure_tuple,
     load_pickle,
     tuple_from_pymatgen,
@@ -35,10 +36,11 @@ from conf import (
     DEFAULT_APPROXIMATE,
     EXAMPLEMAPPING,
     FlaskRedirectException,
+    __version__,
     static_folder,
     view_folder,
-    __version__,
 )
+from pymatgen import Structure
 from pymatgen.io.cif import CifParser
 from web_module import ReverseProxied, get_config, get_secret_key, logme
 
@@ -122,7 +124,8 @@ def get_json_for_visualizer(s):  # pylint:disable=invalid-name
 
 
 def process_precomputed_core(
-    name, loggerobject=None,
+    name,
+    loggerobject=None,
 ):
     """
     The main function that generates the data to be sent back to the view.
@@ -307,7 +310,11 @@ def process_precomputed_core(
 
 
 def process_structure_core(
-    filecontent, fileformat, call_source="", loggerobject=None, flask_request=None,
+    filecontent,
+    fileformat,
+    call_source="",
+    loggerobject=None,
+    flask_request=None,
 ):
     """
     The main function that generates the data to be sent back to the view.
@@ -595,7 +602,7 @@ def index():
     """
     Main view, redirect to input_structure
     """
-    return flask.redirect(flask.url_for("input_structure"), version=__version__)
+    return flask.redirect(flask.url_for("input_structure"))
 
 
 @app.route("/")
@@ -747,7 +754,8 @@ def process_precomputed(name):
     if flask.request.method == "GET":
         try:
             data_for_template = process_precomputed_core(
-                name=name, loggerobject=logger,
+                name=name,
+                loggerobject=logger,
             )
             return flask.render_template(
                 get_visualizer_template(flask.request), **data_for_template

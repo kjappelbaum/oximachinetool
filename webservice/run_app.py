@@ -823,5 +823,4 @@ def oximachine_api():
 
 
 if __name__ == "__main__":
-    app.use_x_sendfile = True
     app.run(debug=False)

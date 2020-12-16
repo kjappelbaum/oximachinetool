@@ -82,7 +82,7 @@ def get_explanations(  # pylint:disable=invalid-name
     feature_names: list,
     approximate: bool = True,
 ) -> dict:
-    """[summary]
+    """Get SHAP feature importance
 
     Arguments:
         X (np.array) -- feature matrix, unscaled
@@ -105,7 +105,7 @@ def get_explanations(  # pylint:disable=invalid-name
     for i, row in enumerate(X):
         html = shap.force_plot(
             EXPLAINER.expected_value[class_idx[i]],
-            shap_values[i][class_idx[i]],
+            shap_values[class_idx[i]][i],
             row,
             feature_names=feature_names,
         )

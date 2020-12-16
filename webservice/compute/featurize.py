@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Runs featurization and computes feature statistics"""
 import os
 import warnings
 
@@ -6,17 +7,17 @@ import matplotlib.cm as cm
 import matplotlib.colors
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy import stats
 from pymatgen import Structure
+from scipy import stats
 
-from .predict import FEATURES, RUNNER
+from .predict import RUNNER
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 
 TRAIN_DATA = np.load(os.path.join(THIS_DIR, "features.npy"))
 
 warnings.simplefilter("ignore")
-alph = "abcdefghijlmnopqrstuvwxyzABZDEFGHIJKLMNOPQRSTUVQXYZ0123456789"
+ALPH = "abcdefghijlmnopqrstuvwxyzABZDEFGHIJKLMNOPQRSTUVQXYZ0123456789"
 
 cmap = plt.cm.coolwarm
 norm = matplotlib.colors.Normalize(vmin=10, vmax=90)
@@ -185,7 +186,7 @@ def _return_feature_statistics(feature_number: int, feature_value: float, names:
     return percentile_score, color, feature_cat_dict[names[feature_number]]
 
 
-def _return_feature_statistics_array(X, names):
+def _return_feature_statistics_array(X, names):  # pylint:disable=invalid-name
     results = []
     for i, val in enumerate(X.T):
         score, color, category = _return_feature_statistics(i, val, names)
@@ -195,12 +196,11 @@ def _return_feature_statistics_array(X, names):
     return results
 
 
-def _featurize_single(structure: Structure, feature_dir: str = ""):
+def _featurize_single(structure: Structure):
     """Featurizes structure, returns feature vector, feature values and metal indices.
 
     Arguments:
         structure (Structure) -- pymatgen Structure object
-        feature_dir (str) -- output directory for features
 
     Returns:
         X (np.array) -- feature matrix
@@ -208,13 +208,19 @@ def _featurize_single(structure: Structure, feature_dir: str = ""):
         metal_indices (list)
         names (list) -- list of feature names
     """
-    X, metal_indices, metals = RUNNER._featurize_single(structure)
+    (
+        X,  # pylint:disable=invalid-name
+        metal_indices,
+        metals,
+    ) = RUNNER._featurize_single(  # pylint:disable=protected-access
+        structure
+    )
     names = RUNNER.feature_names
     names_ = [n.replace("mimum", "minimum") for n in names]  # ToDo: Cleanup name
     feature_value_dict = {}
     for i, site in enumerate(X):
         feature_stats = _return_feature_statistics_array(site, names)
-        feature_value_dict[metals[i] + " " + alph[i]] = dict(zip(names_, feature_stats))
+        feature_value_dict[metals[i] + " " + ALPH[i]] = dict(zip(names_, feature_stats))
     return X, feature_value_dict, metal_indices, names
 
 
@@ -222,5 +228,3 @@ class OverlapError(Exception):
     """
     Error raised if overlaps of atoms are detected in the structure.
     """
-
-    pass

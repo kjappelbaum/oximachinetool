@@ -11,23 +11,25 @@ MAX_NUMBER_OF_ATOMS = 500
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 
 
-
 def load_pickle(file):
+    """Read a pickle with and return content"""
     with open(file, "rb") as fhandle:
         res = pickle.load(fhandle)
     return res
 
 
 def string_to_pymatgen(structurestring):
-    """Convert a string parsed by flask to a pymatgen structure object. We asume that structurestring is a CIF"""
+    """Convert a string parsed by flask to a pymatgen structure object.
+    We asume that structurestring is a CIF"""
     try:
         atoms = run_c2x(structurestring)
         structure = AseAtomsAdaptor().get_structure(atoms)
         if len(structure) > MAX_NUMBER_OF_ATOMS:
             raise LargeStructureError("Structure too large")
-    except Exception as excep:  # pylint:broad-except
+    except Exception as excep:  # pylint:disable=broad-except)
         raise ValueError(
-            "We could not parse the CIF, you might try rewriting the CIF in P1 symmetry (and also remove any clashing atoms/disorder). The exception was {}".format(
+            "We could not parse the CIF, you might try rewriting the CIF in P1 symmetry \
+                 (and also remove any clashing atoms/disorder). The exception was {}".format(
                 excep
             )
         ) from excep
@@ -69,23 +71,15 @@ def tuple_from_pymatgen(pmgstructure):
 
 
 class UnknownFormatError(ValueError):
-    pass  # pylint:disable=unnecessary-pass
+    """Raised when the format cannot be read"""
 
 
 class OverlapError(Exception):
-    """
-    Error raised if overlaps of atoms are detected in the structure.
-    """
-
-    pass  # pylint:disable=unnecessary-pass
+    """Error raised if overlaps of atoms are detected in the structure."""
 
 
 class LargeStructureError(Exception):
-    """
-    Error raised if structure is too large
-    """
-
-    pass  # pylint:disable=unnecessary-pass
+    """Error raised if structure is too large"""
 
 
 def generate_csd_link(refcode: str) -> str:
@@ -95,15 +89,15 @@ def generate_csd_link(refcode: str) -> str:
     )
 
 
-# Todo: make this a bit cleaner
 def run_c2x(string):
-    """write string to cile, run c2x to parse to .py file and convert to primitive, then read this file and make Atoms"""
+    """write string to cile, run c2x to parse to .py file and convert to primitive,
+    then read this file and make Atoms"""
     try:
         tmp = NamedTemporaryFile(delete=False, suffix=".cif")
         tempfile_code = NamedTemporaryFile(delete=False)
 
-        with open(tmp.name, "w") as fh:
-            fh.write(string)
+        with open(tmp.name, "w") as handle:
+            handle.write(string)
 
         subprocess.call(
             ["./c2x_linux"]  # hardcoded path for container!
@@ -112,8 +106,8 @@ def run_c2x(string):
             cwd=THIS_DIR,
         )
 
-        with open(tempfile_code.name, "r") as fh:
-            code_to_execute = fh.read()
+        with open(tempfile_code.name, "r") as handle:
+            code_to_execute = handle.read()
 
         my_context = {"structure": None}
         exec(code_to_execute, globals(), my_context)
@@ -123,7 +117,7 @@ def run_c2x(string):
         tempfile_code.close()
         os.remove(tempfile_code.name)
         os.remove(tmp.name)
-    except Exception as e:  # pylint:disable=invalid-name, broad-except
-        raise IOError("could not read cif {}".format(e))
+    except Exception as excp:
+        raise IOError("could not read cif {}".format(excp)) from excp
 
     return atoms

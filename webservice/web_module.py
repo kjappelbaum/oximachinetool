@@ -8,44 +8,49 @@ import json
 import os
 
 import yaml
-
 from conf import ConfigurationError, config_file_path, directory
 
 
 def get_secret_key():
+    """Attempt to read secret key from file
+    SECRET_KEY"""
     try:
-        with open(os.path.join(directory, 'SECRET_KEY')) as f:
+        with open(os.path.join(directory, "SECRET_KEY")) as f:
             secret_key = f.readlines()[0].strip()
             if len(secret_key) < 16:
                 raise ValueError
             return secret_key
-    except Exception:
-        raise ConfigurationError('Please create a SECRET_KEY file in {} with a random string '
-                                 'of at least 16 characters'.format(directory))
+    except Exception as excep:
+        raise ConfigurationError(
+            "Please create a SECRET_KEY file in {} with a random string "
+            "of at least 16 characters".format(directory)
+        ) from excep
 
 
 def parse_config(config):
     retdict = {}
 
-    templates = config.get('templates', {})
+    templates = config.get("templates", {})
 
     known_templates = [
-        'how_to_cite',
-        'about',
-        'select_content',
-        'upload_structure_additional_content',
+        "how_to_cite",
+        "about",
+        "select_content",
+        "upload_structure_additional_content",
     ]
 
     for template_name in known_templates:
         retdict[template_name] = templates[template_name]
 
-    additional_accordion_entries = config.get('additional_accordion_entries', [])
-    retdict['additional_accordion_entries'] = []
+    additional_accordion_entries = config.get("additional_accordion_entries", [])
+    retdict["additional_accordion_entries"] = []
     for accordian_entry in additional_accordion_entries:
-        retdict['additional_accordion_entries'].append({
-            'header': accordian_entry['header'],
-            'template_page': os.path.join(accordian_entry['template_page']),
-        })
+        retdict["additional_accordion_entries"].append(
+            {
+                "header": accordian_entry["header"],
+                "template_page": os.path.join(accordian_entry["template_page"]),
+            }
+        )
 
     return retdict
 
@@ -54,15 +59,15 @@ def set_config_defaults(config):
     """Add defaults so the site works"""
     new_config = config.copy()
 
-    new_config.setdefault('window_title', 'Materials Cloud Tool')
+    new_config.setdefault("window_title", "Materials Cloud Tool")
     new_config.setdefault(
-        'page_title',
-        '<PLEASE SPECIFY A PAGE_TITLE AND A WINDOW_TITLE IN THE CONFIG FILE>',
+        "page_title",
+        "<PLEASE SPECIFY A PAGE_TITLE AND A WINDOW_TITLE IN THE CONFIG FILE>",
     )
 
-    new_config.setdefault('custom_css_files', {})
-    new_config.setdefault('custom_js_files', {})
-    new_config.setdefault('templates', {})
+    new_config.setdefault("custom_css_files", {})
+    new_config.setdefault("custom_js_files", {})
+    new_config.setdefault("templates", {})
 
     return new_config
 
@@ -80,7 +85,7 @@ def get_config():
     # set defaults
     config = set_config_defaults(config)
 
-    return {'config': config, 'include_pages': parse_config(config)}
+    return {"config": config, "include_pages": parse_config(config)}
 
 
 def logme(logger, *args, **kwargs):
@@ -111,15 +116,15 @@ def generate_log(filecontent, fileformat, request, call_source, reason, extra={}
         NOTE! it must be JSON-serializable
     """
     # I don't know the fileformat
-    data = {'filecontent': filecontent, 'fileformat': fileformat}
+    data = {"filecontent": filecontent, "fileformat": fileformat}
 
     logdict = {
-        'data': data,
-        'reason': reason,
-        'request': str(request.headers),
-        'call_source': call_source,
-        'source': request.headers.get('X-Forwarded-For', request.remote_addr),
-        'time': datetime.datetime.now().isoformat(),
+        "data": data,
+        "reason": reason,
+        "request": str(request.headers),
+        "call_source": call_source,
+        "source": request.headers.get("X-Forwarded-For", request.remote_addr),
+        "time": datetime.datetime.now().isoformat(),
     }
     logdict.update(extra)
     return json.dumps(logdict)
@@ -148,17 +153,17 @@ class ReverseProxied:
         self.app = app
 
     def __call__(self, environ, start_response):
-        script_name = environ.get('HTTP_X_SCRIPT_NAME', '')
+        script_name = environ.get("HTTP_X_SCRIPT_NAME", "")
         if script_name:
-            environ['SCRIPT_NAME'] = script_name
-            path_info = environ['PATH_INFO']
+            environ["SCRIPT_NAME"] = script_name
+            path_info = environ["PATH_INFO"]
             if path_info.startswith(script_name):
-                environ['PATH_INFO'] = path_info[len(script_name):]
+                environ["PATH_INFO"] = path_info[len(script_name) :]
 
-        scheme = environ.get('HTTP_X_SCHEME', '')
+        scheme = environ.get("HTTP_X_SCHEME", "")
         if scheme:
-            environ['wsgi.url_scheme'] = scheme
-        server = environ.get('HTTP_X_FORWARDED_HOST', '')
+            environ["wsgi.url_scheme"] = scheme
+        server = environ.get("HTTP_X_FORWARDED_HOST", "")
         if server:
-            environ['HTTP_HOST'] = server
+            environ["HTTP_HOST"] = server
         return self.app(environ, start_response)

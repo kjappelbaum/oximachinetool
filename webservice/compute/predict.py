@@ -2,21 +2,19 @@
 """Functions to run the prediciton and format the output"""
 import logging
 import os
-import sys
 import warnings
+from typing import List
 
 import joblib
 import numpy as np
 import shap
 from numeral import int2roman
-
-import oximachinerunner.learnmofox as learnmofox
 from oximachinerunner import OximachineRunner
 
 from .utils import generate_csd_link  # pylint:disable=relative-beyond-top-level
 from .utils import (
-    load_pickle as read_pickle,
-)  # pylint:disable=relative-beyond-top-level
+    load_pickle as read_pickle,  # pylint:disable=relative-beyond-top-level
+)
 
 RUNNER = OximachineRunner("mof")
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -30,7 +28,6 @@ warnings.simplefilter("ignore")
 log = logging.getLogger("shap")  # pylint:disable=invalid-name
 log.setLevel(logging.ERROR)
 
-sys.modules["learnmofox"] = learnmofox
 
 # adjust these features according to model
 METAL_CENTER_FEATURES = [
@@ -63,7 +60,8 @@ def get_nearest_neighbors(X: np.array) -> list:  # pylint:disable=invalid-name
         X (np.array): unscaled feature array
 
     Returns:
-        list: list of links to the CSD, each element of the list will be a string with NEAREST_NEIGBORS
+        list: list of links to the CSD, each element of the list
+            will be a string with NEAREST_NEIGBORS
             html links to the WEBCSD.
     """
     link_list = []
@@ -77,8 +75,8 @@ def get_nearest_neighbors(X: np.array) -> list:  # pylint:disable=invalid-name
     return link_list
 
 
-def get_explanations(
-    X: np.array,  # pylint:disable=invalid-name
+def get_explanations(  # pylint:disable=invalid-name
+    X: np.array,
     prediction_labels: list,
     class_idx: list,
     feature_names: list,
@@ -87,14 +85,17 @@ def get_explanations(
     """[summary]
 
     Arguments:
-        X (np.array) -- feature matrix, already unscaled (!, to be easier compatible with the current API)
+        X (np.array) -- feature matrix, unscaled
         prediction_labels (list) -- list of keys that will be used for the dictionary
         feature_names (list) -- list of strings containing the feature names
 
     Keyword Arguments:
+        approximate (bool) --- If true uses and approximation of the SHAP value.
+            Defaults to True
 
     Returns:
-        dict -- [description]
+        dict -- Containing the prediction values as keys and HTML data for
+            the explainer as values
     """
     result_dict = {}
     X = RUNNER.scaler.transform(X)
@@ -115,14 +116,19 @@ def get_explanations(
     return result_dict
 
 
-def predictions(X, site_names):  # pylint:disable=invalid-name
+def predictions(X: np.ndarray, site_names: List[str]):  # pylint:disable=invalid-name
     """Format the predictions"""
 
-    prediction, max_probas, base_predictions = RUNNER._make_predictions(X)
+    (
+        prediction,
+        max_probas,
+        base_predictions,
+    ) = RUNNER._make_predictions(  # pylint:disable=protected-access
+        X
+    )
 
     nearest_neighbors = get_nearest_neighbors(X)
 
-    print(prediction, site_names, max_probas, base_predictions)
     prediction_output = []
     for i, pred in enumerate(prediction):
         agreement = base_predictions[i].count(pred) / len(base_predictions[i]) * 100
@@ -155,7 +161,9 @@ def predictions(X, site_names):  # pylint:disable=invalid-name
     return prediction_output, prediction_labels, class_idx
 
 
-def generate_warning(site_names):
+def generate_warning(site_names: List[str]) -> str:
+    """Given a site name string returns a warning string
+    in case the metal is unusual for the training set"""
     dangerous_metals_in_structure = [
         "Ag",
         "Ce",
@@ -171,6 +179,7 @@ def generate_warning(site_names):
 
     for site_name in site_names:
         if site_name.split()[0] in dangerous_metals_in_structure:
-            return "Your structure contains an element that is rare in MOFs. The prediction might be wrong."
+            return "Your structure contains an element that is rare in MOFs. \
+                 The prediction might be wrong."
 
     return ""

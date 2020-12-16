@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# pylint:disable=logging-format-interpolations
+# pylint:disable=logging-format-interpolation
 """
 Main Flask python function that manages the server backend
 
@@ -19,10 +19,8 @@ import flask
 import jinja2
 import numpy as np
 from ase.data import chemical_symbols
-from pymatgen.io.cif import CifParser
-
 from compute.featurize import _featurize_single
-from compute.predict import generate_warning, get_explanations, predictions, RUNNER
+from compute.predict import RUNNER, generate_warning, get_explanations, predictions
 from compute.utils import (
     MAX_NUMBER_OF_ATOMS,
     LargeStructureError,
@@ -40,12 +38,15 @@ from conf import (
     static_folder,
     view_folder,
 )
+from pymatgen.io.cif import CifParser
+from web_module import ReverseProxied, get_config, get_secret_key, logme
 
 
 class NpEncoder(json.JSONEncoder):
-    """https://stackoverflow.com/questions/50916422/python-typeerror-object-of-type-int64-is-not-json-serializable"""
+    """https://stackoverflow.com/questions/50916422/
+    python-typeerror-object-of-type-int64-is-not-json-serializable"""
 
-    def default(self, obj):
+    def default(self, obj):  # pylint:disable=arguments-differ
         if isinstance(obj, np.integer):
             return int(obj)
         elif isinstance(obj, np.floating):
@@ -53,18 +54,17 @@ class NpEncoder(json.JSONEncoder):
         elif isinstance(obj, np.ndarray):
             return obj.tolist()
         else:
-            return super(NpEncoder, self).default(obj)
+            return super().default(obj)
 
 
+THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 MODEL_VERSION = str(RUNNER)
-from web_module import ReverseProxied, get_config, get_secret_key, logme
+
 
 app = flask.Flask(__name__, static_folder=static_folder)  # pylint:disable=invalid-name
 app.use_x_sendfile = True
 app.wsgi_app = ReverseProxied(app.wsgi_app)
 app.secret_key = get_secret_key()
-
-THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 
 
 # This (undocumented) flag changes the style of the webpage (CSS, etc.)
@@ -121,18 +121,15 @@ def get_json_for_visualizer(s):  # pylint:disable=invalid-name
 
 
 def process_precomputed_core(
-    name, call_source="", logger=None, flask_request=None,
+    name,
+    loggerobject=None,
 ):
     """
     The main function that generates the data to be sent back to the view.
 
     :param name: The structure name (CSD reference code) (string)
-    :param call_source: a string identifying the source (i.e., who called
-       this function). This is a string, mainly for logging reasons.
-    :param logger: if not None, should be a valid logger, that is used
+    :param loggerobject: if not None, should be a valid logger, that is used
        to output useful log messages.
-    :param flask_request: if logger is not None, pass also the flask.request
-       object to help in logging.
     :return: this function calls directly flask methods and returns flask
         objects
     :raise: FlaskRedirectException if there is an error that requires
@@ -140,23 +137,22 @@ def process_precomputed_core(
         is the message to be flashed via Flask (or in general shown to
         the user).
     """
-    logger.debug("dealing with {}".format(name))
+    loggerobject.debug("dealing with {}".format(name))
     start_time = time.time()
-    fileformat = "cif"
     try:
-        logger.debug("building path")
+        loggerobject.debug("building path")
         structurefilepath = os.path.join(
             THIS_DIR, "compute", "precomputed", "structures", name + ".cif"
         )
-        logger.debug("structurefilepath is {}".format(structurefilepath))
+        loggerobject.debug("structurefilepath is {}".format(structurefilepath))
 
         s = CifParser(structurefilepath, occupancy_tolerance=100).get_structures()[0]
 
-        logger.debug("read pymatgen structure")
+        loggerobject.debug("read pymatgen structure")
         structure_tuple = tuple_from_pymatgen(s)
-        logger.debug("generated structure tuple")
+        loggerobject.debug("generated structure tuple")
 
-    except Exception as excep:  # pylint:disable=broad-except, invalid-name
+    except Exception as excep:  # pylint:disable=broad-except
         # There was an exception...
         logger.debug("Exception {} when parsing the input".format(excep))
         raise FlaskRedirectException(
@@ -177,21 +173,21 @@ def process_precomputed_core(
             )
         )
 
-        feature_array = precomputed_dict["feature_array"]
+        # feature_array = precomputed_dict["feature_array"]
         feature_value_dict = precomputed_dict["feature_value_dict"]
         metal_indices = precomputed_dict["metal_indices"]
-        feature_names = precomputed_dict["feature_names"]
-        metal_sites = precomputed_dict["metal_sites"]
+        # feature_names = precomputed_dict["feature_names"]
+        # metal_sites = precomputed_dict["metal_sites"]
         predictions_output = precomputed_dict["predictions_output"]
         prediction_labels = precomputed_dict["prediction_labels"]
         featurization_output = precomputed_dict["featurization_output"]
 
-    except Exception as e:  # pylint:disable=broad-except, invalid-name
-        logger.debug("Exception {} when parsing the input".format(e))
+    except Exception as excep:  # pylint:disable=broad-except, invalid-name
+        logger.debug("Exception {} when parsing the input".format(excep))
         raise FlaskRedirectException(
             "I tried my best, but I wasn't able to load your "
-            "result for '{}'... because of {}".format(name, e)
-        )
+            "result for '{}'... because of {}".format(name, excep)
+        ) from excep
 
     logger.debug("Successfully read pickle with precomputed results")
 
@@ -228,7 +224,6 @@ def process_precomputed_core(
             chemical_symbols[num] for num in path_results["primitive_types"]
         ]
         raw_code_dict["primitive_symbols"] = primitive_symbols
-        # raw_code_dict["primitive_symbols"] = path_results["primitive_types"]
 
         raw_code = json.dumps(raw_code_dict, indent=2)
 
@@ -288,11 +283,10 @@ def process_precomputed_core(
 
         compute_time = time.time() - start_time
 
-    except Exception as e:  # pylint:disable=broad-except, invalid-name
-        logger.debug("Exception {} when parsing the input".format(e))
+    except Exception as excep:  # pylint:disable=broad-except
+        logger.debug("Exception {} when parsing the input".format(excep))
 
     return dict(
-        # jsondata=json.dumps(out_json_data),
         raw_code=raw_code,
         prediction_labels=prediction_labels,
         metal_indices=metal_indices,
@@ -313,7 +307,11 @@ def process_precomputed_core(
 
 
 def process_structure_core(
-    filecontent, fileformat, call_source="", logger=None, flask_request=None,
+    filecontent,
+    fileformat,
+    call_source="",
+    loggerobject=None,
+    flask_request=None,
 ):
     """
     The main function that generates the data to be sent back to the view.
@@ -322,7 +320,7 @@ def process_structure_core(
     :param fileformat: The file format (string), among the accepted formats
     :param call_source: a string identifying the source (i.e., who called
        this function). This is a string, mainly for logging reasons.
-    :param logger: if not None, should be a valid logger, that is used
+    :param loggerobject: if not None, should be a valid logger, that is used
        to output useful log messages.
     :param flask_request: if logger is not None, pass also the flask.request
        object to help in logging.
@@ -341,7 +339,7 @@ def process_structure_core(
     except UnknownFormatError:
         ## Can only read cif at the moment
         logme(
-            logger,
+            loggerobject,
             filecontent,
             fileformat,
             flask_request,
@@ -354,7 +352,7 @@ def process_structure_core(
     except OverlapError:
         ## Structure contains overlaps
         logme(
-            logger,
+            loggerobject,
             filecontent,
             fileformat,
             flask_request,
@@ -368,7 +366,7 @@ def process_structure_core(
     except LargeStructureError:
         ## Structure too big
         logme(
-            logger,
+            loggerobject,
             filecontent,
             fileformat,
             flask_request,
@@ -381,16 +379,16 @@ def process_structure_core(
             "in the input cell, while your structure has {} atoms."
             "".format(MAX_NUMBER_OF_ATOMS, len(structure_tuple[1]))
         )
-    except Exception as excep:  # pylint:disable=broad-except, invalid-name
+    except Exception as excep:  # pylint:disable=broad-except
         # There was an exception...
         logme(
-            logger,
+            loggerobject,
             filecontent,
             fileformat,
             flask_request,
             call_source,
             reason="exception",
-            extra={"exception": str(e), "form_data": form_data},
+            extra={"exception": str(excep), "form_data": form_data},
         )
         raise FlaskRedirectException(
             "I tried my best, but I wasn't able to load your "
@@ -409,9 +407,9 @@ def process_structure_core(
             metal_indices,
             feature_names,
         ) = _featurize_single(s)
-    except Exception as excep:  # pylint:disable=broad-except, invalid-name
+    except Exception as excep:  # pylint:disable=broad-except
         logme(
-            logger,
+            loggerobject,
             filecontent,
             fileformat,
             flask_request,
@@ -420,7 +418,9 @@ def process_structure_core(
             extra={"exception": str(excep)},
         )
         raise FlaskRedirectException(
-            "Sorry, the featurization failed. Make sure that your structure is not pathological (e.g. containing overlapping atoms)."
+            "Sorry, the featurization failed. \
+                 Make sure that your structure is not pathological \
+                     (e.g. containing overlapping atoms)."
         ) from excep
 
     logger.debug("Featurization completed in {}".format(time.time() - feat_start))
@@ -444,7 +444,7 @@ def process_structure_core(
         )
     except UnboundLocalError as excep:
         logme(
-            logger,
+            loggerobject,
             filecontent,
             fileformat,
             flask_request,
@@ -455,7 +455,7 @@ def process_structure_core(
         raise FlaskRedirectException("Sorry, the prediction failed.") from excep
     except Exception as excep:  # pylint:disable=broad-except, invalid-name
         logme(
-            logger,
+            loggerobject,
             filecontent,
             fileformat,
             flask_request,
@@ -559,21 +559,22 @@ def process_structure_core(
 
         compute_time = time.time() - start_time
 
-    except Exception as e:  # pylint:disable=broad-except, invalid-name
+    except Exception as excep:  # pylint:disable=broad-except
 
         logme(
-            logger,
+            loggerobject,
             filecontent,
             fileformat,
             flask_request,
             call_source,
             reason="codeexception",
-            extra={"exception": str(e), "form_data": form_data},
+            extra={"exception": str(excep), "form_data": form_data},
         )
-        raise
+        raise FlaskRedirectException(
+            "Problem with visualizing the structure"
+        ) from excep
 
     return dict(
-        # jsondata=json.dumps(out_json_data),
         raw_code=raw_code,
         prediction_labels=prediction_labels,
         metal_indices=metal_indices,
@@ -643,9 +644,9 @@ def feature_importance_val():
                 )
             )
             return ("", 204)
-        except Exception as e:  # pylint:disable=broad-except, invalid-name
+        except Exception as excep:  # pylint:disable=broad-except
             logger.error(
-                "Could not change sampling level due to exeception {}".format(e)
+                "Could not change sampling level due to exeception {}".format(excep)
             )
             return flask.redirect(flask.url_for("input_structure"))
     else:  # GET Request
@@ -670,7 +671,7 @@ def process_structure():
                 filecontent=filecontent,
                 fileformat=fileformat,
                 call_source="process_structure",
-                logger=logger,
+                loggerobject=logger,
                 flask_request=flask.request,
             )
             return flask.render_template(
@@ -714,7 +715,7 @@ def process_example_structure():
                 filecontent=filecontent,
                 fileformat=fileformat,
                 call_source="process_structure",
-                logger=logger,
+                loggerobject=logger,
                 flask_request=flask.request,
             )
             return flask.render_template(
@@ -748,9 +749,7 @@ def process_precomputed(name):
         try:
             data_for_template = process_precomputed_core(
                 name=name,
-                call_source="process_precomputed",
-                logger=logger,
-                flask_request=flask.request,
+                loggerobject=logger,
             )
             return flask.render_template(
                 get_visualizer_template(flask.request), **data_for_template
@@ -808,7 +807,10 @@ def send_fonts(path):
 @app.route("/api/v1/oximachine", methods=["POST"])
 def oximachine_api():
     """
-    API endpoint for the oximachine
+    API endpoint for the oximachine to use with POST
+    with data of CIF, e.g.
+    response = requests.post('http://localhost:8091/api/v1/oximachine',
+    data = {'cifFile': data})
     """
     request_content = flask.request.form.to_dict()
     logger.debug(request_content)

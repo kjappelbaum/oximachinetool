@@ -1,5 +1,10 @@
 ##  (2020-12-17)
 
+
+
+
+##  (2020-12-17)
+
 * docs: added information about the API endpoint ([12b8656](https://github.com/kjappelbaum/oximachinetool/commit/12b8656))
 * docs: updated instructions ([0df3e07](https://github.com/kjappelbaum/oximachinetool/commit/0df3e07))
 * chore: added API endpoint, closes #20 ([2a7e89f](https://github.com/kjappelbaum/oximachinetool/commit/2a7e89f)), closes [#20](https://github.com/kjappelbaum/oximachinetool/issues/20)

@@ -1,3 +1,26 @@
+##  (2020-12-17)
+
+* docs: added information about the API endpoint ([12b8656](https://github.com/kjappelbaum/oximachinetool/commit/12b8656))
+* docs: updated instructions ([0df3e07](https://github.com/kjappelbaum/oximachinetool/commit/0df3e07))
+* chore: added API endpoint, closes #20 ([2a7e89f](https://github.com/kjappelbaum/oximachinetool/commit/2a7e89f)), closes [#20](https://github.com/kjappelbaum/oximachinetool/issues/20)
+* chore: added CI to build and publish image ([73d9323](https://github.com/kjappelbaum/oximachinetool/commit/73d9323))
+* chore: added info about potential timeout, closes #24 ([94488a6](https://github.com/kjappelbaum/oximachinetool/commit/94488a6)), closes [#24](https://github.com/kjappelbaum/oximachinetool/issues/24)
+* chore: bump version ([02d4a5e](https://github.com/kjappelbaum/oximachinetool/commit/02d4a5e))
+* chore: fix SHAP bug, closes #21 ([2247c2c](https://github.com/kjappelbaum/oximachinetool/commit/2247c2c)), closes [#21](https://github.com/kjappelbaum/oximachinetool/issues/21)
+* chore: fix sklearn dependency ([797fec0](https://github.com/kjappelbaum/oximachinetool/commit/797fec0))
+* chore: fix tools barebone version ([febd3d5](https://github.com/kjappelbaum/oximachinetool/commit/febd3d5))
+* chore: fixes gh actions, updates readme ([d7e5a72](https://github.com/kjappelbaum/oximachinetool/commit/d7e5a72))
+* chore: linting ([4c98a9d](https://github.com/kjappelbaum/oximachinetool/commit/4c98a9d))
+* chore: make sure we delete unneeded files ([1474da9](https://github.com/kjappelbaum/oximachinetool/commit/1474da9))
+* chore: started refactoring, closes #19, #18 ([38a010e](https://github.com/kjappelbaum/oximachinetool/commit/38a010e)), closes [#19](https://github.com/kjappelbaum/oximachinetool/issues/19) [#18](https://github.com/kjappelbaum/oximachinetool/issues/18)
+* chore: testing timing wihout seccomp ([7a795f5](https://github.com/kjappelbaum/oximachinetool/commit/7a795f5))
+* chore: updated landing page ([42b5fce](https://github.com/kjappelbaum/oximachinetool/commit/42b5fce)), closes [#23](https://github.com/kjappelbaum/oximachinetool/issues/23) [#22](https://github.com/kjappelbaum/oximachinetool/issues/22)
+* chore: use python 3 ([486b6a8](https://github.com/kjappelbaum/oximachinetool/commit/486b6a8))
+* trigger rebuild ([f341a8e](https://github.com/kjappelbaum/oximachinetool/commit/f341a8e))
+* feat: added warning for cases with elements that are rare in the training set ([5799813](https://github.com/kjappelbaum/oximachinetool/commit/5799813))
+
+
+
 # Changelog
 
 ## v0.6.0 (2020-08-03)

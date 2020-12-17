@@ -63,6 +63,11 @@ requests.post('<base_url>/api/v1/oximachine', data = {'cifFile': file_content})
 
 Replace base URL with the one of the deployment you want to use. If you want to use our deployment, use `http://oximachine.materialscloud.io`, i.e., `requests.post('http://oximachine.materialscloud.io/api/v1/oximachine', data = {'cifFile': file_content})`. If you want to use it on your own machine, you might want to use something like `localhost:8091`.
 
+# Development
+
+- We use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0-beta.2/)
+- In this way, we can automatically create a `CHANGELOG.md` file. For example, using the [changelog-generator CLI](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-cli)
+
 # Acknowledgments
 
 - Materials Cloud team, especially [Leopold Talirz](https://github.com/ltalirz) for help with deployment and giving valuable feedback and providing a good template.

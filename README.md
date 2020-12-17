@@ -2,26 +2,41 @@
 
 [![Actions Status](https://github.com/kjappelbaum/oximachinetool/workflows/Docker%20Image%20Build%20CI/badge.svg)](https://github.com/kjappelbaum/oximachinetool/actions)
 [![](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/download/releases/3.6.0/)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3603606.svg)](https://doi.org/10.5281/zenodo.3603606)
 
 <img src='oximachine_logo.png' width=200px, text-align=center> </img>
 
-Flask app that uses `jsmol` to visualize the structure (and predictions). The code builds heavily on top of the implementation of the [seekpath web app](https://github.com/giovannipizzi/seekpath).
+Flask app that uses `jsmol` to visualize the structure (and predictions of the oximachine). The code builds heavily on top of the implementation of the [seekpath web app](https://github.com/giovannipizzi/seekpath). Internally, it uses the [oximachinerunner](https://github.com/kjappelbaum/oximachinerunner) Python package.
 
 ## How to run the code
 
-You have to options to run the code: You can either clone the repository and directly run the flask app. Alternatively, can directly [use it on a Dokku pod of Materials Cloud](https://go.epfl.ch/oximachine).
+You have several options to run the application:
 
-### Run docker image
+- You can directly [use it on a Dokku pod of Materials Cloud](https://go.epfl.ch/oximachine).
+- You can pull a pre-built image from the [GitHub container registry](https://github.com/users/kjappelbaum/packages/container/package/oximachinetool)
 
+```bash
+docker pull docker pull ghcr.io/kjappelbaum/oximachinetool:latest
+docker run -d -p 8091:80 ghcr.io/kjappelbaum/oximachinetool
 ```
+
+You can now open the application at `localhost:8091` in your browser.
+
+- You can build your own image by cloning this repository and following the instructions under the heading "build and run docker image". You'll need to use this option if you want to customize parts of the app.
+
+For the last two options, you need to have [Docker installed](https://docs.docker.com/engine/install/) on your machine.
+
+### Build and run docker image
+
+After `git clone https://github.com/kjappelbaum/oximachinetool.git` run
+
+```bash
 cd dev_scripts
 ./build-docker.sh # to build the oximachine
 ./run_docker.sh # to run the docker image
 ```
 
-The `get-apache-errorlog.sh` script can be used to debug potential issues. The `enter-docker.sh` script opens the bash in the container and can also be useful to debug issues.
+The `get-apache-errorlog.sh` script can be used to debug potential issues. The `enter-docker.sh` script opens the bash in the container and can also be useful to debug issues. In case the forwarding of the logs to the container does not work, you'll find logs in `/var/log/apache2/error.log`.
 
 ### How to use the app
 

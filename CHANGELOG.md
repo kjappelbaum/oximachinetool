@@ -1,34 +1,46 @@
-##  (2020-12-17)
+Changelog
+=========
 
+v0.7.1 (2020-12-17)
+-------------------
 
+### New
 
+-   Feat: added warning for cases with elements that are rare in the
+    training set. \[Kevin\]
 
-##  (2020-12-17)
+### Changes
 
-* docs: added information about the API endpoint ([12b8656](https://github.com/kjappelbaum/oximachinetool/commit/12b8656))
-* docs: updated instructions ([0df3e07](https://github.com/kjappelbaum/oximachinetool/commit/0df3e07))
-* chore: added API endpoint, closes #20 ([2a7e89f](https://github.com/kjappelbaum/oximachinetool/commit/2a7e89f)), closes [#20](https://github.com/kjappelbaum/oximachinetool/issues/20)
-* chore: added CI to build and publish image ([73d9323](https://github.com/kjappelbaum/oximachinetool/commit/73d9323))
-* chore: added info about potential timeout, closes #24 ([94488a6](https://github.com/kjappelbaum/oximachinetool/commit/94488a6)), closes [#24](https://github.com/kjappelbaum/oximachinetool/issues/24)
-* chore: bump version ([02d4a5e](https://github.com/kjappelbaum/oximachinetool/commit/02d4a5e))
-* chore: fix SHAP bug, closes #21 ([2247c2c](https://github.com/kjappelbaum/oximachinetool/commit/2247c2c)), closes [#21](https://github.com/kjappelbaum/oximachinetool/issues/21)
-* chore: fix sklearn dependency ([797fec0](https://github.com/kjappelbaum/oximachinetool/commit/797fec0))
-* chore: fix tools barebone version ([febd3d5](https://github.com/kjappelbaum/oximachinetool/commit/febd3d5))
-* chore: fixes gh actions, updates readme ([d7e5a72](https://github.com/kjappelbaum/oximachinetool/commit/d7e5a72))
-* chore: linting ([4c98a9d](https://github.com/kjappelbaum/oximachinetool/commit/4c98a9d))
-* chore: make sure we delete unneeded files ([1474da9](https://github.com/kjappelbaum/oximachinetool/commit/1474da9))
-* chore: started refactoring, closes #19, #18 ([38a010e](https://github.com/kjappelbaum/oximachinetool/commit/38a010e)), closes [#19](https://github.com/kjappelbaum/oximachinetool/issues/19) [#18](https://github.com/kjappelbaum/oximachinetool/issues/18)
-* chore: testing timing wihout seccomp ([7a795f5](https://github.com/kjappelbaum/oximachinetool/commit/7a795f5))
-* chore: updated landing page ([42b5fce](https://github.com/kjappelbaum/oximachinetool/commit/42b5fce)), closes [#23](https://github.com/kjappelbaum/oximachinetool/issues/23) [#22](https://github.com/kjappelbaum/oximachinetool/issues/22)
-* chore: use python 3 ([486b6a8](https://github.com/kjappelbaum/oximachinetool/commit/486b6a8))
-* trigger rebuild ([f341a8e](https://github.com/kjappelbaum/oximachinetool/commit/f341a8e))
-* feat: added warning for cases with elements that are rare in the training set ([5799813](https://github.com/kjappelbaum/oximachinetool/commit/5799813))
+-   Chore: preparing new release. \[Kevin M. Jablonka\]
+-   Chore: preparing new release. \[Kevin M. Jablonka\]
+-   Chore: added CI to build and publish image. \[Kevin M. Jablonka\]
+-   Chore: make sure we delete unneeded files. \[Kevin M. Jablonka\]
+-   Chore: added info about potential timeout, closes \#24. \[Kevin M.
+    Jablonka\]
+-   Chore: updated landing page. \[Kevin M. Jablonka\]
+    -   closes \#23
+    -   closes \#22
+-   Chore: bump version. \[Kevin M. Jablonka\]
+-   Chore: fix tools barebone version. \[Kevin M. Jablonka\]
+-   Chore: use python 3. \[Kevin M. Jablonka\]
+-   Chore: fixes gh actions, updates readme. \[Kevin M. Jablonka\]
+-   Chore: testing timing wihout seccomp. \[Kevin M. Jablonka\]
+-   Chore: fix SHAP bug, closes \#21. \[Kevin M. Jablonka\]
+-   Chore: linting. \[Kevin M. Jablonka\]
+-   Chore: added API endpoint, closes \#20. \[Kevin M. Jablonka\]
+-   Chore: started refactoring, closes \#19, \#18. \[Kevin M. Jablonka\]
+-   Chore: fix sklearn dependency. \[Kevin\]
 
+### Other
 
+-   Docs: added developer notes. \[Kevin M. Jablonka\]
+-   Docs: added information about the API endpoint. \[Kevin M.
+    Jablonka\]
+-   Docs: updated instructions. \[Kevin M. Jablonka\]
+-   Trigger rebuild. \[Kevin M. Jablonka\]
 
-# Changelog
-
-## v0.6.0 (2020-08-03)
+v0.6.0 (2020-08-03)
+-------------------
 
 ### New
 
@@ -37,6 +49,7 @@
 
 ### Changes
 
+-   Chore: relase v0.6.0. \[Kevin\]
 -   Chore: added changelog. \[Kevin\]
 -   Chore: added uio-66 from tricket angew. chem. as example. \[Kevin\]
 -   Chore: dirty trick to unload module. \[Kevin\]
@@ -60,7 +73,8 @@
 -   Trigger rebuild. \[Kevin\]
 -   Trigger rebuild. \[Kevin\]
 
-## v0.5.0 (2020-02-19)
+v0.5.0 (2020-02-19)
+-------------------
 
 ### Changes
 
@@ -95,7 +109,8 @@
 -   Moving acknowledgment. \[Kevin\]
 -   Adding more precomputed examples. \[Kevin\]
 
-## v0.4.0 (2020-02-03)
+v0.4.0 (2020-02-03)
+-------------------
 
 ### Fix
 
@@ -160,35 +175,35 @@
 
 -   Switching from threading to multiprocessing. \[Kevin\]
 
--   Merge pull request \#10 from kjappelbaum/adding_recomputed. \[Kevin
+-   Merge pull request \#10 from kjappelbaum/adding\_recomputed. \[Kevin
     Jablonka\]
 
     changing the example order
 
 -   Changing the example order. \[Kevin\]
 
--   Merge pull request \#9 from kjappelbaum/adding_recomputed. \[Kevin
+-   Merge pull request \#9 from kjappelbaum/adding\_recomputed. \[Kevin
     Jablonka\]
 
     Maintainer deprecated in Docker
 
 -   Maintainer deprecated in Docker. \[Kevin\]
 
--   Merge pull request \#8 from kjappelbaum/adding_recomputed. \[Kevin
+-   Merge pull request \#8 from kjappelbaum/adding\_recomputed. \[Kevin
     Jablonka\]
 
     added more precomputed results
 
 -   Added more precomputed results. \[Kevin\]
 
--   Merge pull request \#7 from kjappelbaum/reorganize_docker. \[Kevin
+-   Merge pull request \#7 from kjappelbaum/reorganize\_docker. \[Kevin
     Jablonka\]
 
     Reorganize docker
 
 -   Cleaned up repo, moved everything to one Dockerfile. \[Kevin\]
 
--   Merge pull request \#6 from kjappelbaum/feature_importance. \[Kevin
+-   Merge pull request \#6 from kjappelbaum/feature\_importance. \[Kevin
     Jablonka\]
 
     adding precalculated section
@@ -197,7 +212,7 @@
 
 -   Adding precalculated section. \[Kevin\]
 
--   Merge pull request \#5 from kjappelbaum/feature_importance. \[Kevin
+-   Merge pull request \#5 from kjappelbaum/feature\_importance. \[Kevin
     Jablonka\]
 
     Preparation for next release
@@ -210,7 +225,7 @@
 
 -   Styling. \[Kevin\]
 
--   Merge branch \'temp\' into feature_importance. \[Kevin\]
+-   Merge branch \'temp\' into feature\_importance. \[Kevin\]
 
 -   Adding waiting page. \[Kevin\]
 
@@ -347,7 +362,7 @@
 -   Adding the option to have additional field into the upload structure
     form. \[Giovanni Pizzi\]
 
--   Using safe_load for YAML. \[Giovanni Pizzi\]
+-   Using safe\_load for YAML. \[Giovanni Pizzi\]
 
 -   Improving the documentation of the tool. \[Giovanni Pizzi\]
 
@@ -399,7 +414,7 @@
 
 -   Added path for accessing data. \[Snehal Kumbhar\]
 
--   Added empty user_requirements.txt file. \[Snehal Kumbhar\]
+-   Added empty user\_requirements.txt file. \[Snehal Kumbhar\]
 
 -   Updated bash script to run and remove example app. \[Snehal
     Kumbhar\]
@@ -409,7 +424,7 @@
 
 -   Added about section title in config file. \[Snehal Kumbhar\]
 
--   Added user_static directory. \[Snehal Kumbhar\]
+-   Added user\_static directory. \[Snehal Kumbhar\]
 
 -   Updated configuration to add additional accordion entries. \[Snehal
     Kumbhar\]

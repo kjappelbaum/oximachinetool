@@ -66,7 +66,7 @@ Replace base URL with the one of the deployment you want to use. If you want to 
 # Development
 
 - We use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0-beta.2/)
-- In this way, we can automatically create a `CHANGELOG.md` file. For example, using the [changelog-generator CLI](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-cli)
+- In this way, we can automatically create a `CHANGELOG.md` file. For example, using the [gitchangelog](https://github.com/vaab/gitchangelog)
 
 # Acknowledgments
 

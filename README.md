@@ -38,13 +38,30 @@ cd dev_scripts
 
 The `get-apache-errorlog.sh` script can be used to debug potential issues. The `enter-docker.sh` script opens the bash in the container and can also be useful to debug issues. In case the forwarding of the logs to the container does not work, you'll find logs in `/var/log/apache2/error.log`.
 
-### How to use the app
+## How to use the app
 
 The use of the web app is shown in the screencast.
 
 ![oximachine screencast](_static/oximachine.gif)
 
 The app provides the option to upload a `cif` or to also choose from some examples.
+
+## Using the API endpoint
+
+Currently, we implemented one simple REST-API point to run the oximachine. You can use it with a `POST` request to `\api\v1\oximachine`. From Python, you could for example use the following snippet
+
+```python
+import requests
+
+# read the filecontent of the CIF
+with open('myciffile.cif', 'r') as handle:
+    file_content = handle.read()
+
+# make a POST request to the API
+requests.post('<base_url>/api/v1/oximachine', data = {'cifFile': file_content})
+```
+
+Replace base URL with the one of the deployment you want to use. If you want to use our deployment, use `http://oximachine.materialscloud.io`, i.e., `requests.post('http://oximachine.materialscloud.io/api/v1/oximachine', data = {'cifFile': file_content})`. If you want to use it on your own machine, you might want to use something like `localhost:8091`.
 
 # Acknowledgments
 

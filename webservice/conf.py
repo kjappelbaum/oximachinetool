@@ -3,7 +3,7 @@
 """Configuration variables for the app"""
 import os
 
-__version__ = "v0.7.1"
+__version__ = "v0.7.2"
 
 
 class ConfigurationError(Exception):

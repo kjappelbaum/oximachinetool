@@ -1,5 +1,5 @@
 shap==0.35.0 # pinning due to frequent API changes
-oximachinerunner>=1.2.0 # use always the latest
+oximachinerunner>=1.3.0 # use always the latest
 scikit-learn==0.22.2.post1 # pinning for reproducibility
 ipython # needed for SHAP
 tbb # threading for numba

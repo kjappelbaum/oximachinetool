@@ -598,21 +598,12 @@ def process_structure_core(
 
 
 @app.route("/")
-def index():
-    """
-    Main view, redirect to input_structure
-    """
-    return flask.redirect(flask.url_for("input_structure"))
-
-
-@app.route("/")
-def input_data():
+def input_structure():
     """
     Main view, input data selection and upload
     """
-    print(**get_config())
     return flask.render_template(
-        get_visualizer_select_template(flask.request), **get_config()
+        get_visualizer_select_template(flask.request), version=__version__
     )
 
 
@@ -622,16 +613,6 @@ def termsofuse():
     View for the terms of use
     """
     return flask.send_from_directory(view_folder, "termsofuse.html")
-
-
-@app.route("/input_structure/")
-def input_structure():
-    """
-    Input structure selection
-    """
-    return flask.render_template(
-        get_visualizer_select_template(flask.request), version=__version__
-    )
 
 
 @app.route("/set_feature_importance_level/", methods=["GET", "POST"])

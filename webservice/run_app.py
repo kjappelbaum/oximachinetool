@@ -420,11 +420,9 @@ def process_structure_core(
             reason="featurizationexception",
             extra={"exception": str(excep)},
         )
-        raise FlaskRedirectException(
-            "Sorry, the featurization failed. \
+        raise FlaskRedirectException("Sorry, the featurization failed. \
                  Make sure that your structure is not pathological \
-                     (e.g. containing overlapping atoms)."
-        ) from excep
+                     (e.g. containing overlapping atoms).") from excep
 
     logger.debug("Featurization completed in {}".format(time.time() - feat_start))
 

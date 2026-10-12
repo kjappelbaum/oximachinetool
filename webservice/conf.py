@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint:disable=invalid-name
 """Configuration variables for the app"""
+
 import os
 
 __version__ = "v0.7.2"

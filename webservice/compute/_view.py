@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Returns the structure viewer with the oxidation state annotations."""
+
 import nglview as nv
 from pymatgen import Structure
 
